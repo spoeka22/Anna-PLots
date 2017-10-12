@@ -21,7 +21,7 @@ filenames = {}
 # print(folders)
 # print(filenames)
 
-for root, subfolders, files in os.walk(r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\initial POR tests Pd'):
+for root, subfolders, files in os.walk(r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\EC and product analysis'):
     if len(files)==0: continue
     #folders.append(root[-8:])
     folders.append(root[-15:])

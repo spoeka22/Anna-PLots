@@ -18,13 +18,13 @@ from matplotlib import pyplot as plt
 import numpy as np
 import os
 
-if os.path.split(os.getcwd())[1] == 'EC_MS':      
-                                #then we're running from inside the package
-    from Combining import timestamp_to_seconds, is_time, cut 
-    from Combining import cut_dataset#, get_time_col
-else:                           #then we use relative import
-    from .Combining import timestamp_to_seconds, is_time, cut 
-    from .Combining import cut_dataset#, get_time_col
+# if os.path.split(os.getcwd())[1] == 'EC_MS':
+#                                 #then we're running from inside the package
+#     from Combining import timestamp_to_seconds, is_time, cut
+#     from Combining import cut_dataset#, get_time_col
+# else:                           #then we use relative import
+#     from .Combining import timestamp_to_seconds, is_time, cut
+#     from .Combining import cut_dataset#, get_time_col
 
 
 def select_cycles(EC_data_0, cycles=1, t_zero=None, verbose=True, cycle_str=None, cutMS=True, data_type='CV'):

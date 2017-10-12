@@ -57,62 +57,74 @@ print(general_info)
 
 #folder_path = r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Au electrodes'
 
-folder_path = r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\initial POR tests Pd\AW_Pd_038'
+folder_path = r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\EC and product analysis'
 
-folders = [
-#           'CV_tests_Ar',
-           'CV_test_propene',
-#           'CO stripping'
-           ]  # list of folders from which data is going to be plotted
+folders = [#'20171005_Pd_049',
+           # '20170901_Pd_040',
+           # '20170831_Pd_039',
+           '20170916_Pd_046',
+           # '20171003_Pd_047',
+           # '20171003_Pd_048',
+           # '20171006_Pd_050',
+           # '20171010_Pd_051'
+            ]  # list of folders from which data is going to be plotted
 
-filenames = {'CV_tests_Ar': [# 'AW_Pd_038_CVtests_Ar_02_CVA_C01_cycle1.mpt',
-#                                                       'AW_Pd_038_CVtests_Ar_02_CVA_C01_cycle2.mpt',
-#                                                       'AW_Pd_038_CVtests_Ar_02_CVA_C01_cycle11.mpt',
-#                                                       'AW_Pd_038_CVtests_Ar_03_CVA_C01_cycle4.mpt',
-                                                       'AW_Pd_038_CVtests_Ar_04_CVA_C01_cycle4.mpt',
-#                                                       'AW_Pd_038_CVtests_Ar_05_CVA_C01_cycle4.mpt',
-#                                                       'AW_Pd_038_CVtests_Ar_06_CVA_C01_cycle4.mpt',
-#                                                       'AW_Pd_038_CVtests_Ar_07_CVA_C01_cycle4.mpt',
-#                                           'AW_Pd_038_CVtests_Ar_08_CVA_C01_cycle4.mpt',
-#                                           'AW_Pd_038_CVtests_Ar_09_CVA_C01_cycle5.mpt',
-#                                           'AW_Pd_038_CVtests_Ar_10_CVA_C01_cycle5.mpt',
-#                                           'AW_Pd_038_CVtests_Ar_11_CVA_C01_cycle5.mpt',
-#                                           'AW_Pd_038_CVtests_Ar_12_CVA_C01_cycle5.mpt',
-                                                       'AW_Pd_038_CVtests_Ar_13_CVA_C01_cycle5.mpt',
-                                                       'AW_Pd_038_CVtests_Ar_14_CVA_C01_cycle5.mpt',
-                                                       'AW_Pd_038_CVtests_Ar_15_CVA_C01_cycle5.mpt',
-                                                       'AW_Pd_038_CVtests_Ar_16_CVA_C01_cycle5.mpt',
-#                                                       'AW_Pd_038_CVtests_Ar_17_CVA_C01_cycle5.mpt'
-                                           ],
-             'CV_test_propene': [#'AW_Pd_038_CVtests_Propene_17_CVA_02_CVA_C01_cycle1.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_02_CVA_C01_cycle2.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_02_CVA_C01_cycle11.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_03_CVA_C01_cycle4.mpt',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_04_CVA_C01_cycle4.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_05_CVA_C01_cycle4.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_06_CVA_C01_cycle4.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_07_CVA_C01_cycle4.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_08_CVA_C01_cycle4.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_09_CVA_C01_cycle5.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_10_CVA_C01_cycle5.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_11_CVA_C01_cycle5.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_12_CVA_C01_cycle5.mpt',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_13_CVA_C01_cycle5.mpt',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_14_CVA_C01_cycle5.mpt',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_15_CVA_C01_cycle5.mpt',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_16_CVA_C01_cycle5.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_17_CVA_C01_cycle5.mpt',
-#                                  'AW_Pd_038_CVtests_Propene_17_CVA_17_CVA_C01_cycle11.mpt'
-                                  ],
-
-                'CO stripping': ['AW_Pd_038_CO_stripping_test_02_CVA_C01_cycle18.mpt',
-                                 'AW_Pd_038_CO_stripping_test_02_CVA_C01_cycle19.mpt',
-                                 'AW_Pd_038_CO_stripping_test_02_CVA_C01_cycle21.mpt',
-                                 'AW_Pd_038_CO_stripping_test_02_CVA_C01_cycle13.mpt',
-                                 'AW_Pd_038_CO_stripping_test_02_CVA_C01_cycle14.mpt',
-                                 'AW_Pd_038_CO_stripping_test_02_CVA_C01_cycle15.mpt',
-                                 'AW_Pd_038_CO_stripping_test_02_CVA_C01_cycle16.mpt'
+filenames = {'20171005_Pd_049': ['20171005_AW_Pd049_2ndtry_04_CVA_C01.mpt',
+                                 '20171005_AW_Pd049_3rd_onlyAr_04_CVA_C01.mpt',
+                                 '20171005_AW_Pd049_2ndtry_05_CVA_C01.mpt',
+                                 '20171005_AW_Pd049_2ndtry_07_CA_C01.mpt',
+                                 '20171005_AW_Pd049_3rd_onlyAr_01_CA_C01.mpt',
+                                 '20171005_AW_Pd049_3rd_onlyAr_06_CA_C01.mpt',
+                                 '20171005_AW_Pd049_02_CA_C01.mpt',
+                                 '20171005_AW_Pd049_2ndtry_06_CA_C01.mpt'
+                                 ],
+             '20170916_Pd_046': [#'AW_Pd_046_05_CA_C01.mpt',
+                                 'AW_Pd_046_02_CVA_C01.mpt'
+                                 ],
+             '20171006_Pd_050': ['20171006_AW_Pd050_onlyAr_restart_02_CA_C01.mpt',
+                                 '20171006_AW_Pd050_onlyAr_restart_03_CA_C01.mpt',
+                                 '20171006_AW_Pd050_onlyAr_02_CA_C01.mpt',
+                                 '20171006_AW_Pd050_onlyAr_04_CVA_C01.mpt',
+                                 '20171006_AW_Pd050_onlyAr_05_CVA_C01.mpt'
+                                 ],
+             '20170901_Pd_040': ['AW_Pd_040_03_CA_C01.mpt',
+                                 'AW_Pd_040_02_CVA_C01.mpt',
+                                 'AW_Pd_040_01_CA_C01.mpt',
+                                 'AW_Pd_042_05_CA_C01.mpt',
+                                 'AW_Pd_042_03_CA_C01.mpt',
+                                 'AW_Pd_042_02_CVA_C01.mpt',
+                                 'AW_Pd_041_05_CA_C01.mpt',
+                                 'AW_Pd_041_03_CA_C01.mpt',
+                                 'AW_Pd_041_02_CVA_C01.mpt',
+                                 'AW_Pd_045_05_CA_C01.mpt',
+                                 'AW_Pd_045_03_CA_C01.mpt',
+                                 'AW_Pd_045_02_CVA_C01.mpt',
+                                 'AW_Pd_044_05_CA_C01.mpt',
+                                 'AW_Pd_044_03_CA_C01.mpt',
+                                 'AW_Pd_044_02_CVA_C01.mpt',
+                                 'AW_Pd_043_05_CA_C01.mpt',
+                                 'AW_Pd_043_03_CA_C01.mpt',
+                                 'AW_Pd_043_02_CVA_C01.mpt'
+                                 ],
+             '20170831_Pd_039': ['AW_Pd_039_05_CA_C01.mpt',
+                                 'AW_Pd_039_02_CVA_C01.mpt',
+                                 'AW_Pd_039_03_CA_C01.mpt'
+                                 ],
+             '20171003_Pd_047': ['20171003_AW_Pd047_COstripping_test_04_CVA_C01.mpt',
+                                 '20171003_AW_Pd047_COstripping_test_02_CVA_C01.mpt',
+                                 '20171003_AW_Pd047_COstripping_test_03_CVA_C01.mpt'
+                                 ],
+             '20171010_Pd_051': ['20171010_AW_Pd051_06_CA_C01.mpt',
+                                 '20171010_AW_Pd051_08_CVA_C01.mpt',
+                                 '20171010_AW_Pd051_02_CA_C01.mpt',
+                                 '20171010_AW_Pd051_04_CVA_C01.mpt',
+                                 '20171010_AW_Pd051_05_CVA_C01.mpt'
+                                 ],
+             '20171003_Pd_048': ['20171003_AW_Pd048_COstripping_test_04_CVA_C01.mpt',
+                                 '20171003_AW_Pd048_COstripping_test_02_CVA_C01.mpt',
+                                 '20171003_AW_Pd048_COstripping_test_05_CVA_C01.mpt'
                                  ]
+
              
              }
 
@@ -120,27 +132,7 @@ filenames = {'CV_tests_Ar': [# 'AW_Pd_038_CVtests_Ar_02_CVA_C01_cycle1.mpt',
 
 # custom labels for data: dictionary correlating filename with label to be assigned:
 
-data_label = {                 
-                                       'AW_Pd_038_CVtests_Ar_08_CVA_C01_cycle4.mpt': 'Ar, 08 cycle4, 50 mV/s',
-                                                       'AW_Pd_038_CVtests_Ar_09_CVA_C01_cycle5.mpt': 'Ar, 09 cycle5, 20 mV/s',
-                                                       'AW_Pd_038_CVtests_Ar_10_CVA_C01_cycle5.mpt': 'Ar, 10 cycle5, 100 mV/s',
-                                                       'AW_Pd_038_CVtests_Ar_11_CVA_C01_cycle5.mpt': 'Ar, 11 cycle5, 200 mV/s',
-                                                       'AW_Pd_038_CVtests_Ar_12_CVA_C01_cycle5.mpt': 'Ar, 12 cycle5, 500 mV/s',
-                                                           'AW_Pd_038_CVtests_Propene_17_CVA_08_CVA_C01_cycle4.mpt': 'propene, 08 cycle4, 50 mV/s',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_09_CVA_C01_cycle5.mpt': 'propene, 09 cycle5, 20 mV/s',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_10_CVA_C01_cycle5.mpt': 'propene, 10 cycle5, 100 mV/s',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_11_CVA_C01_cycle5.mpt': 'propene, 11 cycle5, 200 mV/s',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_12_CVA_C01_cycle5.mpt': 'propene, 12 cycle5, 500 mV/s',
-                                  'AW_Pd_038_CVtests_Ar_04_CVA_C01_cycle4.mpt': 'Ar, 04 cycle4, 50 mV/s',
-                                  'AW_Pd_038_CVtests_Ar_13_CVA_C01_cycle5.mpt': 'Ar, 13 cycle5, 20 mV/s',
-                                  'AW_Pd_038_CVtests_Ar_14_CVA_C01_cycle5.mpt': 'Ar, 14 cycle5, 100 mV/s',
-                                  'AW_Pd_038_CVtests_Ar_15_CVA_C01_cycle5.mpt': 'Ar, 15 cycle5, 200 mV/s',
-                                  'AW_Pd_038_CVtests_Ar_16_CVA_C01_cycle5.mpt': 'Ar, 16 cycle5, 500 mV/s',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_04_CVA_C01_cycle4.mpt': 'propene, 04 cycle4, 50 mV/s',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_13_CVA_C01_cycle5.mpt': 'propene, 13 cycle5, 20 mV/s',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_14_CVA_C01_cycle5.mpt': 'propene, 14 cycle5, 100 mV/s',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_15_CVA_C01_cycle5.mpt': 'propene, 15 cycle5, 200 mV/s',
-                                  'AW_Pd_038_CVtests_Propene_17_CVA_16_CVA_C01_cycle5.mpt': 'propene, 16 cycle5, 500 mV/s'}
+data_label = {}
                                             
 
 # plottype defines axis labels and settings. can be either ca or cv. to be evaluated whether useful or not
@@ -148,7 +140,7 @@ plottype = "cv"
 
 
 # settings for the plot
-plot_settings = {'safeplot': True,
+plot_settings = {'safeplot': False,
                  'plotname': 'CV_Pd_038_Propene_development_scanrate_UPL_1.4Vrhe',
                  'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                  'grid': True,

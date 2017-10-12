@@ -13,8 +13,8 @@ from pandas import DataFrame
 import pandas as pd
 from anna_data_plot_input_original import e_rhe_ref, ph_ref, ph
 
-import Data_Importing
-import EC
+import Data_Importing as Data_Importing_Scott
+import EC as EC_Scott
 
 
 # def import_data(datatype, filenames, general_info):
@@ -77,11 +77,14 @@ def import_data_from(file):
     file is then converted to form that can be used by standard functions for plotting here.
     PLENTY TO DO HERE!!!
     """
-    import_data(file, verbose)
-
-    data=DataDict
-
-
+    DataDict = Data_Importing_Scott.import_data(file)
+    # print(DataDict)
+    data_in_datadict={column: DataDict[column] for column in DataDict['data_cols']}
+    # print(DataDict['data_cols'])
+    print(data_in_datadict)
+    # data=DataFrame(DataDict, columns=['mode', 'Ewe/V', '<I</mA'])
+    data = DataFrame(data_in_datadict)
+    #
     # if ".mpt" in file:
     #     with open(file) as file:
     #         for line in file:
@@ -93,6 +96,7 @@ def import_data_from(file):
     # else:
     #     with open(file) as file:
     #         data = pd.read_table(file, decimal=',')
+    print(data)
     return data
 
 
@@ -119,7 +123,7 @@ def convert_potential_to_rhe(e_ref):
     """
     e_nhe = - e_rhe_ref - 0.059 * ph_ref  # potential vs NHE
     e_rhe = e_ref + e_nhe + 0.059 * ph
-    print("Potential converted to RHE scale at pH=" + ph)
+    print("Potential converted to RHE scale at pH=" + str(ph))
     return e_rhe
 
 def ohmicdrop_correct_e(data, ohmicdrop):
@@ -133,8 +137,8 @@ def ohmicdrop_correct_e(data, ohmicdrop):
     #print(e_rhe, I)
     #from anna_data_plot_input_original import ohmicdrop
     e_rhe_corr = e_rhe - I/1000 * ohmicdrop
-   #print(e_rhe_corr)
-    print("Data has been corrected for an ohmic drop of" + ohmicdrop)
+    #print(e_rhe_corr)
+    #print("Data has been corrected for an ohmic drop of" + ohmicdrop)
     return e_rhe_corr
 
 
@@ -148,10 +152,10 @@ def convert_to_current_density(I, general_info, filename):
 #    from anna_data_plot_input_original import electrode_area_geom
     if filename in general_info.value['electrode_area_geom_special']:
         i=I/general_info.value['electrode_area_geom_special'][filename]
-        print("Current for file: " + filename + " has been normalized to an area of " + electrode_area_geom_special)
+        print("Current for file: " + filename + " has been normalized to an area of " + str(general_info.value['electrode_area_geom_special'][filename]))
     else:    
         i = I/general_info.value['electrode_area_geom']
-        print("Current has been normalized to an area of " + electrode_area_geom)
+        print("Current has been normalized to an area of " + str(general_info.value['electrode_area_geom']))
     return i
 
 
@@ -170,6 +174,7 @@ def extract_cv_data(folder_path, filenames, data_label, folders, general_info):
         for filename in files: #additional for loop to go through list of filenames
 
             if folder in folders:
+                print("Now working on" + filename)
                 # print(folder)
                 # filepath = folder
                 filepath = folder_path + "/" + folder + "/" + filename
@@ -181,13 +186,14 @@ def extract_cv_data(folder_path, filenames, data_label, folders, general_info):
                 extracted_e_and_i = DataFrame(import_data_from(filepath)[['Ewe/V', '<I>/mA']])
 
                                 #print(general_info.value['ohm_drop_corr'])
-
+                print("Data extraction finished.")
                 if general_info.value['ohm_drop_corr']:
+                    print("Carrying out ohmic drop correction")
                     if filename in general_info.value['ohmicdrop_filename']:
                         ohmicdrop = general_info.value['ohmicdrop_filename'][filename]
                     else:
                         ohmicdrop = general_info.value['ohmicdrop']
-                    print(ohmicdrop)
+                    print("Compenstating for R_ohm=" + str(ohmicdrop))
                     ohmicdropcorrected_e = DataFrame(data = [extracted_e_and_i.apply(ohmicdrop_correct_e, axis=1, ohmicdrop=ohmicdrop)],
                                                     index = ['E_corr/V']).T
                     #print(ohmicdropcorrected_e)
@@ -199,6 +205,7 @@ def extract_cv_data(folder_path, filenames, data_label, folders, general_info):
                                               extracted_e_and_i['<I>/mA'].apply(convert_to_current_density, general_info=general_info, filename=filename)],
                                               index = ["EvsRHE/V", "i/mAcm^-2"]) #this part should be simplified
                 e_and_i = extracted_e_and_i.add(converted_e_and_i.T, fill_value=0)
+                print("Data conversion finished.")
 
                #cv_data[filename] = {'scanrate': find_scanrate(filepath), 'data': e_and_i, 'label': label}
                # cv_data.append({'filename':filename, 'scanrate': find_scanrate(filepath), 'data': e_and_i, 'label': label})
