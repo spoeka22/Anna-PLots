@@ -13,8 +13,8 @@ from pandas import DataFrame
 import pandas as pd
 from anna_data_plot_input_original import e_rhe_ref, ph_ref, ph
 
-from EC_MS import Data_Importing
-from EC_MS import EC
+import Data_Importing
+import EC
 
 
 # def import_data(datatype, filenames, general_info):
@@ -77,20 +77,32 @@ def import_data_from(file):
     file is then converted to form that can be used by standard functions for plotting here.
     PLENTY TO DO HERE!!!
     """
-    if ".mpt" in file:
-        with open(file) as file:
-            for line in file:
-                if "header" in line:
-                    headernumber = int(line[line.find(": ") + 2:])
-                    break
-            #load the columns containing data and converting them to rows
-            data = pd.read_table(file, skiprows=headernumber-3, decimal=',')
-    else:
-        with open(file) as file:
-            data = pd.read_table(file, decimal=',')
+    import_data(file, verbose)
+
+    data=DataDict
+
+
+    # if ".mpt" in file:
+    #     with open(file) as file:
+    #         for line in file:
+    #             if "header" in line:
+    #                 headernumber = int(line[line.find(": ") + 2:])
+    #                 break
+    #         #load the columns containing data and converting them to rows
+    #         data = pd.read_table(file, skiprows=headernumber-3, decimal=',')
+    # else:
+    #     with open(file) as file:
+    #         data = pd.read_table(file, decimal=',')
     return data
 
 
+# def import_data(full_path_name='current', title='get_from_file',
+#                 data_type='EC', N_blank=10, verbose=1):
+#     file_lines = import_text(full_path_name, verbose)
+#     DataDict = text_to_data(file_lines, title, data_type, N_blank, verbose)
+#     DataDict = numerize(DataDict)
+#
+#     return DataDict
 
 
 #def function(value):
@@ -122,7 +134,7 @@ def ohmicdrop_correct_e(data, ohmicdrop):
     #from anna_data_plot_input_original import ohmicdrop
     e_rhe_corr = e_rhe - I/1000 * ohmicdrop
    #print(e_rhe_corr)
-    print("Data has been corrected for an ohmic drop of" + ohmic drop)
+    print("Data has been corrected for an ohmic drop of" + ohmicdrop)
     return e_rhe_corr
 
 

@@ -1,7 +1,3 @@
-#this is a test-change.
-#new test of commit and push
-
-
 import os
 
 
