@@ -72,7 +72,8 @@ def select_cycles(EC_data_0, cycles=1, t_zero=None, verbose=True, cycle_str=None
             print('trouble selecting cycle ' + str(cycles) + ' of ' + col + '\n' +
                     'type(I_keep) = ' + str(type(I_keep)))
             good = False
-    t0 = timestamp_to_seconds(EC_data['timestamp'])
+    # t0 = timestamp_to_seconds(EC_data['timestamp'])
+    t0=0
     tspan = np.array([min(EC_data['time/s']), max(EC_data['time/s'])])
     EC_data['tspan'] = tspan
     EC_data['tspan_2'] = tspan
@@ -515,21 +516,22 @@ if __name__ == '__main__':
 
     plt.close('all')    
     
-    import_raw_data = 0
+    import_raw_data = 1
     if import_raw_data:
-        EC_directory = ('/home/soren/Dropbox (Soren Scott Inc)' +
-            '/Sniffer_Experiments/03_Pt_Sputtered/Data/16I28_for_Hawaii/')
-        EC_file =  '03_HER_OER_C01.mpt'
-        
-        EC_data_0 = import_data(EC_directory + EC_file, data_type='EC')
+        EC_directory = (r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\EC and product analysis\20170916_Pd_046')
+        EC_file =  'AW_Pd_046_02_CVA_C01.mpt'
+
+        # filepath = folder_path + "/" + folder + "/" + filename
+
+        EC_data_0 = import_data(EC_directory + "/" + EC_file, data_type='EC')
     
     sync_metadata(EC_data_0, RE_vs_RHE=0.535, A_el=0.196)
     
-    EC_data_1 = select_cycles(EC_data_0, [1,2], tzero='start')
+    EC_data_1 = select_cycles(EC_data_0, [1,2])
     [ax1, ax2] = plot_vs_time(EC_data_1, colors=['r','k'])
     
-    EC_data_2 = select_cycles(EC_data_0, [3,4], tzero='start')
+    EC_data_2 = select_cycles(EC_data_0, [3,4])#, tzero='start')
     plot_vs_time(EC_data_2, colors=['r--','k--'], axes=[ax1, ax2])
-    
-    
+
+    plt.show()
     

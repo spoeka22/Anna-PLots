@@ -33,7 +33,7 @@ electrode_area_geom_special = {#'f_CA_Au_001_POR_C01.mpt': 1,
               }
 
 #ohmic drop in Ohm over cell measured with EIS
-ohm_drop_corr = True #to turn on/off ohmic drop correction
+ohm_drop_corr = False #to turn on/off ohmic drop correction
 ohmicdrop = 39
 ohmicdrop_filename = {'b_CA_Pd_020_HClO4_propene_C01.txt': 34.5,
               'c_CA_Pd_021_HClO4_propene_C01.txt': 23.5,
@@ -152,6 +152,8 @@ plot_settings = {'safeplot': False,
                  'bottom_pad': 0.1,
                  'l_pad': [],
                  'r_pad': [],
+                 'colors': ['g', 'orange', 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75'],
+                 'linestyle': ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-']
                  }
 
 # legend:

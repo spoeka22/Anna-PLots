@@ -75,13 +75,16 @@ def import_data_from(file):
     """opens file by using Scott's set of function from EC-MS package, to make 
     imported data compatible with his functions.
     file is then converted to form that can be used by standard functions for plotting here.
-    PLENTY TO DO HERE!!!
+    COMMENT:
+    This is probably quite useless because it simply adds some rather useless conversion steps to the data import.
+    Especially, since original data import version is already capable of importing all the data columns / the new functions
+    that handle cycle selection and CO strip integration don't rely on this kind of data import anyway.
     """
     DataDict = Data_Importing_Scott.import_data(file)
     # print(DataDict)
     data_in_datadict={column: DataDict[column] for column in DataDict['data_cols']}
-    # print(DataDict['data_cols'])
-    print(data_in_datadict)
+    print(sorted(DataDict.keys()))
+    # print(data_in_datadict)
     # data=DataFrame(DataDict, columns=['mode', 'Ewe/V', '<I</mA'])
     data = DataFrame(data_in_datadict)
     #
@@ -96,8 +99,10 @@ def import_data_from(file):
     # else:
     #     with open(file) as file:
     #         data = pd.read_table(file, decimal=',')
-    print(data)
+    # print(data)
     return data
+
+
 
 
 # def import_data(full_path_name='current', title='get_from_file',
@@ -305,9 +310,11 @@ def cv_plot(cv_data, plot_settings, legend_settings, annotation_settings): #basi
     #List of 6 different linestyles to loop through
     # linestyle_list= ['-', (0, (2, 3)), '--', (3, (15, 7.5)) ,'-.',':', '-', (0, (2, 3)), '--', (3, (15, 7.5)),'-.',':',
     #                  '-', (0, (2, 3)), '--', (3, (15, 7.5)), '-.', ':','-', (0, (2, 3)), '--', (3, (15, 7.5)) ,'-.',':']
-    linestyle_list = ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-']
-#    linestyle_list = [ ':', ':', ':', ':', ':', '-', '-', '-', '-', '-', '-']
-    color_list = ['g', 'orange', 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75','orange', 'g', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75']
+    # linestyle_list = ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-']
+    #linestyle_list = [ ':', ':', ':', ':', ':', '-', '-', '-', '-', '-', '-']
+    linestyle_list = plot_settings['linestyle']
+    color_list = plot_settings['colors']
+    #color_list = ['g', 'orange', 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75','orange', 'g', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75']
     #color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
     #color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
     #print(color_list)
@@ -394,8 +401,10 @@ def ca_plot(ca_data, plot_settings, legend_settings, annotation_settings): #basi
     #color_list = ['orange', 'orange', 'g', 'g', 'r', 'r', 'b', 'b', 'k', 'k', 'c', 'c']
 
 #    linestyle_list = ['-', '--', '-.', ':', (0, (2, 3)), (3, (10, 5))]
-    linestyle_list = ['-', '-', '-', '-', '-', '-']
-    color_list = ['orange','g', 'r', 'b', 'k', 'c']
+#     linestyle_list = ['-', '-', '-', '-', '-', '-']
+#     color_list = ['orange','g', 'r', 'b', 'k', 'c']
+    linestyle_list = plot_settings['linestyle']
+    color_list = plot_settings['colors']
 
     i=-1
     j=-1
