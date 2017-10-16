@@ -139,7 +139,7 @@ data_label = {}
 # that should be included/considered for plotting TODO: automatically detect which is the CO strip and the reference cycle based on the potential holde period in the cycle??
 plottype = "cv_cycles"
 
-extractcycles = [1,2,5,7]
+extractcycles = [1,2,5,9]   #has to be asigned to the filename to make different cycle selection for different files possible
 
 
 # settings for the plot

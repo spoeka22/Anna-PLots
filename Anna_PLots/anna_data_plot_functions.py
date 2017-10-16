@@ -119,7 +119,7 @@ def convert_potential_to_rhe(e_ref):
     """
     e_nhe = - e_rhe_ref - 0.059 * ph_ref  # potential vs NHE
     e_rhe = e_ref + e_nhe + 0.059 * ph
-    print("Potential converted to RHE scale at pH=" + str(ph))
+    # print("Potential converted to RHE scale at pH=" + str(ph))
     return e_rhe
 
 def ohmicdrop_correct_e(data, ohmicdrop):
@@ -148,10 +148,10 @@ def convert_to_current_density(I, general_info, filename):
 #    from anna_data_plot_input_original import electrode_area_geom
     if filename in general_info.value['electrode_area_geom_special']:
         i=I/general_info.value['electrode_area_geom_special'][filename]
-        print("Current for file: " + filename + " has been normalized to an area of " + str(general_info.value['electrode_area_geom_special'][filename]))
+        # print("Current for file: " + filename + " has been normalized to an area of " + str(general_info.value['electrode_area_geom_special'][filename]))
     else:    
         i = I/general_info.value['electrode_area_geom']
-        print("Current has been normalized to an area of " + str(general_info.value['electrode_area_geom']))
+        # print("Current has been normalized to an area of " + str(general_info.value['electrode_area_geom']))
     return i
 
 
@@ -376,7 +376,7 @@ def cv_plot(cv_data, plot_settings, legend_settings, annotation_settings): #basi
 
 def ca_plot(ca_data, plot_settings, legend_settings, annotation_settings): #basically all the details that are chosen in the settings part go into this function
     """plot tuples of current/time
-    input: settings from anna_data_plot_settings through doplot function
+    input: settings from anna_data_plot_settings through doplot function and ca_data from extract_ca_data function
     output: ca_plot
     """
     # prepare for figure with 2 x-axes, not really necessary, but also opens possibilty for subplots
@@ -480,15 +480,25 @@ def extract_cv_cycle_data(folder_path, filenames, folders, extractcycles, data_l
 
                 # function select_cycles(EC_data_0, cycles=1, t_zero=None, verbose=True, cycle_str=None, cutMS=True, data_type='CV', override=False)
 
-                data_selected_cycles = EC_Scott.select_cycles(datadict, extractcycles)
+
+
 
     # convert DataDict to DataFrame
-   # raw_cv_data = convert_datadict_to_dataframe(data_selected_cycles)
+   # raw_cv_data = convert_datadict_to_dataframe(data_selected_cycle)
 
-                e_and_i = DataFrame(convert_datadict_to_dataframe(data_selected_cycles)[['Ewe/V', '<I>/mA']])
+                for cycle in extractcycles:
+                    data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle])
+                    # print(data_selected_cycle['cycle number'])
 
-                cv_data.append({'filename': filename, 'data': e_and_i, 'label': filename})
-    print(cv_data)
+                    e_and_i = DataFrame(convert_datadict_to_dataframe(data_selected_cycle)[['Ewe/V', '<I>/mA']])
+
+                    converted_e_and_i = DataFrame(data=[e_and_i['Ewe/V'].apply(convert_potential_to_rhe),
+                                                    e_and_i['<I>/mA'].apply(convert_to_current_density,
+                                                    general_info=general_info, filename=filename)],
+                                              index=["EvsRHE/V", "i/mAcm^-2"]).T
+                    # print(converted_e_and_i)
+                    cv_data.append({'filename': filename + "_cycle_" + str(cycle), 'data': converted_e_and_i, 'label': filename})
+    # print(cv_data)
 
     return cv_data
 
