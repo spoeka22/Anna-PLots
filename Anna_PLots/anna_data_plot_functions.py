@@ -122,20 +122,29 @@ def convert_potential_to_rhe(e_ref):
     # print("Potential converted to RHE scale at pH=" + str(ph))
     return e_rhe
 
-def ohmicdrop_correct_e(data, ohmicdrop):
+def ohmicdrop_correct_e(file, ohmicdrop):
     """
     Corrects for the Ohmic drop in the setup
     :param e_rhe: potential vs RHE, ohmicdrop: ohmic resistance of the setup (in Ohms)
     :return: e_rhe_corr
     """
-    e_rhe = data['Ewe/V']
-    I = data['<I>/mA']
+    if 'individual ohmicdrop' in file:  #['filespec_settings']:
+        ohmic_drop = file['filespec_settings'['individual_ohmicdrop']]
+    else:
+        ohmic_drop = ohmicdrop
+    # print("Compenstating for R_ohm=" + str(ohmic_drop))
+    # print(ohmicdropcorrected_e)
+    e_rhe = file['data']['Ewe/V']
+
+    I = file['data']['<I>/mA']
     #print(e_rhe, I)
     #from anna_data_plot_input_original import ohmicdrop
-    e_rhe_corr = e_rhe - I/1000 * ohmicdrop
-    #print(e_rhe_corr)
-    #print("Data has been corrected for an ohmic drop of" + ohmicdrop)
-    return e_rhe_corr
+    e_rhe_corr = [e_rhe - I/1000 * ohmic_drop]
+    # print(e_rhe_corr)
+    ohmicdropcorrected_e = DataFrame(e_rhe_corr, index=['E_corr/V']).T
+    # print(ohmicdropcorrected_e)
+    print("Ohmic drop correction finished.")
+    return ohmicdropcorrected_e
 
 
 def convert_to_current_density(I, general_info, filename):
@@ -470,37 +479,61 @@ def extract_cv_cycle_data(folder_path, filenames, folders, extractcycles, data_l
                 # filepath = folder
                 filepath = folder_path + "/" + folder + "/" + filename
                 # import from file
-
                 datadict = Data_Importing_Scott.import_data(filepath)
 
-                # treat data (synchmetadata or my functions??) -> does select cycles work with my functions???
-
-
-                # split cycles
-
-                # function select_cycles(EC_data_0, cycles=1, t_zero=None, verbose=True, cycle_str=None, cutMS=True, data_type='CV', override=False)
-
-
-
-
-    # convert DataDict to DataFrame
-   # raw_cv_data = convert_datadict_to_dataframe(data_selected_cycle)
-
                 for cycle in extractcycles:
-                    data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle])
+                    data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle]) #extract only the data from selected cycles
                     # print(data_selected_cycle['cycle number'])
-
+                    # convert DataDict to DataFrame
                     e_and_i = DataFrame(convert_datadict_to_dataframe(data_selected_cycle)[['Ewe/V', '<I>/mA']])
-
+                    #convert potential/current and save columns in a way that the plotting function can find the columns it's looking for
                     converted_e_and_i = DataFrame(data=[e_and_i['Ewe/V'].apply(convert_potential_to_rhe),
                                                     e_and_i['<I>/mA'].apply(convert_to_current_density,
                                                     general_info=general_info, filename=filename)],
                                               index=["EvsRHE/V", "i/mAcm^-2"]).T
                     # print(converted_e_and_i)
+                    #collect all the data from different files&loops in one big dictionary
                     cv_data.append({'filename': filename + "_cycle_" + str(cycle), 'data': converted_e_and_i, 'label': filename})
     # print(cv_data)
 
     return cv_data
+
+def extract_data(folder_path, filenames, folders, filespec_settings):
+    """
+    imports data from EC_lab file to a DataDict using Scott's function.
+    If CV data and cycles selected, then extracts the selected cycles using Scott's
+    function to extract cycles, looping through all the files given in "filenames"
+    :return: list of dictionaries for each file/loop that was chosen to be plotted, each containing filename(+cycle),
+    DataFrame of all extracted data (all data columns), and file specific settings (unaltered) as given in input as "settings".
+    """
+    data=[]
+    # loop
+    for folder, files in filenames.items():
+        print("Now checking folder: " + folder)
+        for filename in files:  # additional for loop to go through list of filenames
+            if folder in folders:
+                print("Extracting data from: " + filename)
+                # filepath = folder
+                filepath = folder_path + "/" + folder + "/" + filename
+                # import from file
+                datadict = Data_Importing_Scott.import_data(filepath)
+                # print(filespec_settings[str(filename)].keys())
+                if 'cycles to extract' in filespec_settings[str(filename)].keys():
+                    for cycle in filespec_settings[str(filename)]['cycles to extract']:
+                        data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle]) #extract only the data from selected cycles
+                        # print(data_selected_cycle['cycle number'])
+                        # convert DataDict to DataFrame
+                        data_selected_cycle_frame = DataFrame(convert_datadict_to_dataframe(data_selected_cycle))
+                        # print(converted_e_and_i)
+                        #collect all the data from different cycles in one big dictionary
+                        data.append({'filename': filename + "_cycle_" + str(cycle), 'data': data_selected_cycle_frame, 'settings': filespec_settings[str(filename)]})
+                        print("cycle " + str(cycle) +" extracted")
+                else:
+                    data_current_file = DataFrame(convert_datadict_to_dataframe(datadict))
+                    data.append({'filename': filename, 'data': data_current_file, 'settings': filespec_settings[str(filename)]})
+                    print("data from " + filename + " extracted")
+    # print(data)
+    return data
 
 
 # TODO: implement the synchmetadata stuff to work instead of my functions to convert to RHE scale?? or leave mine because they can do more?
@@ -508,34 +541,30 @@ def extract_cv_cycle_data(folder_path, filenames, folders, extractcycles, data_l
 def convert_datadict_to_dataframe(datadict):
     """Converts DataDict output from Scott's import/cycle selection functions to DataFrame that is used by the plotting
     functions"""
-
-    # print(DataDict)
     data_in_datadict = {column: datadict[column] for column in datadict['data_cols']}
-    print(sorted(datadict.keys()))
+    # print(sorted(datadict.keys()))
     # print(data_in_datadict)
-    # data=DataFrame(DataDict, columns=['mode', 'Ewe/V', '<I</mA'])
     data = DataFrame(data_in_datadict)
-    # print(data)
     return data
 
 
-def doplot(plottype, folder_path, filenames, folders, extractcycles, data_label, plot_settings, legend_settings, annotation_settings, general_info):
-    """
-    Chooses what kind of plot to do and refers to that function
-    :param plottype: kind of plot to do
-    :return: plot
-    """
-    if plottype == "cv":
-        cv_plot(cv_data = extract_cv_data(folder_path=folder_path, filenames = filenames, folders=folders, data_label=data_label, general_info = general_info), plot_settings=plot_settings,
-                legend_settings=legend_settings, annotation_settings=annotation_settings )
-
-    if plottype == "cv_cycles":
-        cv_plot(cv_data=extract_cv_cycle_data(folder_path=folder_path, filenames=filenames, folders=folders, extractcycles=extractcycles,
-                                        data_label=data_label, general_info=general_info), plot_settings=plot_settings,
-                legend_settings=legend_settings, annotation_settings=annotation_settings)
-
-    if plottype == "ca":
-        ca_plot(ca_data = extract_ca_data(folder_path=folder_path, filenames = filenames, folders=folders, data_label=data_label, general_info=general_info), plot_settings=plot_settings,
-                legend_settings=legend_settings, annotation_settings=annotation_settings )
+# def doplot(plottype, folder_path, filenames, folders, extractcycles, data_label, plot_settings, legend_settings, annotation_settings, general_info):
+#     """
+#     Chooses what kind of plot to do and refers to that function
+#     :param plottype: kind of plot to do
+#     :return: plot
+#     """
+#     if plottype == "cv":
+#         cv_plot(cv_data = extract_cv_data(folder_path=folder_path, filenames = filenames, folders=folders, data_label=data_label, general_info = general_info), plot_settings=plot_settings,
+#                 legend_settings=legend_settings, annotation_settings=annotation_settings)
+#
+#     if plottype == "cv_cycles":
+#         cv_plot(cv_data=extract_cv_cycle_data(folder_path=folder_path, filenames=filenames, folders=folders, extractcycles=,
+#                                         data_label=data_label, general_info=general_info), plot_settings=plot_settings,
+#                 legend_settings=legend_settings, annotation_settings=annotation_settings)
+#
+#     if plottype == "ca":
+#         ca_plot(ca_data = extract_ca_data(folder_path=folder_path, filenames = filenames, folders=folders, data_label=data_label, general_info=general_info), plot_settings=plot_settings,
+#                 legend_settings=legend_settings, annotation_settings=annotation_settings )
 
 

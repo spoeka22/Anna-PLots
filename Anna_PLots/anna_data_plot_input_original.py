@@ -9,7 +9,7 @@ Settings for the data to plot are inserted here. The data plotting is done using
 
 from pandas import DataFrame
 
-import anna_data_plot_functions
+import anna_data_plot_functions as dpf
 
 # general information  if applicable, otherwise comment
 # temperature
@@ -35,10 +35,7 @@ electrode_area_geom_special = {#'f_CA_Au_001_POR_C01.mpt': 1,
 #ohmic drop in Ohm over cell measured with EIS
 ohm_drop_corr = True #to turn on/off ohmic drop correction
 ohmicdrop = 50
-ohmicdrop_filename = {'b_CA_Pd_020_HClO4_propene_C01.txt': 34.5,
-              'c_CA_Pd_021_HClO4_propene_C01.txt': 23.5,
-              'b_CA_POR_Pd_022_C01.txt': 44
-              }
+ohmicdrop_filename = {}
              
 #insert filename in list if starting time is notzero, AND should be plotted as nonzero (ie NOT BE CHANGED)
 no_timezero = {'i_CA_Pd_025_Ar_propenepurge_02_CA_C01.mpt'}             
@@ -132,15 +129,12 @@ filenames = {'20171005_Pd_049': ['20171005_AW_Pd049_2ndtry_04_CVA_C01.mpt',
 
 # custom labels for data: dictionary correlating filename with label to be assigned:
 
-data_label = {}
+filespec_settings = {'AW_Pd_046_02_CVA_C01.mpt':{'label': "test", 'cycles to extract': [1,2,5,9], 'electrode area geom special': 1, 'individual ohmicdrop':40}}
                                             
 
 # plottype defines axis labels and settings. can be either 'ca' or 'cv'. new option: 'cv_cycles' requires list of cycles
 # that should be included/considered for plotting TODO: automatically detect which is the CO strip and the reference cycle based on the potential holde period in the cycle??
-plottype = "cv_cycles"
-
-extractcycles = [1,2,5,9]   #has to be asigned to the filename to make different cycle selection for different files possible
-
+plottype = "cv"
 
 # settings for the plot
 plot_settings = {'safeplot': False,
@@ -178,14 +172,46 @@ annotation_settings = {'annotation 1': ["scanrate"],
 
 
 def main():
-    # import file (can be commented if doplot is active)
-    # anna_data_plot.import_data(plottype, filenames, general_info)
+    #create list of data dictionaries for plotting
+        #loop through datafiles
+        #import data
+    # list of dictionaries for each file/loop that was chosen to be plotted, each containing filename(+cycle), DataFrame of all extracted data (all data columns), and file specific settings (unaltered) as given in input as "settings".
+    #actual data in form of DataFrame for further treatment with the functions from data plot. if sync metadata is to be implemented the conversion has to be moved to later stage
+    datalist = dpf.extract_data(folder_path, filenames, folders, filespec_settings)
+    # print(datalist)
+
+    # #treat data (now functions from data plot, future sync metadate from EC_MS package?, also depending of data-type)
+    if plottype == "cv":
+        for file in datalist:
+            #ohmic drop correction
+            if 'ohm_drop_corr':
+                print("Carrying out ohmic drop correction")
+                file['data'] = file['data'].add(dpf.ohmicdrop_correct_e(file, ohmicdrop), fill_value=0)
+                # print(file['data'])
+            #conversion to rhe scale
+
+            #conversion to current density (possibility to select both geometric and ecsa normalised?)
 
 
-    # make the plot (includes importing the file)
-    anna_data_plot_functions.doplot(plottype=plottype, folder_path=folder_path, filenames=filenames, folders=folders, extractcycles=extractcycles,
-                                    data_label=data_label, plot_settings=plot_settings, legend_settings=legend_settings,
-                                    annotation_settings=annotation_settings, general_info=general_info)
+
+
+
+    #             converted_e_and_i = DataFrame(data=[ohmicdropcorrected_e['E_corr/V'].apply(convert_potential_to_rhe),
+    #                                                 extracted_e_and_i['<I>/mA'].apply(convert_to_current_density,
+    #                                                                                   general_info=general_info,
+    #                                                                                   filename=filename)],
+    #                                           index=["EvsRHE/V", "i/mAcm^-2"])
+    #         else:
+    #             converted_e_and_i = DataFrame(data=[extracted_e_and_i['Ewe/V'].apply(convert_potential_to_rhe),
+    #                                                 extracted_e_and_i['<I>/mA'].apply(convert_to_current_density,
+    #                                                                                   general_info=general_info,
+    #                                                                                   filename=filename)],
+    #                                           index=["EvsRHE/V", "i/mAcm^-2"])  # this part should be simplified
+    #         e_and_i = extracted_e_and_i.add(converted_e_and_i.T, fill_value=0)
+    #         print("Data conversion finished.")
+
+
+    #plot the data from the list of data dictionaries
 
 
 if __name__ == "__main__":
