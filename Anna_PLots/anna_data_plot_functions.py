@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 from pandas import DataFrame
 import pandas as pd
+import itertools
 from anna_data_plot_input_original import e_rhe_ref, ph_ref, ph
 
 from EC_MS import Data_Importing as Data_Importing_Scott
@@ -128,9 +129,11 @@ def ohmicdrop_correct_e(file, ohmicdrop):
     :param e_rhe: potential vs RHE, ohmicdrop: ohmic resistance of the setup (in Ohms)
     :return: e_rhe_corr
     """
-    if 'individual ohmicdrop' in file:  #['filespec_settings']:
-        ohmic_drop = file['filespec_settings'['individual_ohmicdrop']]
+    if 'individual ohmicdrop' in file['settings']:
+        ohmic_drop = file['settings']['individual ohmicdrop']
+        print(ohmic_drop)
     else:
+        print("No individual ohmic drop selected. Using the general settings. ")
         ohmic_drop = ohmicdrop
     # print("Compenstating for R_ohm=" + str(ohmic_drop))
     # print(ohmicdropcorrected_e)
@@ -147,126 +150,38 @@ def ohmicdrop_correct_e(file, ohmicdrop):
     return ohmicdropcorrected_e
 
 
-def convert_to_current_density(I, general_info, filename):
+def convert_to_current_density(file, electrode_area_geom, electrode_area_ecsa):
     """
     Converts current into current density using the electrode surface area given in the settings
-    TODO: possibility to choose "real" or electrochemically active surface area
     :param I: measured current from data(frame)
     :return: current density
     """
 #    from anna_data_plot_input_original import electrode_area_geom
-    if filename in general_info.value['electrode_area_geom_special']:
-        i=I/general_info.value['electrode_area_geom_special'][filename]
-        # print("Current for file: " + filename + " has been normalized to an area of " + str(general_info.value['electrode_area_geom_special'][filename]))
-    else:    
-        i = I/general_info.value['electrode_area_geom']
-        # print("Current has been normalized to an area of " + str(general_info.value['electrode_area_geom']))
-    return i
+    #check if there is individual settings, else use the general settings and creates 2 new columns
+    #Data frame that then can be added to the general dataframe.
+
+    if electrode_area_geom or 'electrode area geom' in file['settings']:
+        if 'electrode area geom' in file['settings']:
+            i_geom = file['data']['<I>/mA']/file['settings']['electrode area geom']
+        else:
+            i_geom = file['data']['<I>/mA']/electrode_area_geom
+    else:
+        i_geom=[]
 
 
-#collect relevant data for plotting CVs in a DataFrame
-def extract_cv_data(folder_path, filenames, data_label, folders, general_info):
-    """
-    Extracts dataframes containing potential and current from multiple dataframes, calculates potential vs RHE and current density using functions
-     and stores it in a dataframe, to be accessible for plotting
-    :return: cv_data: List of Databases with information about the experiment: filename (string), scanrate (float), E vs ref, E vs RHE
-     and I and i (Dataframe), label for plot (string)
-    """
-    cv_data = []
-    #cv_data = {}
+    if electrode_area_ecsa or 'electrode area ecsa' in file['settings']:
+        if 'electrode area ecsa' in file['settings']:
+            i_ecsa = file['data']['<I>/mA']/file['settings']['electrode area ecsa']
+        else:
+            i_ecsa = file['data']['<I>/mA'] / electrode_area_ecsa
+    else:
+        i_ecsa = []
 
-    for folder, files in filenames.items():
-        for filename in files: #additional for loop to go through list of filenames
 
-            if folder in folders:
-                print("Now working on" + filename)
-                # print(folder)
-                # filepath = folder
-                filepath = folder_path + "/" + folder + "/" + filename
-                if filename in data_label:
-                    label = data_label[filename]
-                else:
-                    label = filename[filename.find("Pd"): filename.find("_CVA")] + filename[filename.find('_cy'):filename.find('.')]
+    i_df = DataFrame(data=[i_geom, i_ecsa], index=["i/mAcm^-2_geom", "i/mAcm^-2_ECSA"]).T
 
-                extracted_e_and_i = DataFrame(import_data_from(filepath)[['Ewe/V', '<I>/mA']])
 
-                                #print(general_info.value['ohm_drop_corr'])
-                print("Data extraction finished.")
-                if general_info.value['ohm_drop_corr']:
-                    print("Carrying out ohmic drop correction")
-                    if filename in general_info.value['ohmicdrop_filename']:
-                        ohmicdrop = general_info.value['ohmicdrop_filename'][filename]
-                    else:
-                        ohmicdrop = general_info.value['ohmicdrop']
-                    print("Compenstating for R_ohm=" + str(ohmicdrop))
-                    ohmicdropcorrected_e = DataFrame(data = [extracted_e_and_i.apply(ohmicdrop_correct_e, axis=1, ohmicdrop=ohmicdrop)],
-                                                    index = ['E_corr/V']).T
-                    #print(ohmicdropcorrected_e)
-                    converted_e_and_i = DataFrame(data=[ohmicdropcorrected_e['E_corr/V'].apply(convert_potential_to_rhe),
-                                                        extracted_e_and_i['<I>/mA'].apply(convert_to_current_density, general_info=general_info, filename=filename)],
-                                                  index=["EvsRHE/V", "i/mAcm^-2"])
-                else:
-                    converted_e_and_i = DataFrame(data = [extracted_e_and_i['Ewe/V'].apply(convert_potential_to_rhe),
-                                              extracted_e_and_i['<I>/mA'].apply(convert_to_current_density, general_info=general_info, filename=filename)],
-                                              index = ["EvsRHE/V", "i/mAcm^-2"]) #this part should be simplified
-                e_and_i = extracted_e_and_i.add(converted_e_and_i.T, fill_value=0)
-                print("Data conversion finished.")
-
-               #cv_data[filename] = {'scanrate': find_scanrate(filepath), 'data': e_and_i, 'label': label}
-               # cv_data.append({'filename':filename, 'scanrate': find_scanrate(filepath), 'data': e_and_i, 'label': label})
-                cv_data.append({'filename': filename, 'data': e_and_i, 'label': label})
-    return cv_data
-
-#collect relevant data for plotting chronoamperometry data in a DataFrame
-def extract_ca_data(folder_path, filenames, data_label, folders, general_info):
-    """
-    Extracts dataframes containing potential and current from multiple dataframes, calculates potential vs RHE and current density using functions
-     and stores it in a dataframe, to be accessible for plotting
-    :return: ca_data: List of Dictionaries with information about the experiment: filename (string), scanrate (float), E vs ref, E vs RHE
-     and I and i (Dataframe), label for plot (string)
-    """
-    #ca_data = {}
-    ca_data = []
-    for folder, files in filenames.items():
-        for filename in files: #additional for loop to go through list of filenames
-            if folder in folders:
-                # print(folder)
-                # filepath = folder
-                filepath = folder_path + "/" + folder + "/" + filename
-                if filename in data_label:
-                    label = data_label[filename]
-                else:
-                    label = filename[filename.find("Pd"): filename.find("_C0")] #+ filename[filename.find('_C')-5:filename.find('_C')-2]
-
-                extracted_t_and_i = DataFrame(import_data_from(filepath)[['time/s', '<I>/mA', '(Q-Qo)/C', 'Ewe/V']])
-                converted_i = DataFrame(data = [extracted_t_and_i['<I>/mA'].apply(convert_to_current_density, general_info=general_info, filename=filename)],
-                                              index = ["i/mAcm^-2"]) #this part should be simplified
-                
-                if extracted_t_and_i['time/s'].ix[0] >= 20 and not filename in general_info.value['no_timezero']:
-                    extracted_t_and_i['time/s'] = extracted_t_and_i['time/s'] - extracted_t_and_i['time/s'].ix[0]
-                 
-                   
-                if filename in general_info.value['ohmicdrop_filename']:
-                   ohmicdrop = general_info.value['ohmicdrop_filename'][filename]
-                else:
-                   ohmicdrop = general_info.value['ohmicdrop']
-                #print(ohmicdrop)
-                ohm_drop_corrected_e = DataFrame(data = [extracted_t_and_i.apply(ohmicdrop_correct_e, axis=1,ohmicdrop=ohmicdrop).apply(convert_potential_to_rhe)],
-                                             index=['E_corr/V']).T
-                #print(ohm_drop_corrected_e.T)
-                t_and_i = extracted_t_and_i.add(converted_i.T, fill_value=0)
-                #print(t_and_i)
-                t_and_i_and_u = t_and_i.add(ohm_drop_corrected_e, fill_value=0)
-                #print(t_and_i_and_u)
-                #ca_data[filename]= {'potential': find_set_potential(filepath), 'data': t_and_i, 'label': label}
-                if ".mpt" in filename:
-                    ca_data.append(
-                    {'filename': filename, 'potential': find_set_potential(filepath), 'data': t_and_i_and_u, 'label': label})
-                else:
-                    ca_data.append(
-                        {'filename': filename, 'data': t_and_i_and_u,'label': label})
-#    print(ca_data)
-    return ca_data
+    return i_df
 
 
 def find_scanrate(file):
@@ -291,6 +206,139 @@ def find_set_potential(file):
                print(e_vs_ref, e_vs_rhe)
                break
     return e_vs_rhe
+
+def makelabel(file):
+    """Creates label from filename or selects label from "settings" part of data dictionary"""
+    if 'label' in file['settings'] and file['settings']['label'] is not "":
+        plot_label = file['settings']['label']
+    else:
+        plot_label = file['filename'] #for now
+    return plot_label
+
+def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr): #basically all the details that are chosen in the settings part go into this function
+    """makes plots, main function of the program
+    input: settings from anna_data_plot_settings through doplot function
+    output: cv_plot
+    """
+    # prepare for figure with 2 x-axes
+    print('Preparing a figure with 2 x-axes for plotting.')
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+
+    #imports linestyle/colours
+    linestyle_list = plot_settings['linestyle']
+    color_list = plot_settings['colors']
+
+    #select which data columns to plot
+    if plot_settings['x_data']:
+        x_data_col = plot_settings['x_data']
+    elif plot_settings['plot type'] == "cv":
+        if ohm_drop_corr:
+            x_data_col = "E_corr_vsRHE/V"
+        else:
+            x_data_col = "EvsRHE/V"
+    elif plot_settings['plot type'] == "ca":
+        x_data_col = "time/s"
+    else:
+        print("Error: Select plot-type or data column for x-axis!")
+        x_data_col=""
+
+    if plot_settings['y_data']:
+        y_data_col = plot_settings['y_data']
+    elif plot_settings['plot type'] == "cv":
+        y_data_col = "i/mAcm^-2_geom"
+    elif plot_settings['plot type'] == "ca":
+        if ohm_drop_corr:
+            y_data_col = "E_corr_vsRHE/V"
+        else:
+            y_data_col = "EvsRHE/V"
+    else:
+        print("Error: Select plot-type or data column for y-axis!")
+        y_data_col = ""
+
+    leg1=[]
+    leg2=[]
+
+    for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
+        # print(each_file['data']['EvsRHE/V'])
+            plot = ax1.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y_data_col].values.tolist(), color=color,
+                 linestyle=linestyle, label=makelabel(each_file))
+            axis1 = leg1.append(plot)
+
+
+        # x_data2
+
+    # inserts second y-axis if data column to plot chosen in plot_settings['y_data2']
+    if plot_settings['y_data2']:
+        ax2 = ax1.twinx()  # adds second y axis with the same x-axis
+        y2_data_col = plot_settings['y_data2']
+        print(y2_data_col)
+        for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
+            plot = ax2.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y2_data_col].values.tolist(),
+                     color=color, linestyle=linestyle, label=makelabel(each_file) + "(" +y2_data_col + ")")
+            axis2= leg2.append(plot)
+
+    if len(color_list) <= len(datalist):
+        print("Careful! You are plotting more trances than you assigned colours. Python standard colours are used!")
+
+    if len(linestyle_list) <= len(datalist):
+        print("Careful! You are plotting more trances than you assigned linestyles. Style \"-\" is used!")
+
+
+
+
+
+    # axis labels
+    ax1.set_xlabel("E vs. RHE / V")
+    ax1.set_ylabel("i / mA cm$^{-2}$")
+
+    #set axis limits according to info given in settings
+    ax1.set_xlim(plot_settings['x_lim'])
+    ax1.set_ylim(plot_settings['y_lim'])
+
+    #create legend according to settings
+    all_axes=axis1+axis2
+    labels = [l.get_label() for l in all_axes]
+    ax1.legend(all_axes, labels, fontsize=legend_settings["fontsize"], loc=legend_settings["position"], ncol=legend_settings["number_of_cols"])
+    # ax2.legend(fontsize=legend_settings["fontsize"], ncol=legend_settings["number_of_cols"])
+
+    #grid
+    if plot_settings['grid']:
+        ax1.grid(True, color="grey")
+
+     # inserts second x-axis with E vs Ref on top, if selected in settings. only if plot type is not CA
+    if plot_settings['second axis'] and not plot_settings['plot type'] == 'ca':
+        ax3 = ax1.twiny()
+        ax1Ticks = ax1.get_xticks()
+        ax3Ticks = ax1Ticks  # here the scaling of ticks could be changed
+
+        def tick_function(e_rhe):
+            e_nhe = - e_rhe_ref - 0.059 * ph_ref  # potential vs NHE
+            e_ref = e_rhe - e_nhe - 0.059 * ph
+            return ["%.2f" % z for z in e_ref]
+
+        ax3.set_xticks(ax3Ticks)
+        ax3.set_xbound(ax1.get_xbound())
+        ax3.set_xticklabels(tick_function(ax3Ticks))
+        ax3.set_xlabel("E vs. Hg/Hg$_2$SO$_4$ / V")
+
+    #defines size of padding, important for legend on top, possibility to change space between subplots once implemented
+    lpad = plot_settings['l_pad'] if plot_settings['l_pad'] else 0.15
+    rpad = plot_settings['r_pad'] if plot_settings['r_pad'] else 0.15
+    tpad = plot_settings['top_pad'] if plot_settings['top_pad'] else 0.10
+    bpad = plot_settings['bottom_pad'] if plot_settings['bottom_pad'] else 0.15
+    # wspace = pt.wspace[r1] if is_set(pt.wspace[r1]) else 0.12
+    # hspace = pt.hspace[r1] if is_set(pt.hspace[r1]) else 0.12
+
+    fig.subplots_adjust(left=lpad, right=1 - rpad, top=1 - tpad, bottom=bpad) # hspace=hspace, wspace=wspace)
+
+    #safes figure as png and pdf
+    if plot_settings['safeplot']:
+        plt.savefig(plot_settings['plotname']+'.png', dpi=400, bbox_inches='tight')
+        plt.savefig(plot_settings['plotname']+'.pdf', dpi=400, bbox_inches='tight')
+    plt.show()
+
+
 
 def cv_plot(cv_data, plot_settings, legend_settings, annotation_settings): #basically all the details that are chosen in the settings part go into this function
     """plot tuples of current/voltage
@@ -463,41 +511,6 @@ def ca_plot(ca_data, plot_settings, legend_settings, annotation_settings): #basi
     plt.show()
 
 
-def extract_cv_cycle_data(folder_path, filenames, folders, extractcycles, data_label, general_info):
-    """
-    imports data from EC_lab file to a DataDict using Scott's function. Then extracts the selected cycles using Scott's
-    function to extract cycles.
-    has to loop through all chosen files
-    :return: cv_data in a DataFrame format that makes it plottable with cv_plot function
-    """
-    cv_data=[]
-    # loop
-    for folder, files in filenames.items():
-        for filename in files:  # additional for loop to go through list of filenames
-            if folder in folders:
-                # print(folder)
-                # filepath = folder
-                filepath = folder_path + "/" + folder + "/" + filename
-                # import from file
-                datadict = Data_Importing_Scott.import_data(filepath)
-
-                for cycle in extractcycles:
-                    data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle]) #extract only the data from selected cycles
-                    # print(data_selected_cycle['cycle number'])
-                    # convert DataDict to DataFrame
-                    e_and_i = DataFrame(convert_datadict_to_dataframe(data_selected_cycle)[['Ewe/V', '<I>/mA']])
-                    #convert potential/current and save columns in a way that the plotting function can find the columns it's looking for
-                    converted_e_and_i = DataFrame(data=[e_and_i['Ewe/V'].apply(convert_potential_to_rhe),
-                                                    e_and_i['<I>/mA'].apply(convert_to_current_density,
-                                                    general_info=general_info, filename=filename)],
-                                              index=["EvsRHE/V", "i/mAcm^-2"]).T
-                    # print(converted_e_and_i)
-                    #collect all the data from different files&loops in one big dictionary
-                    cv_data.append({'filename': filename + "_cycle_" + str(cycle), 'data': converted_e_and_i, 'label': filename})
-    # print(cv_data)
-
-    return cv_data
-
 def extract_data(folder_path, filenames, folders, filespec_settings):
     """
     imports data from EC_lab file to a DataDict using Scott's function.
@@ -535,9 +548,6 @@ def extract_data(folder_path, filenames, folders, filespec_settings):
     # print(data)
     return data
 
-
-# TODO: implement the synchmetadata stuff to work instead of my functions to convert to RHE scale?? or leave mine because they can do more?
-
 def convert_datadict_to_dataframe(datadict):
     """Converts DataDict output from Scott's import/cycle selection functions to DataFrame that is used by the plotting
     functions"""
@@ -546,25 +556,4 @@ def convert_datadict_to_dataframe(datadict):
     # print(data_in_datadict)
     data = DataFrame(data_in_datadict)
     return data
-
-
-# def doplot(plottype, folder_path, filenames, folders, extractcycles, data_label, plot_settings, legend_settings, annotation_settings, general_info):
-#     """
-#     Chooses what kind of plot to do and refers to that function
-#     :param plottype: kind of plot to do
-#     :return: plot
-#     """
-#     if plottype == "cv":
-#         cv_plot(cv_data = extract_cv_data(folder_path=folder_path, filenames = filenames, folders=folders, data_label=data_label, general_info = general_info), plot_settings=plot_settings,
-#                 legend_settings=legend_settings, annotation_settings=annotation_settings)
-#
-#     if plottype == "cv_cycles":
-#         cv_plot(cv_data=extract_cv_cycle_data(folder_path=folder_path, filenames=filenames, folders=folders, extractcycles=,
-#                                         data_label=data_label, general_info=general_info), plot_settings=plot_settings,
-#                 legend_settings=legend_settings, annotation_settings=annotation_settings)
-#
-#     if plottype == "ca":
-#         ca_plot(ca_data = extract_ca_data(folder_path=folder_path, filenames = filenames, folders=folders, data_label=data_label, general_info=general_info), plot_settings=plot_settings,
-#                 legend_settings=legend_settings, annotation_settings=annotation_settings )
-
 

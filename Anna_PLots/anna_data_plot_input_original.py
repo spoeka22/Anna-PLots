@@ -4,6 +4,8 @@ Created on Tue Oct  18 19:25:46 2016
 
 @author: Anna
 
+Plotting of CV and CA data recorded with EC-lab and safed as .mpt file
+
 Settings for the data to plot are inserted here. The data plotting is done using functions stored in anna_data_plot_functions.
 """
 
@@ -20,17 +22,12 @@ e_rhe_ref = -0.720  # V
 ph_ref = 1
 
 # electrolyte
-info = "0.1 M HClO4"  # to be printed in annotations
+info = "0.1 M HClO_{4}"  # to be printed in annotations
 ph = 0.96
 
 # electrode area in cm2
-electrode_area_geom = 2  # cm2
-electrode_area_real = False  # cm2 NOT IMPLEMENTED YET
-electrode_area_geom_special = {#'f_CA_Au_001_POR_C01.mpt': 1, 
-#              'Au_002_POR_06_CA_C01.mpt': 1,
-#              'i_CA_Pd_025_Ar_propenepurge_02_CA_C01.mpt': 1,
-#              'k_CA_Pd_025_Propene_C01.mpt': 1
-              }
+electrode_area_geom = 20  # cm2
+electrode_area_ecsa = 500  # cm2 NOT IMPLEMENTED YET
 
 #ohmic drop in Ohm over cell measured with EIS
 ohm_drop_corr = True #to turn on/off ohmic drop correction
@@ -39,18 +36,6 @@ ohmicdrop_filename = {}
              
 #insert filename in list if starting time is notzero, AND should be plotted as nonzero (ie NOT BE CHANGED)
 no_timezero = {'i_CA_Pd_025_Ar_propenepurge_02_CA_C01.mpt'}             
-
-general_info = DataFrame(data=[temperature, e_rhe_ref, ph_ref, info, ph, electrode_area_geom, electrode_area_real, electrode_area_geom_special, ohm_drop_corr, ohmicdrop,
-                               ohmicdrop_filename, no_timezero],
-                         index=["temperature", "e_rhe_ref", "ph_ref", "info", "ph", "electrode_area_geom",
-                                "electode_area_real", "electrode_area_geom_special", "ohm_drop_corr",  "ohmicdrop", 'ohmicdrop_filename', 'no_timezero'], columns=["value"])
-
-print(general_info)
-
-
-# dictionary containing local folder names and names of the files containing relevant data
-# TO BE IMPLEMENTED: automatic searching for appropriate filenames in a given folder and importing selected files
-
 
 #folder_path = r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Au electrodes'
 
@@ -125,43 +110,53 @@ filenames = {'20171005_Pd_049': ['20171005_AW_Pd049_2ndtry_04_CVA_C01.mpt',
              
              }
 
+# custom settings for data files: dictionary correlating filename with custom label, cycles to extract from CV file,
+#electrode area (geom and ecsa), ohmic drop to correct for
 
-
-# custom labels for data: dictionary correlating filename with label to be assigned:
-
-filespec_settings = {'AW_Pd_046_02_CVA_C01.mpt':{'label': "test", 'cycles to extract': [1,2,5,9], 'electrode area geom special': 1, 'individual ohmicdrop':40}}
+filespec_settings = {'AW_Pd_046_02_CVA_C01.mpt':{'label': "",
+                                                 'cycles to extract': [1,2,5,9],
+                                                 'electrode area geom': 1, 'electrode area ecsa': 10,
+                                                 'individual ohmicdrop':40}}
                                             
 
-# plottype defines axis labels and settings. can be either 'ca' or 'cv'. new option: 'cv_cycles' requires list of cycles
-# that should be included/considered for plotting TODO: automatically detect which is the CO strip and the reference cycle based on the potential holde period in the cycle??
-plottype = "cv"
+#TODO: automatically detect which is the CO strip and the reference cycle based on the potential holde period in the cycle??
+
 
 # settings for the plot
 plot_settings = {'safeplot': False,
                  'plotname': 'CV_Pd_038_Propene_development_scanrate_UPL_1.4Vrhe',
                  'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                  'grid': True,
-                 'second axis':  True,
-                 'x_lim': (0.25, 1.6),
+                 'second axis':  False,
+                 'x_lim': (0.3, 1.6),
                  'y_lim': (-6.0, 6),
                  'y2_lim': (0.25, 1.5),
                  'top_pad': 0.2,
                  'bottom_pad': 0.1,
                  'l_pad': [],
                  'r_pad': [],
-                 'colors': ['g', 'orange', 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75'],
-                 'linestyle': ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-']
+                 'colors': ['g', 'orange'],#, 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75'],
+                 'linestyle': ['-', ':'],
                  # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
                  # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
+                 #options to select which data is plotted
+                 'plot type': "cv", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
+                 #custom column selection, will overrule plottype, if given. Possibilities are all data column names,
+                 #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>mA", "i/mAcm^-2_geom",
+                 # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
+                 'x_data':"",
+                 'y_data':"i/mAcm^-2_ECSA",
+                 'x_data2':"", #not implemented yet
+                 "y_data2":"i/mAcm^-2_geom"
                  }
 
 # legend:
 legend_settings = {'position': (0, 1.15),
                    'number_of_cols': 2,
-                   'fontsize': 10
+                   'fontsize': 8
                    }
 
-# annotations: dictionary of annotation plus relevant properties in list form
+# annotations: dictionary of annotation plus relevant properties in list form CURRENTLY NOT USED!?!?
 annotation_settings = {'annotation 1': ["scanrate"],
                        #E-range for finding the delta i in the capacitance region for estimation of surface area
                        'e_range': [0.99, 1.01] #works only if scan starts at lowest potential
@@ -181,37 +176,44 @@ def main():
     # print(datalist)
 
     # #treat data (now functions from data plot, future sync metadate from EC_MS package?, also depending of data-type)
-    if plottype == "cv":
-        for file in datalist:
-            #ohmic drop correction
-            if 'ohm_drop_corr':
-                print("Carrying out ohmic drop correction")
-                file['data'] = file['data'].add(dpf.ohmicdrop_correct_e(file, ohmicdrop), fill_value=0)
-                # print(file['data'])
-            #conversion to rhe scale
+    for file in datalist:
+        #ohmic drop correction
+        if 'ohm_drop_corr':
+            print("Carrying out ohmic drop correction")
+            file['data'] = file['data'].add(dpf.ohmicdrop_correct_e(file, ohmicdrop), fill_value=0)
+            # print(file['data'])
 
-            #conversion to current density (possibility to select both geometric and ecsa normalised?)
+        #conversion to rhe scale TODO: make it possible to choose pH and reference individually!
+        file['data'] = file['data'].add(DataFrame([file['data']['Ewe/V'].apply(dpf.convert_potential_to_rhe)],
+                                                  index=['EvsRHE/V']).T, fill_value=0)
+        if 'ohm_drop_corr':
+            file['data'] = file['data'].add(DataFrame([file['data']['E_corr/V'].apply(dpf.convert_potential_to_rhe)],
+                                                      index=['E_corr_vsRHE/V']).T, fill_value=0)
+        # print(file['data'])
+        print(file['filename'])
 
+        #conversion to current density
+        file['data'] = file['data'].add(dpf.convert_to_current_density(file, electrode_area_geom, electrode_area_ecsa),
+                                        fill_value=0)
 
+        #set time at start of file to 0, if not 0 (and not selected in 'no_timezero'
+        if file['data']['time/s'].ix[0] >= 20 and not file['filename'] in no_timezero:
+            file['data']['time/s'] = file['data']['time/s'] - file['data']['time/s'].ix[0]
+        # print(file['data']['time/s'])
 
+        # TODO: update find and print the difference in current in the double layer capacitance region
+        # current_file = cv_data[j]['filename']
+        # e_range = annotation_settings['e_range']
+        # find_deltaI_DLcapacitance(e_vs_rhe=x, i_mApscm=y, e_range=e_range, file=current_file)
 
-
-    #             converted_e_and_i = DataFrame(data=[ohmicdropcorrected_e['E_corr/V'].apply(convert_potential_to_rhe),
-    #                                                 extracted_e_and_i['<I>/mA'].apply(convert_to_current_density,
-    #                                                                                   general_info=general_info,
-    #                                                                                   filename=filename)],
-    #                                           index=["EvsRHE/V", "i/mAcm^-2"])
-    #         else:
-    #             converted_e_and_i = DataFrame(data=[extracted_e_and_i['Ewe/V'].apply(convert_potential_to_rhe),
-    #                                                 extracted_e_and_i['<I>/mA'].apply(convert_to_current_density,
-    #                                                                                   general_info=general_info,
-    #                                                                                   filename=filename)],
-    #                                           index=["EvsRHE/V", "i/mAcm^-2"])  # this part should be simplified
-    #         e_and_i = extracted_e_and_i.add(converted_e_and_i.T, fill_value=0)
-    #         print("Data conversion finished.")
+     #TODO: find set potential in CA and print it/annotate it in plot
 
 
     #plot the data from the list of data dictionaries
+    dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr)
+
+    # try:
+    # except IndexError:
 
 
 if __name__ == "__main__":
