@@ -18,12 +18,6 @@ from EC_MS import Data_Importing as Data_Importing_Scott
 from EC_MS import EC as EC_Scott
 
 
-# def import_data(datatype, filenames, general_info):
-#     if datatype == "cv":
-#         extract_cv_data(filenames, general_info)
-#     else:
-#         print("Error: plottype not available. Please check plottype")
-
 def find_deltaI_DLcapacitance(e_vs_rhe, i_mApscm, e_range, file):
     #print(e_vs_rhe.index(max(e_vs_rhe)))
 
@@ -52,8 +46,6 @@ def find_deltaI_DLcapacitance(e_vs_rhe, i_mApscm, e_range, file):
 
 
 
-
-
 def import_data_from(file):
    """opens file and extracts information about the number of header lines as
        given in the second row, then removes headerlines accordingly, and
@@ -71,39 +63,6 @@ def import_data_from(file):
        with open(file) as file:
            data = pd.read_table(file, decimal=',')
    return data
-
-# def import_data_from(file):
-#     """opens file by using Scott's set of function from EC-MS package, to make
-#     imported data compatible with his functions.
-#     file is then converted to form that can be used by standard functions for plotting here.
-#     COMMENT:
-#     This is probably quite useless because it simply adds some rather useless conversion steps to the data import.
-#     Especially, since original data import version is already capable of importing all the data columns / the new functions
-#     that handle cycle selection and CO strip integration don't rely on this kind of data import anyway.
-#     """
-#     DataDict = Data_Importing_Scott.import_data(file)
-#     # print(DataDict)
-#     data_in_datadict={column: DataDict[column] for column in DataDict['data_cols']}
-#     print(sorted(DataDict.keys()))
-#     # print(data_in_datadict)
-#     # data=DataFrame(DataDict, columns=['mode', 'Ewe/V', '<I</mA'])
-#     data = DataFrame(data_in_datadict)
-#     #
-#     # if ".mpt" in file:
-#     #     with open(file) as file:
-#     #         for line in file:
-#     #             if "header" in line:
-#     #                 headernumber = int(line[line.find(": ") + 2:])
-#     #                 break
-#     #         #load the columns containing data and converting them to rows
-#     #         data = pd.read_table(file, skiprows=headernumber-3, decimal=',')
-#     # else:
-#     #     with open(file) as file:
-#     #         data = pd.read_table(file, decimal=',')
-#     # print(data)
-#     return data
-
-
 
 
 #def function(value):
@@ -256,14 +215,10 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
         print("Error: Select plot-type or data column for y-axis!")
         y_data_col = ""
 
-    leg1=[]
-    leg2=[]
-
     for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
         # print(each_file['data']['EvsRHE/V'])
-            plot = ax1.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y_data_col].values.tolist(), color=color,
+            ax1.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y_data_col].values.tolist(), color=color,
                  linestyle=linestyle, label=makelabel(each_file))
-            axis1 = leg1.append(plot)
 
 
         # x_data2
@@ -274,9 +229,9 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
         y2_data_col = plot_settings['y_data2']
         print(y2_data_col)
         for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
-            plot = ax2.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y2_data_col].values.tolist(),
+            ax2.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y2_data_col].values.tolist(),
                      color=color, linestyle=linestyle, label=makelabel(each_file) + "(" +y2_data_col + ")")
-            axis2= leg2.append(plot)
+
 
     if len(color_list) <= len(datalist):
         print("Careful! You are plotting more trances than you assigned colours. Python standard colours are used!")
@@ -297,10 +252,9 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     ax1.set_ylim(plot_settings['y_lim'])
 
     #create legend according to settings
-    all_axes=axis1+axis2
-    labels = [l.get_label() for l in all_axes]
-    ax1.legend(all_axes, labels, fontsize=legend_settings["fontsize"], loc=legend_settings["position"], ncol=legend_settings["number_of_cols"])
-    # ax2.legend(fontsize=legend_settings["fontsize"], ncol=legend_settings["number_of_cols"])
+
+    ax1.legend(fontsize=legend_settings["fontsize"], loc=legend_settings["position1"], ncol=legend_settings["number_of_cols"])
+    ax2.legend(fontsize=legend_settings["fontsize"], loc=legend_settings["position2"], ncol=legend_settings["number_of_cols"])
 
     #grid
     if plot_settings['grid']:

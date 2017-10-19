@@ -151,7 +151,8 @@ plot_settings = {'safeplot': False,
                  }
 
 # legend:
-legend_settings = {'position': (0, 1.15),
+legend_settings = {'position1': (0, 1.15),
+                   'position2': (0, -0.15), #position of the legend for the second y axis
                    'number_of_cols': 2,
                    'fontsize': 8
                    }
