@@ -44,6 +44,36 @@ def find_deltaI_DLcapacitance(e_vs_rhe, i_mApscm, e_range, file):
     print(str(file)+": The difference between oxidation and reduction current in the potential region " +str(e_range) + " = " + str(delta_i) +
           " mA/cm2")
 
+def integrate_CV(dataline, type="CO_strip", Vspan=[], ox_red=[]):
+    """
+    Determines the charge passed between the potential values specified in V_span.
+    :param dataline:Data of a specific cycle.
+    :param type: Either "CO_strip" or "oxide_red" for predefined Vspan and ox_red. If None, give individual values
+    :param Vspan: Potential interval, potential vs RHE!!!
+    :return:
+    """
+    #Test if dataline only contains one cycle, else ERROR MESSAGE!!
+
+    if type == "CO_strip":
+        Vspan=[0.6,1.2] #V vs. RHE, taken from Mittermeier et.al 2017
+        ox_red = 1
+    elif type == "oxide_red":
+        Vspan=[0.9, 0.4] #V vs. RHE, taken from Mittermeier et.al 2017
+        ox_red = 0
+
+    #check if ohmic drop correction was done and choose which column to use
+    if "E_corr_vsRHE/V" in dataline['data']:  #THIS IS NOT WORKING FOR SOME REASON
+        V_col="E_corr_vsRHE/V"
+    else:
+        V_col= "EvsRHE/V"
+
+    #find (Q-Q0) in the V range given by V span and oxidation/reduction sweep according to ox_red
+
+    data_keep = [dataline for E in dataline['data'][V_col] if Vspan[0] < dataline['data'][V_col] < Vspan[1]
+                                                              and dataline['data']["ox/red"]]
+
+    return
+
 
 
 def import_data_from(file):
