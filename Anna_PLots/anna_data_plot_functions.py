@@ -65,11 +65,6 @@ def import_data_from(file):
    return data
 
 
-#def function(value):
-#        new_value = value+5
-#        return new_value
-
-
 def convert_potential_to_rhe(e_ref):
     """
     Converts potential vs reference electrode to potential vs RHE
@@ -174,6 +169,33 @@ def makelabel(file):
         plot_label = file['filename'] #for now
     return plot_label
 
+def find_axis_label(data_col):
+    """Finds the appropriate axis label for different kinds of plotted data."""
+    axis_label = None
+    if "E" in data_col and not "mA" in data_col:
+        if data_col == "EvsRHE" or data_col =="E_corr_vsRHE/V":
+            axis_label = "E vs. RHE / V"
+        elif data_col == "Ewe/V" or data_col == "E_corr/V":
+            axis_label = "E vs. Ref / V"
+        else:
+            print("Something wrong with potential axis labelling.")
+    elif "i" in data_col or "I" in data_col:
+        if data_col == "i/mAcm^-2_geom":
+            axis_label = "i / mA cm$^{-2}$$_{geom.}$"
+        elif data_col == "i/mAcm^-2_ECSA":
+            axis_label = "i / mA cm$^{-2}$$_{ECSA}$"
+        elif data_col == "<I>/mA":
+            axis_label = "I / mA"
+        else:
+            print("Something wrong with current density axis labelling.")
+    elif data_col == "time/s":
+        axis_label = "Time / s"
+    else:
+        axis_label = "Charge / C"  #This might not be the smartest way to deal with it, but ok for now.
+    print("Label for " + str(data_col) + " is: " + str(axis_label))
+    return axis_label
+
+
 def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr): #basically all the details that are chosen in the settings part go into this function
     """makes plots, main function of the program
     input: settings from anna_data_plot_settings through doplot function
@@ -240,16 +262,17 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
         print("Careful! You are plotting more trances than you assigned linestyles. Style \"-\" is used!")
 
 
-
-
-
     # axis labels
-    ax1.set_xlabel("E vs. RHE / V")
-    ax1.set_ylabel("i / mA cm$^{-2}$")
+    ax1.set_xlabel(find_axis_label(x_data_col))
+    ax1.set_ylabel(find_axis_label(y_data_col))
+    if plot_settings['y_data2']:
+        ax2.set_ylabel(find_axis_label(y2_data_col))
 
     #set axis limits according to info given in settings
     ax1.set_xlim(plot_settings['x_lim'])
     ax1.set_ylim(plot_settings['y_lim'])
+    if plot_settings['y_data2']:
+        ax2.set_ylim(plot_settings['y2_lim'])
 
     #create legend according to settings
 
@@ -275,178 +298,6 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
         ax3.set_xbound(ax1.get_xbound())
         ax3.set_xticklabels(tick_function(ax3Ticks))
         ax3.set_xlabel("E vs. Hg/Hg$_2$SO$_4$ / V")
-
-    #defines size of padding, important for legend on top, possibility to change space between subplots once implemented
-    lpad = plot_settings['l_pad'] if plot_settings['l_pad'] else 0.15
-    rpad = plot_settings['r_pad'] if plot_settings['r_pad'] else 0.15
-    tpad = plot_settings['top_pad'] if plot_settings['top_pad'] else 0.10
-    bpad = plot_settings['bottom_pad'] if plot_settings['bottom_pad'] else 0.15
-    # wspace = pt.wspace[r1] if is_set(pt.wspace[r1]) else 0.12
-    # hspace = pt.hspace[r1] if is_set(pt.hspace[r1]) else 0.12
-
-    fig.subplots_adjust(left=lpad, right=1 - rpad, top=1 - tpad, bottom=bpad) # hspace=hspace, wspace=wspace)
-
-    #safes figure as png and pdf
-    if plot_settings['safeplot']:
-        plt.savefig(plot_settings['plotname']+'.png', dpi=400, bbox_inches='tight')
-        plt.savefig(plot_settings['plotname']+'.pdf', dpi=400, bbox_inches='tight')
-    plt.show()
-
-
-
-def cv_plot(cv_data, plot_settings, legend_settings, annotation_settings): #basically all the details that are chosen in the settings part go into this function
-    """plot tuples of current/voltage
-    main function of the program
-    input: settings from anna_data_plot_settings through doplot function
-    output: cv_plot
-    """
-    #print CV data for check
-    #print(cv_data)
-
-
-
-    # prepare for figure with 2 x-axes
-    fig = plt.figure()
-    ax1 = fig.add_subplot(111)
-
-    #List of 6 different linestyles to loop through
-    # linestyle_list= ['-', (0, (2, 3)), '--', (3, (15, 7.5)) ,'-.',':', '-', (0, (2, 3)), '--', (3, (15, 7.5)),'-.',':',
-    #                  '-', (0, (2, 3)), '--', (3, (15, 7.5)), '-.', ':','-', (0, (2, 3)), '--', (3, (15, 7.5)) ,'-.',':']
-    # linestyle_list = ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-']
-    #linestyle_list = [ ':', ':', ':', ':', ':', '-', '-', '-', '-', '-', '-']
-    linestyle_list = plot_settings['linestyle']
-    color_list = plot_settings['colors']
-    #color_list = ['g', 'orange', 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75','orange', 'g', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75']
-    #print(color_list)
-    i=-1
-    j=-1
-
-    for each_cv in cv_data:
-        if i <= 11:
-            i = i+1
-        else: 
-            i = 0
-        j = j +1
-        x = cv_data[j]['data']['EvsRHE/V'].values.tolist()
-        y = cv_data[j]['data']['i/mAcm^-2'].values.tolist()
-        #print(x,y)
-        print(i)
-        plt.plot(x, y, color=color_list[i], linestyle = linestyle_list[i], label=cv_data[j]['label'])
-        # find and print the difference in current in the double layer capacitance region
-        current_file=cv_data[j]['filename']
-        e_range = annotation_settings['e_range']
-        find_deltaI_DLcapacitance(e_vs_rhe=x, i_mApscm=y, e_range=e_range, file=current_file)
-
-
-    #set axis limits according to info given in settings
-    ax1.set_xlim(plot_settings['x_lim'])
-    ax1.set_ylim(plot_settings['y_lim'])
-
-    #create legend according to settings
-    plt.legend(fontsize=legend_settings["fontsize"], loc=legend_settings["position"], ncol=legend_settings["number_of_cols"])
-
-    #grid
-    if plot_settings['grid']:
-        ax1.grid(True, color="grey")
-
-    #inserts second axis with E vs Ref on top, if selected in settings
-    if plot_settings['second axis']:
-        ax2 = ax1.twiny()
-        ax1Ticks = ax1.get_xticks()
-        ax2Ticks = ax1Ticks  # here the scaling of ticks could be changed
-
-        def tick_function(e_rhe):
-            e_nhe = - e_rhe_ref - 0.059 * ph_ref  # potential vs NHE
-            e_ref = e_rhe - e_nhe - 0.059 * ph
-            return ["%.2f" % z for z in e_ref]
-
-        ax2.set_xticks(ax2Ticks)
-        ax2.set_xbound(ax1.get_xbound())
-        ax2.set_xticklabels(tick_function(ax2Ticks))
-        ax2.set_xlabel("E vs. Hg/Hg$_2$SO$_4$ / V")
-
-    #axis labels
-    ax1.set_xlabel("E vs. RHE / V")
-    ax1.set_ylabel("i / mA cm$^{-2}$")
-
-    #defines size of padding, important for legend on top, possibility to change space between subplots once implemented
-    lpad = plot_settings['l_pad'] if plot_settings['l_pad'] else 0.15
-    rpad = plot_settings['r_pad'] if plot_settings['r_pad'] else 0.15
-    tpad = plot_settings['top_pad'] if plot_settings['top_pad'] else 0.10
-    bpad = plot_settings['bottom_pad'] if plot_settings['bottom_pad'] else 0.15
-    # wspace = pt.wspace[r1] if is_set(pt.wspace[r1]) else 0.12
-    # hspace = pt.hspace[r1] if is_set(pt.hspace[r1]) else 0.12
-
-    fig.subplots_adjust(left=lpad, right=1 - rpad, top=1 - tpad, bottom=bpad) # hspace=hspace, wspace=wspace)
-
-    #safes figure as png and pdf
-    if plot_settings['safeplot']:
-        plt.savefig(plot_settings['plotname']+'.png', dpi=400, bbox_inches='tight')
-        plt.savefig(plot_settings['plotname']+'.pdf', dpi=400, bbox_inches='tight')
-    plt.show()
-
-def ca_plot(ca_data, plot_settings, legend_settings, annotation_settings): #basically all the details that are chosen in the settings part go into this function
-    """plot tuples of current/time
-    input: settings from anna_data_plot_settings through doplot function and ca_data from extract_ca_data function
-    output: ca_plot
-    """
-    # prepare for figure with 2 x-axes, not really necessary, but also opens possibilty for subplots
-    fig = plt.figure()
-    ax1 = fig.add_subplot(111)
-    if plot_settings['coplot_evsrhe']:
-        ax2 = ax1.twinx() #adds second y axis with the same x-axis
-
-    #List of 6 different linestyles to loop through
-    #linestyle_list = ['-', '-', '--','--', '-.','-.', ':', ':', (0, (2, 3)), (0, (2, 3)),  (3, (10, 5)),  (3, (10, 5))]
-    #color_list = ['orange', 'orange', 'g', 'g', 'r', 'r', 'b', 'b', 'k', 'k', 'c', 'c']
-
-#    linestyle_list = ['-', '--', '-.', ':', (0, (2, 3)), (3, (10, 5))]
-#     linestyle_list = ['-', '-', '-', '-', '-', '-']
-#     color_list = ['orange','g', 'r', 'b', 'k', 'c']
-    linestyle_list = plot_settings['linestyle']
-    color_list = plot_settings['colors']
-
-    i=-1
-    j=-1
-
-    for each_ca in ca_data:
-        if i <= 10: i = i+1
-        else: i=0
-        j = j+1
-
-        x = ca_data[j]['data'][['time/s']].values.tolist()
-        #x = ca_data[each_ca]['data'][['time/s']].values.tolist()
-        y = ca_data[j]['data'][['i/mAcm^-2']].values.tolist()
-        #y = ca_data[each_ca]['data'][['i/mAcm^-2']].values.tolist()
-        #print(x,y)
-        #print(i)
-        ax1.plot(x, y, color=color_list[i], linestyle = linestyle_list[i], label=ca_data[j]['label'])
-        if plot_settings['coplot_evsrhe']:
-            y2 = ca_data[j]['data'][['E_corr/V']].values.tolist()
-            ax2.plot(x, y2, color=color_list[i], linestyle=linestyle_list[i+1], label=ca_data[j]['label']+'_E_corr')
-
-    #set axis limits according to info given in settings
-    ax1.set_xlim(plot_settings['x_lim'])
-    ax1.set_ylim(plot_settings['y_lim'])
-    
-
-    #create legend according to settings
-    ax1.legend(fontsize=legend_settings["fontsize"], loc=legend_settings["position"], ncol=legend_settings["number_of_cols"])
-
-    #grid
-    if plot_settings['grid']:
-        ax1.grid(True)
-
-    #axis labels
-    ax1.set_xlabel("time / s")
-    ax1.set_ylabel("i / mA cm$^{-2}$")
-    
-    
-    #settings for 2nd axis if chosen
-    if plot_settings['coplot_evsrhe']:
-        ax2.set_ylim(plot_settings['y2_lim'])
-        ax2.set_ylabel("E_corr vs. RHE / V")
-        
 
     #defines size of padding, important for legend on top, possibility to change space between subplots once implemented
     lpad = plot_settings['l_pad'] if plot_settings['l_pad'] else 0.15

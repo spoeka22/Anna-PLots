@@ -129,8 +129,8 @@ plot_settings = {'safeplot': False,
                  'grid': True,
                  'second axis':  False,
                  'x_lim': (0.3, 1.6),
-                 'y_lim': (-6.0, 6),
-                 'y2_lim': (0.25, 1.5),
+                 'y_lim': (-3.0, 3),
+                 'y2_lim': (-6, 6),
                  'top_pad': 0.2,
                  'bottom_pad': 0.1,
                  'l_pad': [],
@@ -142,12 +142,12 @@ plot_settings = {'safeplot': False,
                  #options to select which data is plotted
                  'plot type': "cv", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
                  #custom column selection, will overrule plottype, if given. Possibilities are all data column names,
-                 #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>mA", "i/mAcm^-2_geom",
+                 #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
                  # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
                  'x_data':"",
-                 'y_data':"i/mAcm^-2_ECSA",
+                 'y_data':"i/mAcm^-2_geom",
                  'x_data2':"", #not implemented yet
-                 "y_data2":"i/mAcm^-2_geom"
+                 "y_data2":"i/mAcm^-2_ECSA"
                  }
 
 # legend:
