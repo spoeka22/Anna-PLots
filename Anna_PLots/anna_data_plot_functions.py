@@ -44,22 +44,16 @@ def find_deltaI_DLcapacitance(e_vs_rhe, i_mApscm, e_range, file):
     print(str(file)+": The difference between oxidation and reduction current in the potential region " +str(e_range) + " = " + str(delta_i) +
           " mA/cm2")
 
-def integrate_CV(dataline, type="CO_strip", Vspan=[], ox_red=[]):
+def integrate_CV(dataline, Vspan, ox_red):
     """
     Determines the charge passed between the potential values specified in V_span.
     :param dataline:Data of a specific cycle.
     :param type: Either "CO_strip" or "oxide_red" for predefined Vspan and ox_red. If None, give individual values
     :param Vspan: Potential interval, potential vs RHE!!!
-    :return:
+    :return: dQ: "integrated" potential (i.e. charge difference) in the selected region
     """
     #Test if dataline only contains one cycle, else ERROR MESSAGE!!
-
-    if type == "CO_strip":
-        Vspan=[0.6,1.2] #V vs. RHE, taken from Mittermeier et.al 2017
-        ox_red = 1
-    elif type == "oxide_red":
-        Vspan=[0.9, 0.4] #V vs. RHE, taken from Mittermeier et.al 2017
-        ox_red = 0
+    # print(dataline)
 
     #check if ohmic drop correction was done and choose which column to use
     if "E_corr_vsRHE/V" in dataline['data']:  #THIS IS NOT WORKING FOR SOME REASON
@@ -68,11 +62,72 @@ def integrate_CV(dataline, type="CO_strip", Vspan=[], ox_red=[]):
         V_col= "EvsRHE/V"
 
     #find (Q-Q0) in the V range given by V span and oxidation/reduction sweep according to ox_red
+    data_keep_index=[]
 
-    data_keep = [dataline for E in dataline['data'][V_col] if Vspan[0] < dataline['data'][V_col] < Vspan[1]
-                                                              and dataline['data']["ox/red"]]
+    for (potential, oxred) in zip(dataline['data'][V_col].iteritems(), dataline['data']["ox/red"].iteritems()):
+        # print(potential, oxred)
+        # eachline_frame=DataFrame([eachline])
+        # print(eachline_frame)
+        if Vspan[0] < potential[1] < Vspan[1] and oxred[1] == ox_red:
+            data_keep_index.append(potential[0])
 
-    return
+    # print(data_keep_index)
+    index_firstrow=data_keep_index[0]
+    index_lastrow=data_keep_index[-1]
+    data_keep=dataline['data'][index_firstrow:index_lastrow+1]
+    # print(data_keep)
+
+    # print(str(index_firstrow) + " stuff " + str(index_lastrow))
+
+    #Calculate the difference in charge passed between beginning and end of selected peak
+    dQ = data_keep.loc[index_lastrow, '(Q-Qo)/C'] - data_keep.loc[index_firstrow,'(Q-Qo)/C']
+    #
+    print("The total charge in the selected potential region is " + str(dQ) + " C.")
+    #print(dataline['data'])
+    # print(len(dataline['data']))
+    # print(len(data_keep))
+    return dQ
+
+def calc_esca(datalines,  type="CO_strip", Vspan=[], ox_red=[], charge_p_area=1):
+    """ Input: list of 2 dictionaries containing data (file in datalist), one with surface area specific peak,
+    one with reference peak. Calls integrate_CV function to evaluate charge difference in selected Vspan.
+    calculates absolute difference between these charge differences & multiplies with a selected factor
+    (or given one if type & metal chosen. returns & prints ECSA."""
+
+    if type == "CO_strip":
+        Vspan=[0.6,1.2] #V vs. RHE, taken from Mittermeier et.al 2017
+        ox_red = 1
+    elif type == "oxide_red":
+        Vspan=[0.4, 0.9] #V vs. RHE, taken from Mittermeier et.al 2017
+        ox_red = 0
+
+    dQ=[]
+    for dataline in datalines:
+        dQ.append(integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red))
+        if len(dQ) > 2:
+            break
+
+    deltaQ = abs(dQ[0]-dQ[1])
+    print("The charge difference between following CVs: (" +str(datalines[0]['filename']) + " and " +
+        str(datalines[1]['filename']) + ") is " + str(deltaQ) + " C.")
+
+    esca = None
+    esca_co = None
+
+    if type == "CO_strip":
+        esca_co = deltaQ * 1000000 / (2*205)  #taken from Mittermeier et.al 2017, only valid for Pd!!
+        print("An ESCA of " + str(esca_co) + " cm^2 was estimated based on CO-stripping on Pd.")
+
+    elif type == "oxide_red":
+        print("You need to find some reference for the relation between surface area and oxide reduction "
+              "current before I can calulate the ESCA for you.")
+    else:
+        esca=deltaQ/charge_p_area
+        print("An ESCA of " + str(esca) + "cm^2 was estimated based on the value you entered for charge per area.")
+
+    return deltaQ, esca_co, esca
+
+
 
 
 
@@ -152,7 +207,6 @@ def convert_to_current_density(file, electrode_area_geom, electrode_area_ecsa):
     else:
         i_geom=[]
 
-
     if electrode_area_ecsa or 'electrode area ecsa' in file['settings']:
         if 'electrode area ecsa' in file['settings']:
             i_ecsa = file['data']['<I>/mA']/file['settings']['electrode area ecsa']
@@ -161,10 +215,7 @@ def convert_to_current_density(file, electrode_area_geom, electrode_area_ecsa):
     else:
         i_ecsa = []
 
-
     i_df = DataFrame(data=[i_geom, i_ecsa], index=["i/mAcm^-2_geom", "i/mAcm^-2_ECSA"]).T
-
-
     return i_df
 
 

@@ -213,8 +213,13 @@ def main():
     #plot the data from the list of data dictionaries
     dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr)
 
+    #Calculate ESCA from a list of 2 data dictionaries (all further items in the list will be disregarded).
+    dpf.calc_esca(datalist[0:2], type='CO_strip')
+
     # try:
     # except IndexError:
+
+
 
 
 if __name__ == "__main__":
