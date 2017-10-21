@@ -12,6 +12,11 @@ Settings for the data to plot are inserted here. The data plotting is done using
 from pandas import DataFrame
 
 import anna_data_plot_functions as dpf
+import json
+
+load_new_data = True #False if saved set of data files should be used.
+input_plot_settings = True #False if saved settings for plot (size, colours etc.) should be used.
+savesettings = True #True if the new input settings should be saved.
 
 # general information  if applicable, otherwise comment
 # temperature
@@ -29,145 +34,174 @@ ph = 0.96
 electrode_area_geom = 20  # cm2
 electrode_area_ecsa = 500  # cm2 NOT IMPLEMENTED YET
 
-#ohmic drop in Ohm over cell measured with EIS
-ohm_drop_corr = True #to turn on/off ohmic drop correction
+# ohmic drop in Ohm over cell measured with EIS
+ohm_drop_corr = True  # to turn on/off ohmic drop correction
 ohmicdrop = 50
-ohmicdrop_filename = {}
-             
-#insert filename in list if starting time is notzero, AND should be plotted as nonzero (ie NOT BE CHANGED)
-no_timezero = {'i_CA_Pd_025_Ar_propenepurge_02_CA_C01.mpt'}             
 
-#folder_path = r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Au electrodes'
+# insert filename in list if starting time is notzero, AND should be plotted as nonzero (ie NOT BE CHANGED)
+no_timezero = {}
 
-folder_path = r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\EC and product analysis'
+if not load_new_data:
+    settings_file = input("Enter the name of the file containing data path and settings: ")
+    with open(settings_file) as f:
+        data_load_settings = json.load(f)
+    print(data_load_settings)
+    folder_path = data_load_settings[0]
+    folders = data_load_settings[1]
+    filenames = data_load_settings[2]
+    filespec_settings = data_load_settings[3]
 
-folders = [#'20171005_Pd_049',
-           # '20170901_Pd_040',
-           # '20170831_Pd_039',
-           '20170916_Pd_046',
-           # '20171003_Pd_047',
-           # '20171003_Pd_048',
-           # '20171006_Pd_050',
-           # '20171010_Pd_051'
-            ]  # list of folders from which data is going to be plotted
+elif load_new_data:
+    #folder_path = r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Au electrodes'
 
-filenames = {'20171005_Pd_049': ['20171005_AW_Pd049_2ndtry_04_CVA_C01.mpt',
-                                 '20171005_AW_Pd049_3rd_onlyAr_04_CVA_C01.mpt',
-                                 '20171005_AW_Pd049_2ndtry_05_CVA_C01.mpt',
-                                 '20171005_AW_Pd049_2ndtry_07_CA_C01.mpt',
-                                 '20171005_AW_Pd049_3rd_onlyAr_01_CA_C01.mpt',
-                                 '20171005_AW_Pd049_3rd_onlyAr_06_CA_C01.mpt',
-                                 '20171005_AW_Pd049_02_CA_C01.mpt',
-                                 '20171005_AW_Pd049_2ndtry_06_CA_C01.mpt'
-                                 ],
-             '20170916_Pd_046': [#'AW_Pd_046_05_CA_C01.mpt',
-                                 'AW_Pd_046_02_CVA_C01.mpt'
-                                 ],
-             '20171006_Pd_050': ['20171006_AW_Pd050_onlyAr_restart_02_CA_C01.mpt',
-                                 '20171006_AW_Pd050_onlyAr_restart_03_CA_C01.mpt',
-                                 '20171006_AW_Pd050_onlyAr_02_CA_C01.mpt',
-                                 '20171006_AW_Pd050_onlyAr_04_CVA_C01.mpt',
-                                 '20171006_AW_Pd050_onlyAr_05_CVA_C01.mpt'
-                                 ],
-             '20170901_Pd_040': ['AW_Pd_040_03_CA_C01.mpt',
-                                 'AW_Pd_040_02_CVA_C01.mpt',
-                                 'AW_Pd_040_01_CA_C01.mpt',
-                                 'AW_Pd_042_05_CA_C01.mpt',
-                                 'AW_Pd_042_03_CA_C01.mpt',
-                                 'AW_Pd_042_02_CVA_C01.mpt',
-                                 'AW_Pd_041_05_CA_C01.mpt',
-                                 'AW_Pd_041_03_CA_C01.mpt',
-                                 'AW_Pd_041_02_CVA_C01.mpt',
-                                 'AW_Pd_045_05_CA_C01.mpt',
-                                 'AW_Pd_045_03_CA_C01.mpt',
-                                 'AW_Pd_045_02_CVA_C01.mpt',
-                                 'AW_Pd_044_05_CA_C01.mpt',
-                                 'AW_Pd_044_03_CA_C01.mpt',
-                                 'AW_Pd_044_02_CVA_C01.mpt',
-                                 'AW_Pd_043_05_CA_C01.mpt',
-                                 'AW_Pd_043_03_CA_C01.mpt',
-                                 'AW_Pd_043_02_CVA_C01.mpt'
-                                 ],
-             '20170831_Pd_039': ['AW_Pd_039_05_CA_C01.mpt',
-                                 'AW_Pd_039_02_CVA_C01.mpt',
-                                 'AW_Pd_039_03_CA_C01.mpt'
-                                 ],
-             '20171003_Pd_047': ['20171003_AW_Pd047_COstripping_test_04_CVA_C01.mpt',
-                                 '20171003_AW_Pd047_COstripping_test_02_CVA_C01.mpt',
-                                 '20171003_AW_Pd047_COstripping_test_03_CVA_C01.mpt'
-                                 ],
-             '20171010_Pd_051': ['20171010_AW_Pd051_06_CA_C01.mpt',
-                                 '20171010_AW_Pd051_08_CVA_C01.mpt',
-                                 '20171010_AW_Pd051_02_CA_C01.mpt',
-                                 '20171010_AW_Pd051_04_CVA_C01.mpt',
-                                 '20171010_AW_Pd051_05_CVA_C01.mpt'
-                                 ],
-             '20171003_Pd_048': ['20171003_AW_Pd048_COstripping_test_04_CVA_C01.mpt',
-                                 '20171003_AW_Pd048_COstripping_test_02_CVA_C01.mpt',
-                                 '20171003_AW_Pd048_COstripping_test_05_CVA_C01.mpt'
-                                 ]
+    folder_path = r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\EC and product analysis'
 
-             
-             }
+    folders = [#'20171005_Pd_049',
+               # '20170901_Pd_040',
+               # '20170831_Pd_039',
+               '20170916_Pd_046',
+               # '20171003_Pd_047',
+               # '20171003_Pd_048',
+               # '20171006_Pd_050',
+               # '20171010_Pd_051'
+                ]  # list of folders from which data is going to be plotted
 
-# custom settings for data files: dictionary correlating filename with custom label, cycles to extract from CV file,
-#electrode area (geom and ecsa), ohmic drop to correct for
+    filenames = {'20171005_Pd_049': ['20171005_AW_Pd049_2ndtry_04_CVA_C01.mpt',
+                                     '20171005_AW_Pd049_3rd_onlyAr_04_CVA_C01.mpt',
+                                     '20171005_AW_Pd049_2ndtry_05_CVA_C01.mpt',
+                                     '20171005_AW_Pd049_2ndtry_07_CA_C01.mpt',
+                                     '20171005_AW_Pd049_3rd_onlyAr_01_CA_C01.mpt',
+                                     '20171005_AW_Pd049_3rd_onlyAr_06_CA_C01.mpt',
+                                     '20171005_AW_Pd049_02_CA_C01.mpt',
+                                     '20171005_AW_Pd049_2ndtry_06_CA_C01.mpt'
+                                     ],
+                 '20170916_Pd_046': [#'AW_Pd_046_05_CA_C01.mpt',
+                                     'AW_Pd_046_02_CVA_C01.mpt'
+                                     ],
+                 '20171006_Pd_050': ['20171006_AW_Pd050_onlyAr_restart_02_CA_C01.mpt',
+                                     '20171006_AW_Pd050_onlyAr_restart_03_CA_C01.mpt',
+                                     '20171006_AW_Pd050_onlyAr_02_CA_C01.mpt',
+                                     '20171006_AW_Pd050_onlyAr_04_CVA_C01.mpt',
+                                     '20171006_AW_Pd050_onlyAr_05_CVA_C01.mpt'
+                                     ],
+                 '20170901_Pd_040': ['AW_Pd_040_03_CA_C01.mpt',
+                                     'AW_Pd_040_02_CVA_C01.mpt',
+                                     'AW_Pd_040_01_CA_C01.mpt',
+                                     'AW_Pd_042_05_CA_C01.mpt',
+                                     'AW_Pd_042_03_CA_C01.mpt',
+                                     'AW_Pd_042_02_CVA_C01.mpt',
+                                     'AW_Pd_041_05_CA_C01.mpt',
+                                     'AW_Pd_041_03_CA_C01.mpt',
+                                     'AW_Pd_041_02_CVA_C01.mpt',
+                                     'AW_Pd_045_05_CA_C01.mpt',
+                                     'AW_Pd_045_03_CA_C01.mpt',
+                                     'AW_Pd_045_02_CVA_C01.mpt',
+                                     'AW_Pd_044_05_CA_C01.mpt',
+                                     'AW_Pd_044_03_CA_C01.mpt',
+                                     'AW_Pd_044_02_CVA_C01.mpt',
+                                     'AW_Pd_043_05_CA_C01.mpt',
+                                     'AW_Pd_043_03_CA_C01.mpt',
+                                     'AW_Pd_043_02_CVA_C01.mpt'
+                                     ],
+                 '20170831_Pd_039': ['AW_Pd_039_05_CA_C01.mpt',
+                                     'AW_Pd_039_02_CVA_C01.mpt',
+                                     'AW_Pd_039_03_CA_C01.mpt'
+                                     ],
+                 '20171003_Pd_047': ['20171003_AW_Pd047_COstripping_test_04_CVA_C01.mpt',
+                                     '20171003_AW_Pd047_COstripping_test_02_CVA_C01.mpt',
+                                     '20171003_AW_Pd047_COstripping_test_03_CVA_C01.mpt'
+                                     ],
+                 '20171010_Pd_051': ['20171010_AW_Pd051_06_CA_C01.mpt',
+                                     '20171010_AW_Pd051_08_CVA_C01.mpt',
+                                     '20171010_AW_Pd051_02_CA_C01.mpt',
+                                     '20171010_AW_Pd051_04_CVA_C01.mpt',
+                                     '20171010_AW_Pd051_05_CVA_C01.mpt'
+                                     ],
+                 '20171003_Pd_048': ['20171003_AW_Pd048_COstripping_test_04_CVA_C01.mpt',
+                                     '20171003_AW_Pd048_COstripping_test_02_CVA_C01.mpt',
+                                     '20171003_AW_Pd048_COstripping_test_05_CVA_C01.mpt'
+                                     ]
+                 }
 
-filespec_settings = {'AW_Pd_046_02_CVA_C01.mpt':{'label': "",
-                                                 'cycles to extract': [1,2,5,9],
-                                                 'electrode area geom': 1, 'electrode area ecsa': 10,
-                                                 'individual ohmicdrop':40}}
-                                            
+    # custom settings for data files: dictionary correlating filename with custom label, cycles to extract from CV file,
+    #electrode area (geom and ecsa), ohmic drop to correct for
+
+    filespec_settings = {'AW_Pd_046_02_CVA_C01.mpt':{'label': "",
+                                                     'cycles to extract': [1,2,5,9],
+                                                     'electrode area geom': 1, 'electrode area ecsa': 10,
+                                                     'individual ohmicdrop':40}}
+    if savesettings:
+        data_load_settings = [folder_path, folders, filenames, filespec_settings]
+
+        save_settings_as = input("Save data input settings as ([...]_input.txt): ") + "_input.txt"
+        with open(save_settings_as, 'w') as f:
+            json.dump(data_load_settings, f)
 
 #TODO: automatically detect which is the CO strip and the reference cycle based on the potential holde period in the cycle??
 
+if not input_plot_settings:
+    plotsettings_file = input("Enter the name of the settings file for the plot: ")
+    with open(plotsettings_file) as f:
+        plot_load_settings = json.load(f)
+    print(plot_load_settings)
+    plot_settings = plot_load_settings[0]
+    legend_settings = plot_load_settings[1]
+    annotation_settings = plot_load_settings[2]
 
-# settings for the plot
-plot_settings = {'safeplot': False,
-                 'plotname': 'CV_Pd_038_Propene_development_scanrate_UPL_1.4Vrhe',
-                 'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
-                 'grid': True,
-                 'second axis':  False,
-                 'x_lim': (0.3, 1.6),
-                 'y_lim': (-6.0, 6),
-                 'y2_lim': (-3, 3),
-                 'top_pad': 0.2,
-                 'bottom_pad': 0.1,
-                 'l_pad': [],
-                 'r_pad': [],
-                 'colors': ['g', 'orange'],#, 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75'],
-                 'linestyle': ['-', ':'],
-                 # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
-                 # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
-                 #options to select which data is plotted
-                 'plot type': "cv", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
-                 #custom column selection, will overrule plottype, if given. Possibilities are all data column names,
-                 #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
-                 # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
-                 'x_data':"",
-                 'y_data':"i/mAcm^-2_geom",
-                 'x_data2':"", #not implemented yet
-                 "y_data2":"i/mAcm^-2_ECSA"
-                 }
+else:
+    # settings for the plot
+    plot_settings = {'safeplot': False,
+                     'plotname': 'CV_Pd_038_Propene_development_scanrate_UPL_1.4Vrhe',
+                     'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
+                     'grid': True,
+                     'second axis':  False,
+                     'x_lim': (0.3, 1.6),
+                     'y_lim': (-6.0, 6),
+                     'y2_lim': (-3, 3),
+                     'top_pad': 0.2,
+                     'bottom_pad': 0.1,
+                     'l_pad': [],
+                     'r_pad': [],
+                     'colors': ['g', 'orange'],#, 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75'],
+                     'linestyle': ['-', ':'],
+                     # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
+                     # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
+                     #options to select which data is plotted
+                     'plot type': "cv", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
+                     #custom column selection, will overrule plottype, if given. Possibilities are all data column names,
+                     #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
+                     # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
+                     'x_data':"",
+                     'y_data':"i/mAcm^-2_geom",
+                     'x_data2':"", #not implemented yet
+                     "y_data2":"i/mAcm^-2_ECSA"
+                     }
 
-# legend:
-legend_settings = {'position1': (0, 1.15),
-                   'position2': (0, -0.15), #position of the legend for the second y axis
-                   'number_of_cols': 2,
-                   'fontsize': 8
-                   }
-
-# annotations: dictionary of annotation plus relevant properties in list form CURRENTLY NOT USED!?!?
-annotation_settings = {'annotation 1': ["scanrate"],
-                       #E-range for finding the delta i in the capacitance region for estimation of surface area
-                       'e_range': [0.99, 1.01] #works only if scan starts at lowest potential
+    # legend:
+    legend_settings = {'position1': (0, 1.15),
+                       'position2': (0, -0.15), #position of the legend for the second y axis
+                       'number_of_cols': 2,
+                       'fontsize': 8
                        }
 
+    # annotations: dictionary of annotation plus relevant properties in list form CURRENTLY NOT USED!?!?
+    annotation_settings = {'annotation 1': ["scanrate"],
+                           #E-range for finding the delta i in the capacitance region for estimation of surface area
+                           'e_range': [0.99, 1.01] #works only if scan starts at lowest potential
+                           }
+
+    if savesettings:
+        plot_load_settings = [plot_settings, legend_settings, annotation_settings]
+
+        save_plotsettings_as = input("Save plot settings as ([...]_plot_settings.txt): ") + "_plot_settings.txt"
+        with open(save_plotsettings_as, 'w') as f:
+            json.dump(data_load_settings, f)
 
 # todo: subplot possibility
 
 
 def main():
+    # f load_new_settings:
     #create list of data dictionaries for plotting
         #loop through datafiles
         #import data
@@ -175,6 +209,7 @@ def main():
     #actual data in form of DataFrame for further treatment with the functions from data plot. if sync metadata is to be implemented the conversion has to be moved to later stage
     datalist = dpf.extract_data(folder_path, filenames, folders, filespec_settings)
     # print(datalist)
+    print("Data extraction finished.")
 
     # #treat data (now functions from data plot, future sync metadate from EC_MS package?, also depending of data-type)
     for file in datalist:
@@ -219,8 +254,7 @@ def main():
     # try:
     # except IndexError:
 
-
-
+    print("FINISHED")
 
 if __name__ == "__main__":
     main()
