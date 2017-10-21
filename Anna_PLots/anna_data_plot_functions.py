@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from pandas import DataFrame
 import pandas as pd
 import itertools
-from anna_data_plot_input_original import e_rhe_ref, ph_ref, ph
+# from anna_data_plot_input_original import e_rhe_ref, ph_ref, ph
 
 from EC_MS import Data_Importing as Data_Importing_Scott
 from EC_MS import EC as EC_Scott
@@ -150,7 +150,7 @@ def import_data_from(file):
    return data
 
 
-def convert_potential_to_rhe(e_ref):
+def convert_potential_to_rhe(e_ref, e_rhe_ref, ph_ref, ph):
     """
     Converts potential vs reference electrode to potential vs RHE
     using parameters defined in the settings

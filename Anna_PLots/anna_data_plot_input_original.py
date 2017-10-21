@@ -220,10 +220,10 @@ def main():
             # print(file['data'])
 
         #conversion to rhe scale TODO: make it possible to choose pH and reference individually!
-        file['data'] = file['data'].add(DataFrame([file['data']['Ewe/V'].apply(dpf.convert_potential_to_rhe)],
+        file['data'] = file['data'].add(DataFrame([dpf.convert_potential_to_rhe(file['data']['Ewe/V'], e_rhe_ref=e_rhe_ref, ph_ref=ph_ref, ph=ph)],
                                                   index=['EvsRHE/V']).T, fill_value=0)
         if 'ohm_drop_corr':
-            file['data'] = file['data'].add(DataFrame([file['data']['E_corr/V'].apply(dpf.convert_potential_to_rhe)],
+            file['data'] = file['data'].add(DataFrame([dpf.convert_potential_to_rhe(file['data']['E_corr/V'], e_rhe_ref=e_rhe_ref, ph_ref=ph_ref, ph=ph)],
                                                       index=['E_corr_vsRHE/V']).T, fill_value=0)
         # print(file['data'])
         print(file['filename'])
