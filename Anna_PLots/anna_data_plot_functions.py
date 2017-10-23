@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 from pandas import DataFrame
 import pandas as pd
 import itertools
-# from anna_data_plot_input_original import e_rhe_ref, ph_ref, ph
 
 from EC_MS import Data_Importing as Data_Importing_Scott
 from EC_MS import EC as EC_Scott
@@ -125,7 +124,9 @@ def calc_esca(datalines,  type="CO_strip", Vspan=[], ox_red=[], charge_p_area=1)
         esca=deltaQ/charge_p_area
         print("An ESCA of " + str(esca) + "cm^2 was estimated based on the value you entered for charge per area.")
 
-    return deltaQ, esca_co, esca
+    esca_data=[deltaQ, esca_co, esca]
+
+    return deltaQ, esca_co, esca, esca_data
 
 
 
@@ -254,7 +255,7 @@ def find_axis_label(data_col):
     """Finds the appropriate axis label for different kinds of plotted data."""
     axis_label = None
     if "E" in data_col and not "mA" in data_col:
-        if data_col == "EvsRHE" or data_col =="E_corr_vsRHE/V":
+        if data_col == "EvsRHE/V" or data_col =="E_corr_vsRHE/V":
             axis_label = "E vs. RHE / V"
         elif data_col == "Ewe/V" or data_col == "E_corr/V":
             axis_label = "E vs. Ref / V"
@@ -277,7 +278,7 @@ def find_axis_label(data_col):
     return axis_label
 
 
-def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr): #basically all the details that are chosen in the settings part go into this function
+def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data): #basically all the details that are chosen in the settings part go into this function
     """makes plots, main function of the program
     input: settings from anna_data_plot_settings through doplot function
     output: cv_plot
@@ -292,7 +293,7 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     color_list = plot_settings['colors']
 
     #select which data columns to plot
-    if plot_settings['x_data']:
+    if not plot_settings['x_data'] == "":
         x_data_col = plot_settings['x_data']
     elif plot_settings['plot type'] == "cv":
         if ohm_drop_corr:
@@ -305,7 +306,7 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
         print("Error: Select plot-type or data column for x-axis!")
         x_data_col=""
 
-    if plot_settings['y_data']:
+    if not plot_settings['y_data'] == "":
         y_data_col = plot_settings['y_data']
     elif plot_settings['plot type'] == "cv":
         y_data_col = "i/mAcm^-2_geom"
@@ -318,11 +319,22 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
         print("Error: Select plot-type or data column for y-axis!")
         y_data_col = ""
 
+
     for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
-        # print(each_file['data']['EvsRHE/V'])
+        # print(each_file['data']['i/mAcm^-2_geom'])
+        # print(each_file['data'][x_data_col])
+        # x=each_file['data'][x_data_col]
+        #.values.tolist()
+        # y=each_file['data'][y_data_col] #.values.tolist()
+        # ax1.plot(x,y)
+        try:
             ax1.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y_data_col].values.tolist(), color=color,
                  linestyle=linestyle, label=makelabel(each_file))
-
+        except TypeError:
+            if len(datalist) < len(color_list) or len(datalist) < len(linestyle_list):
+               continue
+            else:
+                print("Problem plotting datalist...")
 
         # x_data2
 
@@ -332,33 +344,39 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
         y2_data_col = plot_settings['y_data2']
         print(y2_data_col)
         for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
-            ax2.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y2_data_col].values.tolist(),
+            try:
+                ax2.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y2_data_col].values.tolist(),
                      color=color, linestyle=linestyle, label=makelabel(each_file) + "(" +y2_data_col + ")")
-
+            except TypeError:
+                if len(datalist) < len(color_list) or len(datalist) < len(linestyle_list):
+                    continue
+                else:
+                    print("Problem plotting datalist (2nd y axis)...")
 
     if len(color_list) <= len(datalist):
-        print("Careful! You are plotting more trances than you assigned colours. Python standard colours are used!")
+        print("Careful! You are plotting more traces than you assigned colours. Python standard colours are used!")
 
     if len(linestyle_list) <= len(datalist):
-        print("Careful! You are plotting more trances than you assigned linestyles. Style \"-\" is used!")
+        print("Careful! You are plotting more traces than you assigned linestyles. Style \"-\" is used!")
 
 
     # axis labels
     ax1.set_xlabel(find_axis_label(x_data_col))
     ax1.set_ylabel(find_axis_label(y_data_col))
-    if plot_settings['y_data2']:
+    if not plot_settings['y_data2'] == "":
         ax2.set_ylabel(find_axis_label(y2_data_col))
 
     #set axis limits according to info given in settings
     ax1.set_xlim(plot_settings['x_lim'])
     ax1.set_ylim(plot_settings['y_lim'])
-    if plot_settings['y_data2']:
+    if not plot_settings['y_data2'] == "":
         ax2.set_ylim(plot_settings['y2_lim'])
 
     #create legend according to settings
 
     ax1.legend(fontsize=legend_settings["fontsize"], loc=legend_settings["position1"], ncol=legend_settings["number_of_cols"])
-    ax2.legend(fontsize=legend_settings["fontsize"], loc=legend_settings["position2"], ncol=legend_settings["number_of_cols"])
+    if not plot_settings['y_data2'] == "":
+        ax2.legend(fontsize=legend_settings["fontsize"], loc=legend_settings["position2"], ncol=legend_settings["number_of_cols"])
 
     #grid
     if plot_settings['grid']:
@@ -390,6 +408,11 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
 
     fig.subplots_adjust(left=lpad, right=1 - rpad, top=1 - tpad, bottom=bpad) # hspace=hspace, wspace=wspace)
 
+    #annotations
+    if esca_data:
+        anno_esca="$\Delta$Q ="+ str(esca_data[0]) + "C \n ESCA$_{CO}$= " + str(esca_data[1]) + "cm$^2$"
+        ax1.annotate(anno_esca, xy=(0.7, 0.05), xycoords="axes fraction")
+
     #safes figure as png and pdf
     if plot_settings['safeplot']:
         plt.savefig(plot_settings['plotname']+'.png', dpi=400, bbox_inches='tight')
@@ -417,16 +440,17 @@ def extract_data(folder_path, filenames, folders, filespec_settings):
                 # import from file
                 datadict = Data_Importing_Scott.import_data(filepath)
                 # print(filespec_settings[str(filename)].keys())
-                if 'cycles to extract' in filespec_settings[str(filename)].keys():
-                    for cycle in filespec_settings[str(filename)]['cycles to extract']:
-                        data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle]) #extract only the data from selected cycles
-                        # print(data_selected_cycle['cycle number'])
-                        # convert DataDict to DataFrame
-                        data_selected_cycle_frame = DataFrame(convert_datadict_to_dataframe(data_selected_cycle))
-                        # print(converted_e_and_i)
-                        #collect all the data from different cycles in one big dictionary
-                        data.append({'filename': filename + "_cycle_" + str(cycle), 'data': data_selected_cycle_frame, 'settings': filespec_settings[str(filename)]})
-                        print("cycle " + str(cycle) +" extracted")
+                if filespec_settings[str(filename)].keys():
+                    if 'cycles to extract' in filespec_settings[str(filename)].keys():
+                        for cycle in filespec_settings[str(filename)]['cycles to extract']:
+                            data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle]) #extract only the data from selected cycles
+                            # print(data_selected_cycle['cycle number'])
+                            # convert DataDict to DataFrame
+                            data_selected_cycle_frame = DataFrame(convert_datadict_to_dataframe(data_selected_cycle))
+                            # print(converted_e_and_i)
+                            #collect all the data from different cycles in one big dictionary
+                            data.append({'filename': filename + "_cycle_" + str(cycle), 'data': data_selected_cycle_frame, 'settings': filespec_settings[str(filename)]})
+                            print("cycle " + str(cycle) +" extracted")
                 else:
                     data_current_file = DataFrame(convert_datadict_to_dataframe(datadict))
                     data.append({'filename': filename, 'data': data_current_file, 'settings': filespec_settings[str(filename)]})

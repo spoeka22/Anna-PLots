@@ -16,26 +16,26 @@ import json
 
 load_new_data = True #False if saved set of data files should be used.
 input_plot_settings = True #False if saved settings for plot (size, colours etc.) should be used.
-savesettings = True #True if the new input settings should be saved.
+savesettings = False #True if the new input settings should be saved.
 
 # general information  if applicable, otherwise comment
 # temperature
 temperature = 25  # C
 
 # reference electrode
-e_rhe_ref = -0.720  # V
-ph_ref = 1
+e_rhe_ref = -0.7240  # V
+ph_ref = 1.2
 
 # electrolyte
 info = "0.1 M HClO_{4}"  # to be printed in annotations
-ph = 0.96
+ph = 1.2
 
 # electrode area in cm2
-electrode_area_geom = 20  # cm2
-electrode_area_ecsa = 500  # cm2 NOT IMPLEMENTED YET
+electrode_area_geom = 2  # cm2
+electrode_area_ecsa = 1  # cm2
 
 # ohmic drop in Ohm over cell measured with EIS
-ohm_drop_corr = True  # to turn on/off ohmic drop correction
+ohm_drop_corr = False  # to turn on/off ohmic drop correction
 ohmicdrop = 50
 
 # insert filename in list if starting time is notzero, AND should be plotted as nonzero (ie NOT BE CHANGED)
@@ -56,24 +56,24 @@ elif load_new_data:
 
     folder_path = r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\EC and product analysis'
 
-    folders = [#'20171005_Pd_049',
+    folders = ['20171005_Pd_049',
                # '20170901_Pd_040',
                # '20170831_Pd_039',
-               '20170916_Pd_046',
+               # '20170916_Pd_046',
                # '20171003_Pd_047',
                # '20171003_Pd_048',
                # '20171006_Pd_050',
                # '20171010_Pd_051'
                 ]  # list of folders from which data is going to be plotted
 
-    filenames = {'20171005_Pd_049': ['20171005_AW_Pd049_2ndtry_04_CVA_C01.mpt',
-                                     '20171005_AW_Pd049_3rd_onlyAr_04_CVA_C01.mpt',
+    filenames = {'20171005_Pd_049': [#'20171005_AW_Pd049_2ndtry_04_CVA_C01.mpt',
+                                     # '20171005_AW_Pd049_3rd_onlyAr_04_CVA_C01.mpt',
                                      '20171005_AW_Pd049_2ndtry_05_CVA_C01.mpt',
-                                     '20171005_AW_Pd049_2ndtry_07_CA_C01.mpt',
-                                     '20171005_AW_Pd049_3rd_onlyAr_01_CA_C01.mpt',
-                                     '20171005_AW_Pd049_3rd_onlyAr_06_CA_C01.mpt',
-                                     '20171005_AW_Pd049_02_CA_C01.mpt',
-                                     '20171005_AW_Pd049_2ndtry_06_CA_C01.mpt'
+                                     # '20171005_AW_Pd049_2ndtry_07_CA_C01.mpt',
+                                     # '20171005_AW_Pd049_3rd_onlyAr_01_CA_C01.mpt',
+                                     # '20171005_AW_Pd049_3rd_onlyAr_06_CA_C01.mpt',
+                                     # '20171005_AW_Pd049_02_CA_C01.mpt',
+                                     # '20171005_AW_Pd049_2ndtry_06_CA_C01.mpt'
                                      ],
                  '20170916_Pd_046': [#'AW_Pd_046_05_CA_C01.mpt',
                                      'AW_Pd_046_02_CVA_C01.mpt'
@@ -126,10 +126,9 @@ elif load_new_data:
     # custom settings for data files: dictionary correlating filename with custom label, cycles to extract from CV file,
     #electrode area (geom and ecsa), ohmic drop to correct for
 
-    filespec_settings = {'AW_Pd_046_02_CVA_C01.mpt':{'label': "",
-                                                     'cycles to extract': [1,2,5,9],
-                                                     'electrode area geom': 1, 'electrode area ecsa': 10,
-                                                     'individual ohmicdrop':40}}
+    filespec_settings = {'20171005_AW_Pd049_2ndtry_05_CVA_C01.mpt':{'label': "",
+                                                     'cycles to extract': [1,3],
+                                                     'electrode area geom': 2}}
     if savesettings:
         data_load_settings = [folder_path, folders, filenames, filespec_settings]
 
@@ -151,7 +150,7 @@ if not input_plot_settings:
 else:
     # settings for the plot
     plot_settings = {'safeplot': False,
-                     'plotname': 'CV_Pd_038_Propene_development_scanrate_UPL_1.4Vrhe',
+                     'plotname': 'CV_Pd_049_CO_strip',
                      'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': True,
                      'second axis':  False,
@@ -162,8 +161,8 @@ else:
                      'bottom_pad': 0.1,
                      'l_pad': [],
                      'r_pad': [],
-                     'colors': ['g', 'orange'],#, 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75'],
-                     'linestyle': ['-', ':'],
+                     'colors': ['g', 'orange', 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75'],
+                     'linestyle': ['-'],
                      # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
                      # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
                      #options to select which data is plotted
@@ -172,9 +171,9 @@ else:
                      #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
                      # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
                      'x_data':"",
-                     'y_data':"i/mAcm^-2_geom",
+                     'y_data':"",
                      'x_data2':"", #not implemented yet
-                     "y_data2":"i/mAcm^-2_ECSA"
+                     "y_data2":""
                      }
 
     # legend:
@@ -214,7 +213,7 @@ def main():
     # #treat data (now functions from data plot, future sync metadate from EC_MS package?, also depending of data-type)
     for file in datalist:
         #ohmic drop correction
-        if 'ohm_drop_corr':
+        if ohm_drop_corr:
             print("Carrying out ohmic drop correction")
             file['data'] = file['data'].add(dpf.ohmicdrop_correct_e(file, ohmicdrop), fill_value=0)
             # print(file['data'])
@@ -222,11 +221,11 @@ def main():
         #conversion to rhe scale TODO: make it possible to choose pH and reference individually!
         file['data'] = file['data'].add(DataFrame([dpf.convert_potential_to_rhe(file['data']['Ewe/V'], e_rhe_ref=e_rhe_ref, ph_ref=ph_ref, ph=ph)],
                                                   index=['EvsRHE/V']).T, fill_value=0)
-        if 'ohm_drop_corr':
+        if ohm_drop_corr:
             file['data'] = file['data'].add(DataFrame([dpf.convert_potential_to_rhe(file['data']['E_corr/V'], e_rhe_ref=e_rhe_ref, ph_ref=ph_ref, ph=ph)],
                                                       index=['E_corr_vsRHE/V']).T, fill_value=0)
         # print(file['data'])
-        print(file['filename'])
+        # print(file['filename'])
 
         #conversion to current density
         file['data'] = file['data'].add(dpf.convert_to_current_density(file, electrode_area_geom, electrode_area_ecsa),
@@ -245,11 +244,14 @@ def main():
      #TODO: find set potential in CA and print it/annotate it in plot
 
 
-    #plot the data from the list of data dictionaries
-    dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr)
-
     #Calculate ESCA from a list of 2 data dictionaries (all further items in the list will be disregarded).
-    dpf.calc_esca(datalist[0:2], type='CO_strip')
+    # dpf.calc_esca(datalist[0:2], type='CO_strip')
+    # print(esca_data)
+
+    esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
+    #plot the data from the list of data dictionaries
+    # print(datalist)
+    dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
 
     # try:
     # except IndexError:
