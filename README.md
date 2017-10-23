@@ -1,2 +1,2 @@
 # Anna-PLots
-the plot thing -maybe?
+Plotting and treatment of CV and CA data from EC lab 
