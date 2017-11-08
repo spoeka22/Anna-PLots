@@ -15,7 +15,7 @@ import json
 
 load_new_data = True #False if saved set of data files should be used.
 input_plot_settings = True #False if saved settings for plot (size, colours etc.) should be used.
-savesettings = True #True if the new input settings should be saved.
+savesettings = False #True if the new input settings should be saved.
 
 # general information  if applicable, otherwise comment
 # temperature
@@ -112,12 +112,12 @@ elif load_new_data:
                                                                      'cycles to extract': [1],
                                                                      'electrode area geom': 2,
                                                                      'electrode area ecsa': 55.1},
-                         '20171010_AW_Pd051_06_CA_C01.mpt':{'label': "Pd_051 CO-strip",
-                                                                     # 'cycles to extract': [3, 7],
+                         '20171010_AW_Pd051_05_CVA_C01.mpt':{'label': "Pd_051 CO-strip",
+                                                                     'cycles to extract': [1],
                                                                      'electrode area geom': 2,
                                                                     'electrode area ecsa': 83.5},
-                         '20171011_AW_Pd_052_2ndgo_06_CA_C01.mpt':{'label': "Pd_052 CO-strip",
-                                                                     # 'cycles to extract': [2, 6],
+                         '20171011_AW_Pd_052_2ndgo_05_CVA_C01.mpt':{'label': "Pd_052 CO-strip",
+                                                                     'cycles to extract': [1],
                                                                      'electrode area geom': 2,
                                                                     'electrode area ecsa': 78.9
                                                                     }
@@ -146,8 +146,8 @@ else:
                      'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': True,
                      'second axis':  False,
-                     'x_lim': (-10, 2750),
-                     'y_lim': (-0.002, 0.006),
+                     'x_lim': (0.2, 1.6),
+                     'y_lim': (-3, 2),
                      'y2_lim': (0.6, 2.6),
                      'top_pad': 0.2,
                      'bottom_pad': 0.1,
@@ -160,14 +160,14 @@ else:
                      # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
                      # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
                      #options to select which data is plotted
-                     'plot type': "ca", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
+                     'plot type': "cv", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
                      #custom column selection, will overrule plottype, if given. Possibilities are all data column names,
                      #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
                      # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
-                     'x_data':"time/s",
-                     'y_data':"i/mAcm^-2_ECSA",
+                     'x_data':"",
+                     'y_data':"",
                      'x_data2':"", #not implemented yet
-                     "y_data2":"EvsRHE/V"
+                     "y_data2":""
                      }
 
     # legend:
@@ -245,6 +245,7 @@ def main():
     # esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
     #plot the data from the list of data dictionaries
     # print(datalist)
+    esca_data=[]
     dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
 
     # try:

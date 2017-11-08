@@ -7,7 +7,11 @@ Created on Tue Oct  18 19:25:46 2016
 Working part of the data plotting programme, that contains all the functions
 """
 import numpy as np
+
+import matplotlib
+matplotlib.use('qt4agg')
 import matplotlib.pyplot as plt
+
 
 from pandas import DataFrame
 import pandas as pd
@@ -110,8 +114,8 @@ def find_ave_current(dataline, Vspan, ox_red):
     index_lastrow = data_keep_index[-1]
     data_keep = dataline['data'][index_firstrow:index_lastrow + 1]
 
-    ave_current = np.mean(data_keep['data']['<I>/mA'])
-    print("The average current is: " + str(ave_current))
+    ave_current = np.mean(data_keep['<I>/mA'])
+    print("The average current is: " + str(ave_current) + "mA")
     return ave_current
 
 
@@ -120,6 +124,8 @@ def calc_esca(datalines,  type="CO_strip", Vspan=[], ox_red=[], charge_p_area=1)
     one with reference peak. Calls integrate_CV function to evaluate charge difference in selected Vspan.
     calculates absolute difference between these charge differences & multiplies with a selected factor
     (or given one if type & metal chosen. returns & prints ECSA."""
+
+    print(type)
 
     if type == "CO_strip":
         Vspan=[0.6, 1.2] #V vs. RHE, taken from Mittermeier et.al 2017
@@ -137,13 +143,13 @@ def calc_esca(datalines,  type="CO_strip", Vspan=[], ox_red=[], charge_p_area=1)
     if type == "oxide_red":
         deltaQ=[]
         for dataline in datalines:
-            reduction_charge = integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red)
+            reduction_charge = abs(integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red))
             dQ.append(reduction_charge)
-            reduction_charge_corr = reduction_charge - find_ave_current(dataline, Vspan=[0.32, 0.4], ox_red=ox_red)
+            reduction_charge_corr = reduction_charge - abs(find_ave_current(dataline, Vspan=[0.32, 0.4], ox_red=ox_red))*0.001
             deltaQ.append(reduction_charge_corr)
 
             print("The oxide reduction charge for file: " + str(dataline['filename']) +
-              " has been calculated to " + str(reduction_charge_corr))
+              " has been calculated to " + str(reduction_charge_corr) + " C.")
             # print("You need to find some reference for the relation between surface area and oxide reduction "
             #       "current before I can calulate the ECSA for you.")
 
