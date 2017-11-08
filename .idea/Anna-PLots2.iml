@@ -6,6 +6,7 @@
     <orderEntry type="jdk" jdkName="Python 3.5.2 (C:\Users\annawi\AppData\Local\Continuum\Anaconda3\python.exe)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="EC_MS" />
+    <orderEntry type="module" module-name="molecules" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="Nosetests" />

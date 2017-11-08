@@ -10,13 +10,12 @@ Settings for the data to plot are inserted here. The data plotting is done using
 """
 
 from pandas import DataFrame
-
 import anna_data_plot_functions as dpf
 import json
 
 load_new_data = True #False if saved set of data files should be used.
 input_plot_settings = True #False if saved settings for plot (size, colours etc.) should be used.
-savesettings = False #True if the new input settings should be saved.
+savesettings = True #True if the new input settings should be saved.
 
 # general information  if applicable, otherwise comment
 # temperature
@@ -27,7 +26,7 @@ e_rhe_ref = -0.7240  # V
 ph_ref = 1.2
 
 # electrolyte
-info = "0.1 M HClO_{4}"  # to be printed in annotations
+info = "0.1 M HClO_{4}"  # to be printed in annotations (not implemented)
 ph = 1.2
 
 # electrode area in cm2
@@ -42,7 +41,7 @@ ohmicdrop = 50
 no_timezero = {}
 
 if not load_new_data:
-    settings_file = input("Enter the name of the file containing data path and settings: ")
+    settings_file = 'import_settings/' + input("Enter the name of the file containing data path and settings: ")
     with open(settings_file) as f:
         data_load_settings = json.load(f)
     print(data_load_settings)
@@ -62,9 +61,10 @@ elif load_new_data:
                # '20170916_Pd_046',
                # '20171003_Pd_047',
                # '20171003_Pd_048',
-               # '20171006_Pd_050',
-               # '20171010_Pd_051'
-                ]  # list of folders from which data is going to be plotted
+               '20171006_Pd_050',
+               '20171010_Pd_051',
+               '20171011_Pd_052'
+    ]  # list of folders from which data is going to be plotted
 
     filenames = {'20171005_Pd_049': [#'20171005_AW_Pd049_2ndtry_04_CVA_C01.mpt',
                                      # '20171005_AW_Pd049_3rd_onlyAr_04_CVA_C01.mpt',
@@ -75,71 +75,64 @@ elif load_new_data:
                                      # '20171005_AW_Pd049_02_CA_C01.mpt',
                                      # '20171005_AW_Pd049_2ndtry_06_CA_C01.mpt'
                                      ],
-                 '20170916_Pd_046': [#'AW_Pd_046_05_CA_C01.mpt',
-                                     'AW_Pd_046_02_CVA_C01.mpt'
-                                     ],
-                 '20171006_Pd_050': ['20171006_AW_Pd050_onlyAr_restart_02_CA_C01.mpt',
-                                     '20171006_AW_Pd050_onlyAr_restart_03_CA_C01.mpt',
-                                     '20171006_AW_Pd050_onlyAr_02_CA_C01.mpt',
-                                     '20171006_AW_Pd050_onlyAr_04_CVA_C01.mpt',
+                 '20171006_Pd_050': [#'20171006_AW_Pd050_onlyAr_restart_02_CA_C01.mpt',
+                                     # '20171006_AW_Pd050_onlyAr_restart_03_CA_C01.mpt',
+                                     #'20171006_AW_Pd050_onlyAr_02_CA_C01.mpt',
+                                     #'20171006_AW_Pd050_onlyAr_04_CVA_C01.mpt',
                                      '20171006_AW_Pd050_onlyAr_05_CVA_C01.mpt'
                                      ],
-                 '20170901_Pd_040': ['AW_Pd_040_03_CA_C01.mpt',
-                                     'AW_Pd_040_02_CVA_C01.mpt',
-                                     'AW_Pd_040_01_CA_C01.mpt',
-                                     'AW_Pd_042_05_CA_C01.mpt',
-                                     'AW_Pd_042_03_CA_C01.mpt',
-                                     'AW_Pd_042_02_CVA_C01.mpt',
-                                     'AW_Pd_041_05_CA_C01.mpt',
-                                     'AW_Pd_041_03_CA_C01.mpt',
-                                     'AW_Pd_041_02_CVA_C01.mpt',
-                                     'AW_Pd_045_05_CA_C01.mpt',
-                                     'AW_Pd_045_03_CA_C01.mpt',
-                                     'AW_Pd_045_02_CVA_C01.mpt',
-                                     'AW_Pd_044_05_CA_C01.mpt',
-                                     'AW_Pd_044_03_CA_C01.mpt',
-                                     'AW_Pd_044_02_CVA_C01.mpt',
-                                     'AW_Pd_043_05_CA_C01.mpt',
-                                     'AW_Pd_043_03_CA_C01.mpt',
-                                     'AW_Pd_043_02_CVA_C01.mpt'
-                                     ],
-                 '20170831_Pd_039': ['AW_Pd_039_05_CA_C01.mpt',
-                                     'AW_Pd_039_02_CVA_C01.mpt',
-                                     'AW_Pd_039_03_CA_C01.mpt'
-                                     ],
-                 '20171003_Pd_047': ['20171003_AW_Pd047_COstripping_test_04_CVA_C01.mpt',
-                                     '20171003_AW_Pd047_COstripping_test_02_CVA_C01.mpt',
-                                     '20171003_AW_Pd047_COstripping_test_03_CVA_C01.mpt'
-                                     ],
-                 '20171010_Pd_051': ['20171010_AW_Pd051_06_CA_C01.mpt',
-                                     '20171010_AW_Pd051_08_CVA_C01.mpt',
-                                     '20171010_AW_Pd051_02_CA_C01.mpt',
-                                     '20171010_AW_Pd051_04_CVA_C01.mpt',
+                 '20171010_Pd_051': [#'20171010_AW_Pd051_06_CA_C01.mpt',
+                                     # '20171010_AW_Pd051_08_CVA_C01.mpt',
+                                     # '20171010_AW_Pd051_02_CA_C01.mpt',
+                                     # '20171010_AW_Pd051_04_CVA_C01.mpt',
                                      '20171010_AW_Pd051_05_CVA_C01.mpt'
                                      ],
                  '20171003_Pd_048': ['20171003_AW_Pd048_COstripping_test_04_CVA_C01.mpt',
                                      '20171003_AW_Pd048_COstripping_test_02_CVA_C01.mpt',
                                      '20171003_AW_Pd048_COstripping_test_05_CVA_C01.mpt'
+                                     ],
+                 '20171011_Pd_052': [#'20171011_AW_Pd_052_2ndgo_08_CVA_C01.mpt',
+                                     # '20171011_AW_Pd_052_2ndgo_06_CA_C01.mpt',
+                                     # '20171011_AW_Pd_052_2ndgo_07_CA_C01.mpt',
+                                     '20171011_AW_Pd_052_2ndgo_05_CVA_C01.mpt',
+                                     # '20171011_AW_Pd_052_2ndgo_04_CVA_C01.mpt',
+                                     # '20171011_AW_Pd_052_2ndgo_01_SPEIS_C01.mpt',
+                                     # '20171011_AW_Pd_052_2ndgo_02_CA_C01.mpt'
                                      ]
-                 }
+
+    }
 
     # custom settings for data files: dictionary correlating filename with custom label, cycles to extract from CV file,
     #electrode area (geom and ecsa), ohmic drop to correct for
 
-    filespec_settings = {'20171005_AW_Pd049_2ndtry_05_CVA_C01.mpt':{'label': "",
-                                                     'cycles to extract': [1,3],
-                                                     'electrode area geom': 2}}
+    filespec_settings = {'20171005_AW_Pd049_2ndtry_05_CVA_C01.mpt':{'label': "Pd_049 CO-strip",
+                                                     'cycles to extract': [1],
+                                                     'electrode area geom': 2, 'electrode area ecsa': 97.9},
+                         '20171006_AW_Pd050_onlyAr_05_CVA_C01.mpt': {'label': "Pd_050 CO-strip",
+                                                                     'cycles to extract': [1],
+                                                                     'electrode area geom': 2,
+                                                                     'electrode area ecsa': 55.1},
+                         '20171010_AW_Pd051_06_CA_C01.mpt':{'label': "Pd_051 CO-strip",
+                                                                     # 'cycles to extract': [3, 7],
+                                                                     'electrode area geom': 2,
+                                                                    'electrode area ecsa': 83.5},
+                         '20171011_AW_Pd_052_2ndgo_06_CA_C01.mpt':{'label': "Pd_052 CO-strip",
+                                                                     # 'cycles to extract': [2, 6],
+                                                                     'electrode area geom': 2,
+                                                                    'electrode area ecsa': 78.9
+                                                                    }
+                         }
     if savesettings:
         data_load_settings = [folder_path, folders, filenames, filespec_settings]
 
         save_settings_as = input("Save data input settings as ([...]_input.txt): ") + "_input.txt"
-        with open(save_settings_as, 'w') as f:
+        with open('import_settings/'+save_settings_as, 'w') as f:
             json.dump(data_load_settings, f)
 
 #TODO: automatically detect which is the CO strip and the reference cycle based on the potential holde period in the cycle??
 
 if not input_plot_settings:
-    plotsettings_file = input("Enter the name of the settings file for the plot: ")
+    plotsettings_file = 'plot_settings/'+ input("Enter the name of the settings file for the plot: ")
     with open(plotsettings_file) as f:
         plot_load_settings = json.load(f)
     print(plot_load_settings)
@@ -150,35 +143,36 @@ if not input_plot_settings:
 else:
     # settings for the plot
     plot_settings = {'safeplot': False,
-                     'plotname': 'CV_Pd_049_CO_strip',
                      'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': True,
                      'second axis':  False,
-                     'x_lim': (0.3, 1.6),
-                     'y_lim': (-6.0, 6),
-                     'y2_lim': (-3, 3),
+                     'x_lim': (-10, 2750),
+                     'y_lim': (-0.002, 0.006),
+                     'y2_lim': (0.6, 2.6),
                      'top_pad': 0.2,
                      'bottom_pad': 0.1,
                      'l_pad': [],
                      'r_pad': [],
-                     'colors': ['g', 'orange', 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75'],
-                     'linestyle': ['-'],
+                     'colors': ['r', 'orange','g', 'r', 'b', 'k', 'g', 'orange', 'r', 'b', 'k', 'c', 'm', '0.50',"#538612", '0.75'],
+                     'linestyle': ['-', '--'],
+                     'colors2': ['k', 'grey'],
+                     'linestyle2': ['-','--'],
                      # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
                      # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
                      #options to select which data is plotted
-                     'plot type': "cv", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
+                     'plot type': "ca", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
                      #custom column selection, will overrule plottype, if given. Possibilities are all data column names,
                      #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
                      # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
-                     'x_data':"",
-                     'y_data':"",
+                     'x_data':"time/s",
+                     'y_data':"i/mAcm^-2_ECSA",
                      'x_data2':"", #not implemented yet
-                     "y_data2":""
+                     "y_data2":"EvsRHE/V"
                      }
 
     # legend:
-    legend_settings = {'position1': (0, 1.15),
-                       'position2': (0, -0.15), #position of the legend for the second y axis
+    legend_settings = {'position1': (0, 1.05),
+                       'position2': (0, -0.2), #position of the legend for the second y axis
                        'number_of_cols': 2,
                        'fontsize': 8
                        }
@@ -192,7 +186,7 @@ else:
     if savesettings:
         plot_load_settings = [plot_settings, legend_settings, annotation_settings]
 
-        save_plotsettings_as = input("Save plot settings as ([...]_plot_settings.txt): ") + "_plot_settings.txt"
+        save_plotsettings_as = 'plot_settings/'+input("Save plot settings as ([...]_plot_settings.txt): ") + "_plot_settings.txt"
         with open(save_plotsettings_as, 'w') as f:
             json.dump(data_load_settings, f)
 
@@ -245,10 +239,10 @@ def main():
 
 
     #Calculate ESCA from a list of 2 data dictionaries (all further items in the list will be disregarded).
-    # dpf.calc_esca(datalist[0:2], type='CO_strip')
-    # print(esca_data)
+    esca_data = dpf.calc_esca(datalist[0:4], type='oxide_red')
+    print(esca_data)
 
-    esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
+    # esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
     #plot the data from the list of data dictionaries
     # print(datalist)
     dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)

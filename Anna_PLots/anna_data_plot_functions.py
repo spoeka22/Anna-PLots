@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from pandas import DataFrame
 import pandas as pd
 import itertools
+import os
 
 from EC_MS import Data_Importing as Data_Importing_Scott
 from EC_MS import EC as EC_Scott
@@ -87,6 +88,33 @@ def integrate_CV(dataline, Vspan, ox_red):
     # print(len(data_keep))
     return dQ
 
+def find_ave_current(dataline, Vspan, ox_red):
+    """Calculates the average current in a given region(Vspan) (for example the current in the the DL region """
+
+    #check if ohmic drop correction was done and choose which column to use
+    if "E_corr_vsRHE/V" in dataline['data']:  #THIS IS NOT WORKING FOR SOME REASON
+        V_col="E_corr_vsRHE/V"
+    else:
+        V_col= "EvsRHE/V"
+
+    data_keep_index = []
+
+    for (potential, oxred) in zip(dataline['data'][V_col].iteritems(), dataline['data']["ox/red"].iteritems()):
+        # print(potential, oxred)
+        # eachline_frame=DataFrame([eachline])
+        # print(eachline_frame)
+        if Vspan[0] < potential[1] < Vspan[1] and oxred[1] == ox_red:
+            data_keep_index.append(potential[0])
+
+    index_firstrow = data_keep_index[0]
+    index_lastrow = data_keep_index[-1]
+    data_keep = dataline['data'][index_firstrow:index_lastrow + 1]
+
+    ave_current = np.mean(data_keep['data']['<I>/mA'])
+    print("The average current is: " + str(ave_current))
+    return ave_current
+
+
 def calc_esca(datalines,  type="CO_strip", Vspan=[], ox_red=[], charge_p_area=1):
     """ Input: list of 2 dictionaries containing data (file in datalist), one with surface area specific peak,
     one with reference peak. Calls integrate_CV function to evaluate charge difference in selected Vspan.
@@ -94,39 +122,53 @@ def calc_esca(datalines,  type="CO_strip", Vspan=[], ox_red=[], charge_p_area=1)
     (or given one if type & metal chosen. returns & prints ECSA."""
 
     if type == "CO_strip":
-        Vspan=[0.6,1.2] #V vs. RHE, taken from Mittermeier et.al 2017
+        Vspan=[0.6, 1.2] #V vs. RHE, taken from Mittermeier et.al 2017
         ox_red = 1
     elif type == "oxide_red":
         Vspan=[0.4, 0.9] #V vs. RHE, taken from Mittermeier et.al 2017
         ox_red = 0
 
+    #Integrate CV in selected area (using the charge calculated already by EC lab) for the first 2 CVs in the
+    #list of data (datalines) only
     dQ=[]
-    for dataline in datalines:
-        dQ.append(integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red))
-        if len(dQ) > 2:
-            break
-
-    deltaQ = abs(dQ[0]-dQ[1])
-    print("The charge difference between following CVs: (" +str(datalines[0]['filename']) + " and " +
-        str(datalines[1]['filename']) + ") is " + str(deltaQ) + " C.")
-
     esca = None
     esca_co = None
 
-    if type == "CO_strip":
-        esca_co = deltaQ * 1000000 / (2*205)  #taken from Mittermeier et.al 2017, only valid for Pd!!
-        print("An ESCA of " + str(esca_co) + " cm^2 was estimated based on CO-stripping on Pd.")
+    if type == "oxide_red":
+        deltaQ=[]
+        for dataline in datalines:
+            reduction_charge = integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red)
+            dQ.append(reduction_charge)
+            reduction_charge_corr = reduction_charge - find_ave_current(dataline, Vspan=[0.32, 0.4], ox_red=ox_red)
+            deltaQ.append(reduction_charge_corr)
 
-    elif type == "oxide_red":
-        print("You need to find some reference for the relation between surface area and oxide reduction "
-              "current before I can calulate the ESCA for you.")
-    else:
-        esca=deltaQ/charge_p_area
-        print("An ESCA of " + str(esca) + "cm^2 was estimated based on the value you entered for charge per area.")
+            print("The oxide reduction charge for file: " + str(dataline['filename']) +
+              " has been calculated to " + str(reduction_charge_corr))
+            # print("You need to find some reference for the relation between surface area and oxide reduction "
+            #       "current before I can calulate the ECSA for you.")
+
+    else:  #compares two consecutive cycles (meant for CO-strip)
+        for dataline in datalines:
+            dQ.append(integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red))
+            if len(dQ) > 2:
+                break
+
+        #calculate the difference in dQ between the 2 first CVs in datalines
+        deltaQ = abs(dQ[0]-dQ[1])
+        print("The charge difference between following CVs: (" +str(datalines[0]['filename']) + " and " +
+            str(datalines[1]['filename']) + ") is " + str(deltaQ) + " C.")
+        #calculate ECSA
+        if type == "CO_strip":
+            esca_co = deltaQ * 1000000 / (2*205)  #taken from Mittermeier et.al 2017, only valid for Pd!!
+            print("An ECSA of " + str(esca_co) + " cm^2 was estimated based on CO-stripping on Pd.")
+        else:
+            esca=deltaQ/charge_p_area
+            print("An ECSA of " + str(esca) + "cm^2 was estimated based on the value you entered for charge per area.")
 
     esca_data=[deltaQ, esca_co, esca]
 
-    return deltaQ, esca_co, esca, esca_data
+    # return deltaQ, esca_co, esca
+    return  esca_data
 
 
 
@@ -261,6 +303,8 @@ def find_axis_label(data_col):
             axis_label = "E vs. Ref / V"
         else:
             print("Something wrong with potential axis labelling.")
+    elif data_col == "time/s":
+        axis_label = "Time / s"
     elif "i" in data_col or "I" in data_col:
         if data_col == "i/mAcm^-2_geom":
             axis_label = "i / mA cm$^{-2}$$_{geom.}$"
@@ -270,8 +314,6 @@ def find_axis_label(data_col):
             axis_label = "I / mA"
         else:
             print("Something wrong with current density axis labelling.")
-    elif data_col == "time/s":
-        axis_label = "Time / s"
     else:
         axis_label = "Charge / C"  #This might not be the smartest way to deal with it, but ok for now.
     print("Label for " + str(data_col) + " is: " + str(axis_label))
@@ -291,6 +333,8 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     #imports linestyle/colours
     linestyle_list = plot_settings['linestyle']
     color_list = plot_settings['colors']
+    linestyle_list2 = plot_settings['linestyle2']
+    color_list2 = plot_settings['colors2']
 
     #select which data columns to plot
     if not plot_settings['x_data'] == "":
@@ -332,31 +376,45 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
                  linestyle=linestyle, label=makelabel(each_file))
         except TypeError:
             if len(datalist) < len(color_list) or len(datalist) < len(linestyle_list):
-               continue
+                continue
             else:
                 print("Problem plotting datalist...")
 
-        # x_data2
+    #color the integrated are in the CO CVs grey if calculation of esca is done
+    #This doesnt work, probably because the two cycles dont have the same number of points.
+
+    # if esca_data:
+    #     x=datalist[0]['data'][x_data_col].values.tolist()
+    #     y1=datalist[0]['data'][y_data_col].values.tolist()
+    #     y2=datalist[1]['data'][y_data_col].values.tolist()
+    #     print(str(x))
+    #     print(str(y1))
+    #     print(str(y2))
+    #     ax1.fill_between(x, y1, y2)
+    #             # facecolor='b', interpolate=True)
+
+
+    # x_data2
 
     # inserts second y-axis if data column to plot chosen in plot_settings['y_data2']
     if plot_settings['y_data2']:
         ax2 = ax1.twinx()  # adds second y axis with the same x-axis
         y2_data_col = plot_settings['y_data2']
         print(y2_data_col)
-        for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
+        for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list2, linestyle_list2):
             try:
                 ax2.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y2_data_col].values.tolist(),
-                     color=color, linestyle=linestyle, label=makelabel(each_file) + "(" +y2_data_col + ")")
+                         color=color, linestyle=linestyle, label=makelabel(each_file) + "(" +y2_data_col + ")")
             except TypeError:
-                if len(datalist) < len(color_list) or len(datalist) < len(linestyle_list):
+                if len(datalist) < len(color_list2) or len(datalist) < len(linestyle_list2):
                     continue
                 else:
                     print("Problem plotting datalist (2nd y axis)...")
 
-    if len(color_list) <= len(datalist):
+    if len(color_list) < len(datalist):
         print("Careful! You are plotting more traces than you assigned colours. Python standard colours are used!")
 
-    if len(linestyle_list) <= len(datalist):
+    if len(linestyle_list) < len(datalist):
         print("Careful! You are plotting more traces than you assigned linestyles. Style \"-\" is used!")
 
 
@@ -410,13 +468,21 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
 
     #annotations
     if esca_data:
-        anno_esca="$\Delta$Q ="+ str(esca_data[0]) + "C \n ESCA$_{CO}$= " + str(esca_data[1]) + "cm$^2$"
-        ax1.annotate(anno_esca, xy=(0.7, 0.05), xycoords="axes fraction")
+        # anno_esca="$\Delta$Q ="+ str(esca_data[0]) + "C \n ESCA$_{CO}$= " + str(esca_data[1]) + "cm$^2$"
+        anno_esca = '$\Delta$Q = {:.2e} C'.format(esca_data[0]) + '\n ECSA$_{CO}$ = ' + '{:.2e} cm$^2$'.format(esca_data[1])
+        ax1.annotate(anno_esca, xy=(0.6, 0.05), xycoords="axes fraction")
 
     #safes figure as png and pdf
     if plot_settings['safeplot']:
-        plt.savefig(plot_settings['plotname']+'.png', dpi=400, bbox_inches='tight')
-        plt.savefig(plot_settings['plotname']+'.pdf', dpi=400, bbox_inches='tight')
+        if os.path.exists("output_files/" + plot_settings['plotname']+'.png'):
+            overwrite = input("Do you want to overwrite an existing plot? (y/n)")
+            if overwrite == "y" or overwrite == "yes":
+                print("Overwriting file.")
+            else:
+                plot_settings['plotname'] = input("Enter new filename:")
+
+        plt.savefig("output_files/" + plot_settings['plotname']+'.png', dpi=400, bbox_inches='tight')
+        plt.savefig("output_files/" + plot_settings['plotname']+'.pdf', dpi=400, bbox_inches='tight')
     plt.show()
 
 
@@ -439,8 +505,9 @@ def extract_data(folder_path, filenames, folders, filespec_settings):
                 filepath = folder_path + "/" + folder + "/" + filename
                 # import from file
                 datadict = Data_Importing_Scott.import_data(filepath)
+                # print(filespec_settings.keys())
                 # print(filespec_settings[str(filename)].keys())
-                if filespec_settings[str(filename)].keys():
+                if str(filename) in filespec_settings.keys():
                     if 'cycles to extract' in filespec_settings[str(filename)].keys():
                         for cycle in filespec_settings[str(filename)]['cycles to extract']:
                             data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle]) #extract only the data from selected cycles
@@ -451,10 +518,15 @@ def extract_data(folder_path, filenames, folders, filespec_settings):
                             #collect all the data from different cycles in one big dictionary
                             data.append({'filename': filename + "_cycle_" + str(cycle), 'data': data_selected_cycle_frame, 'settings': filespec_settings[str(filename)]})
                             print("cycle " + str(cycle) +" extracted")
+                    else:
+                        data_current_file = DataFrame(convert_datadict_to_dataframe(datadict))
+                        data.append({'filename': filename, 'data': data_current_file,
+                                     'settings': filespec_settings[str(filename)]})
+                        print("data from " + filename + " extracted using settings specified for file.")
                 else:
                     data_current_file = DataFrame(convert_datadict_to_dataframe(datadict))
-                    data.append({'filename': filename, 'data': data_current_file, 'settings': filespec_settings[str(filename)]})
-                    print("data from " + filename + " extracted")
+                    data.append({'filename': filename, 'data': data_current_file, 'settings': []})
+                    print("data from " + filename + " extracted using standard settings.")
     # print(data)
     return data
 
