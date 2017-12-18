@@ -1,8 +1,9 @@
 import os
+from collections import OrderedDict
 
 
 folders = []
-filenames = {}
+filenames = OrderedDict()
 #
 #
 # for root, subfolders, files in os.walk(r'\\dtu-storage\annawi\Desktop\Data Testfolder'):
@@ -21,9 +22,12 @@ filenames = {}
 # print(folders)
 # print(filenames)
 
-for root, subfolders, files in os.walk(r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\EC and product analysis'):
+for root, subfolders, files in os.walk(r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\Systematic Study NovDec2017'):
     if len(files)==0: continue
     #folders.append(root[-8:])
+    if 'KERAS' in root:
+        continue
+        # print("FOUND")
     folders.append(root[-15:])
     files_this_folder = []
     for filename in files:
@@ -33,7 +37,10 @@ for root, subfolders, files in os.walk(r'\\dtu-storage\annawi\Desktop\Propene ox
 #    filenames[root[-8:]] = files_this_folder
     filenames[root[-15:]] = files_this_folder
 
+
+
 print(folders)
+
 print(filenames)
 
 

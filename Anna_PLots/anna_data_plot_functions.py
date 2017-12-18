@@ -145,7 +145,7 @@ def calc_esca(datalines,  type="CO_strip", Vspan=[], ox_red=[], charge_p_area=1)
         for dataline in datalines:
             reduction_charge = abs(integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red))
             dQ.append(reduction_charge)
-            reduction_charge_corr = reduction_charge - abs(find_ave_current(dataline, Vspan=[0.32, 0.4], ox_red=ox_red))*0.001
+            reduction_charge_corr = reduction_charge - abs(find_ave_current(dataline, Vspan=[0.36, 0.37], ox_red=ox_red))*0.001
             deltaQ.append(reduction_charge_corr)
 
             print("The oxide reduction charge for file: " + str(dataline['filename']) +
@@ -361,10 +361,11 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     elif plot_settings['plot type'] == "cv":
         y_data_col = "i/mAcm^-2_geom"
     elif plot_settings['plot type'] == "ca":
-        if ohm_drop_corr:
-            y_data_col = "E_corr_vsRHE/V"
-        else:
-            y_data_col = "EvsRHE/V"
+        y_data_col = "i/mAcm^-2_geom"
+        # if ohm_drop_corr:
+        #     y_data_col = "E_corr_vsRHE/V"
+        # else:
+        #     y_data_col = "EvsRHE/V"
     else:
         print("Error: Select plot-type or data column for y-axis!")
         y_data_col = ""
@@ -474,9 +475,21 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
 
     #annotations
     if esca_data:
+        # print(esca_data[0], esca_data[1])
         # anno_esca="$\Delta$Q ="+ str(esca_data[0]) + "C \n ESCA$_{CO}$= " + str(esca_data[1]) + "cm$^2$"
-        anno_esca = '$\Delta$Q = {:.2e} C'.format(esca_data[0]) + '\n ECSA$_{CO}$ = ' + '{:.2e} cm$^2$'.format(esca_data[1])
-        ax1.annotate(anno_esca, xy=(0.6, 0.05), xycoords="axes fraction")
+
+        if type(esca_data[0]) is list:
+            anno_esca = []
+            for (datafile, esca_charge) in itertools.zip_longest(datalist,esca_data[0]):
+                anno_esca.append(datafile['settings']['label'] + ': $\Delta$Q = {:.2e} C'.format(esca_charge))
+            anno_esca.sort()
+            anno_print="\n".join(anno_esca)
+            ax1.annotate(anno_print, xy=(0.45, 0.05), xycoords="axes fraction")
+        else:
+            print("notlist")
+            anno_esca = '$\Delta$Q = {:.2e} C'.format(esca_data[0]) + '\n ECSA$_{CO}$ = ' + '{:.2e} cm$^2$'.format(
+                esca_data[1])
+            ax1.annotate(anno_esca, xy=(0.6, 0.05), xycoords="axes fraction")
 
     #safes figure as png and pdf
     if plot_settings['safeplot']:
