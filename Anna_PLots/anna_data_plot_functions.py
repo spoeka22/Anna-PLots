@@ -145,7 +145,7 @@ def calc_esca(datalines,  type="CO_strip", Vspan=[], ox_red=[], charge_p_area=1)
         for dataline in datalines:
             reduction_charge = abs(integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red))
             dQ.append(reduction_charge)
-            reduction_charge_corr = reduction_charge - abs(find_ave_current(dataline, Vspan=[0.36, 0.37], ox_red=ox_red))*0.001
+            reduction_charge_corr = reduction_charge - abs(find_ave_current(dataline, Vspan=[0.37, 0.46], ox_red=ox_red))*0.001
             deltaQ.append(reduction_charge_corr)
 
             print("The oxide reduction charge for file: " + str(dataline['filename']) +

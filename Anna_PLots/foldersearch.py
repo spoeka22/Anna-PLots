@@ -22,7 +22,7 @@ filenames = OrderedDict()
 # print(folders)
 # print(filenames)
 
-for root, subfolders, files in os.walk(r'\\dtu-storage\annawi\Desktop\Propene oxidation\Experiments\Pd electrodes\Systematic Study NovDec2017'):
+for root, subfolders, files in os.walk(r'\\dtu-storage\annawi\Desktop\Projects\Propene oxidation\Experiments\Pd-electrodes\Systematic Study NovDec2017'):
     if len(files)==0: continue
     #folders.append(root[-8:])
     if 'KERAS' in root:
