@@ -119,7 +119,7 @@ def find_ave_current(dataline, Vspan, ox_red):
     return ave_current
 
 
-def calc_esca(datalines,  type="CO_strip", Vspan=[], ox_red=[], charge_p_area=1):
+def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], charge_p_area=1):
     """ Input: list of 2 dictionaries containing data (file in datalist), one with surface area specific peak,
     one with reference peak. Calls integrate_CV function to evaluate charge difference in selected Vspan.
     calculates absolute difference between these charge differences & multiplies with a selected factor
@@ -145,7 +145,10 @@ def calc_esca(datalines,  type="CO_strip", Vspan=[], ox_red=[], charge_p_area=1)
         for dataline in datalines:
             reduction_charge = abs(integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red))
             dQ.append(reduction_charge)
-            reduction_charge_corr = reduction_charge - abs(find_ave_current(dataline, Vspan=[0.37, 0.46], ox_red=ox_red))*0.001
+            #correction: subtraction of double layer charge calculated by finding current in DL region,
+            #and multiplying that with time found from potential difference (Vspan) multiplied with scanrate to get correct units
+            reduction_peak_time = (Vspan[1]-Vspan[0])*scanrate*0.001 #time in s from start to end of integration area
+            reduction_charge_corr = reduction_charge - abs(find_ave_current(dataline, Vspan=[0.37, 0.46], ox_red=ox_red))*0.001 * reduction_peak_time
             deltaQ.append(reduction_charge_corr)
 
             print("The oxide reduction charge for file: " + str(dataline['filename']) +
@@ -258,9 +261,9 @@ def convert_to_current_density(file, electrode_area_geom, electrode_area_ecsa):
 
     if electrode_area_ecsa or 'electrode area ecsa' in file['settings']:
         if 'electrode area ecsa' in file['settings']:
-            i_ecsa = file['data']['<I>/mA']/file['settings']['electrode area ecsa']
+            i_ecsa = file['data']['<I>/mA']/file['settings']['electrode area ecsa'] *1000
         else:
-            i_ecsa = file['data']['<I>/mA'] / electrode_area_ecsa
+            i_ecsa = file['data']['<I>/mA'] / electrode_area_ecsa *1000
     else:
         i_ecsa = []
 
@@ -315,7 +318,7 @@ def find_axis_label(data_col):
         if data_col == "i/mAcm^-2_geom":
             axis_label = "i / mA cm$^{-2}$$_{geom.}$"
         elif data_col == "i/mAcm^-2_ECSA":
-            axis_label = "i / mA cm$^{-2}$$_{ECSA}$"
+            axis_label = "i / $\mu$A cm$^{-2}$$_{ECSA}$"
         elif data_col == "<I>/mA":
             axis_label = "I / mA"
         else:
