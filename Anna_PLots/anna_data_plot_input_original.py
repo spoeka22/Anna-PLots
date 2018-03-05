@@ -404,7 +404,7 @@ elif load_new_data:
                                                               'electrode area ecsa': 60.74,
                                                               # 'individual ohmicdrop': 43.3
                                                               },
-                         '20180209_Pd_102_03_CA_C01.mpt': {'label': "0.8 V/RHE (102)",
+                         '20180209_Pd_102_03_CA_C01.mpt': {'label': "0.79 V/RHE (102)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
                                                                'electrode area ecsa': 45.51,
@@ -787,7 +787,7 @@ def main():
 
     # dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
 
-    dpf.current_at_time_plot(datalist, [100, 500, 1000])
+    dpf.current_at_time_plot(datalist, times=[100, 500, 1000], I_col="i/mAcm^-2_ECSA")
 
     # try:
     # except IndexError:

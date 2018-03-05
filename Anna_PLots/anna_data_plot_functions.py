@@ -92,7 +92,7 @@ def integrate_CV(dataline, Vspan, ox_red):
     # print(len(data_keep))
     return dQ
 
-def find_ave_current(dataline, Vspan=0, ox_red = 0, tspan=0):
+def find_ave_current(dataline, Vspan=0, ox_red = 0, tspan=0, I_col="<I>/mA"):
     """Calculates the average current in a given region(Vspan) (for example the current in the the DL region """
 
     #check if ohmic drop correction was done and choose which column to use
@@ -126,24 +126,28 @@ def find_ave_current(dataline, Vspan=0, ox_red = 0, tspan=0):
     index_lastrow = data_keep_index[-1]
     data_keep = dataline['data'][index_firstrow:index_lastrow + 1]
 
-    ave_current = np.mean(data_keep['<I>/mA'])
-    print("The average current is: " + str(ave_current) + "mA")
+    ave_current = np.mean(data_keep[I_col])
+    if I_col == "<I>/mA":
+        print("The average current is: " + str(ave_current) + "mA")
+    else:
+        print("The average current value of column " + I_col + " is " + str(ave_current))
     return ave_current
 
 def find_pot_at_time(dataline, time):
     ''' finds potential vs RHE at a given time.'''
     for timecounter in dataline['data']['time/s'].iteritems():
-        if timecounter[0] > time:
-            time_index = timecounter[0]
+        if timecounter[0] > time - 1 and timecounter[0] <= time :
+           time_index = timecounter[0]
         continue
     print("timecounter: " + str(timecounter) )
-    potential = dataline['data'][time_index]
-    print("index+potential" + time_index + "and" + potential)
+    # potential = dataline['data'][time_index]
+    potential = dataline['data'].ix[time_index, 'EvsRHE/V']
+    print(time_index, potential)
     return potential
 
 
 
-def current_at_time_plot(datalist, times):
+def current_at_time_plot(datalist, times, I_col):
     """finds current at certain time (adds +/-5s and finds average current in that window) and plots
     this against time -> get a different view on CAs
     """
@@ -154,9 +158,9 @@ def current_at_time_plot(datalist, times):
 
         for dataline in datalist:
             print("Now working on file " + dataline['filename'])
-            current = find_ave_current(dataline, tspan=timespan)
+            current = find_ave_current(dataline, tspan=timespan, I_col= I_col)
             potential = find_pot_at_time(dataline, time=timespan[0])
-            print("current and potential are" + current + "and" + potential)
+            print("current and potential are " + str(current) + " and " + str(potential))
 
     # fig = plt.figure()
     # ax1 = fig.add_subplot(111)
