@@ -92,10 +92,12 @@ def integrate_CV(dataline, Vspan, ox_red):
     # print(len(data_keep))
     return dQ
 
-def find_ave_current(dataline, Vspan, ox_red):
+def find_ave_current(dataline, Vspan=0, ox_red = 0, tspan=0):
     """Calculates the average current in a given region(Vspan) (for example the current in the the DL region """
 
     #check if ohmic drop correction was done and choose which column to use
+
+    # print("Function find_ave_current now active.")
     if "E_corr_vsRHE/V" in dataline['data']:  #THIS IS NOT WORKING FOR SOME REASON
         V_col="E_corr_vsRHE/V"
     else:
@@ -103,12 +105,22 @@ def find_ave_current(dataline, Vspan, ox_red):
 
     data_keep_index = []
 
-    for (potential, oxred) in zip(dataline['data'][V_col].iteritems(), dataline['data']["ox/red"].iteritems()):
-        # print(potential, oxred)
-        # eachline_frame=DataFrame([eachline])
-        # print(eachline_frame)
-        if Vspan[0] < potential[1] < Vspan[1] and oxred[1] == ox_red:
-            data_keep_index.append(potential[0])
+    if Vspan is not 0:
+        for (potential, oxred) in zip(dataline['data'][V_col].iteritems(), dataline['data']["ox/red"].iteritems()):
+            # print(potential, oxred)
+            # eachline_frame=DataFrame([eachline])
+            # print(eachline_frame)
+            if Vspan[0] < potential[1] < Vspan[1] and oxred[1] == ox_red:
+                data_keep_index.append(potential[0])
+
+
+    elif tspan is not 0:
+        # print("work based on tspan")
+        for time in dataline['data']['time/s'].iteritems():
+            # eachline_frame=DataFrame([eachline])
+            # print(eachline_frame)
+            if tspan[0] < time[1] < tspan[1]:
+                data_keep_index.append(time[0])
 
     index_firstrow = data_keep_index[0]
     index_lastrow = data_keep_index[-1]
@@ -117,6 +129,38 @@ def find_ave_current(dataline, Vspan, ox_red):
     ave_current = np.mean(data_keep['<I>/mA'])
     print("The average current is: " + str(ave_current) + "mA")
     return ave_current
+
+def find_pot_at_time(dataline, time):
+    ''' finds potential vs RHE at a given time.'''
+    for timecounter in dataline['data']['time/s'].iteritems():
+        if timecounter[0] > time:
+            time_index = timecounter[0]
+        continue
+    print("timecounter: " + str(timecounter) )
+    potential = dataline['data'][time_index]
+    print("index+potential" + time_index + "and" + potential)
+    return potential
+
+
+
+def current_at_time_plot(datalist, times):
+    """finds current at certain time (adds +/-5s and finds average current in that window) and plots
+    this against time -> get a different view on CAs
+    """
+
+    for time in times:
+        timespan=[time - 5, time + 5]
+        print(time, timespan)
+
+        for dataline in datalist:
+            print("Now working on file " + dataline['filename'])
+            current = find_ave_current(dataline, tspan=timespan)
+            potential = find_pot_at_time(dataline, time=timespan[0])
+            print("current and potential are" + current + "and" + potential)
+
+    # fig = plt.figure()
+    # ax1 = fig.add_subplot(111)
+
 
 
 def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], charge_p_area=1):
@@ -506,6 +550,9 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
         plt.savefig("output_files/" + plot_settings['plotname']+'.png', dpi=400, bbox_inches='tight')
         plt.savefig("output_files/" + plot_settings['plotname']+'.pdf', dpi=400, bbox_inches='tight')
     plt.show()
+
+
+
 
 
 def extract_data(folder_path, filenames, folders, filespec_settings):
