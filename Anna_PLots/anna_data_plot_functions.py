@@ -129,8 +129,8 @@ def find_ave_current(dataline, Vspan=0, ox_red = 0, tspan=0, I_col="<I>/mA"):
     ave_current = np.mean(data_keep[I_col])
     if I_col == "<I>/mA":
         print("The average current is: " + str(ave_current) + "mA")
-    else:
-        print("The average current value of column " + I_col + " is " + str(ave_current))
+    # else:
+        # print("The average current value of column " + I_col + "  is " + str(ave_current))
     return ave_current
 
 def find_pot_at_time(dataline, time):
@@ -139,10 +139,10 @@ def find_pot_at_time(dataline, time):
         if timecounter[0] > time - 1 and timecounter[0] <= time :
            time_index = timecounter[0]
         continue
-    print("timecounter: " + str(timecounter) )
+    # print("timecounter: " + str(timecounter) )
     # potential = dataline['data'][time_index]
     potential = dataline['data'].ix[time_index, 'EvsRHE/V']
-    print(time_index, potential)
+    # print(time_index, potential)
     return potential
 
 
@@ -150,20 +150,58 @@ def find_pot_at_time(dataline, time):
 def current_at_time_plot(datalist, times, I_col):
     """finds current at certain time (adds +/-5s and finds average current in that window) and plots
     this against time -> get a different view on CAs
+    HARDCODED plotsettings - suboptimal but good for now
     """
+    # prepare a figure
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
 
+    #prepare a dataframe to save the extracted data
+    VI_data = pd.DataFrame({"filename": 0, "EvsRHE/V": 0, I_col: 0}, index=[0])
     for time in times:
         timespan=[time - 5, time + 5]
         print(time, timespan)
+        # print(type(time))
 
         for dataline in datalist:
             print("Now working on file " + dataline['filename'])
             current = find_ave_current(dataline, tspan=timespan, I_col= I_col)
             potential = find_pot_at_time(dataline, time=timespan[0])
-            print("current and potential are " + str(current) + " and " + str(potential))
+            VI_data_dataline = pd.DataFrame({"filename":[dataline['filename']],"EvsRHE/V": [potential], I_col: [current]}, index=[time])
+            VI_data = VI_data.append(VI_data_dataline)
+            # print(VI_data_dataline)
+            # print(VI_data)
+            # print("current and potential are {0} and {1}".format(str(current), str(potential)))
+        print(VI_data.ix[time, 'EvsRHE/V'].values.tolist())
+        print(VI_data.ix[time, I_col].values.tolist())
+        ax1.plot(VI_data.ix[time, 'EvsRHE/V'].values.tolist(),VI_data.ix[time, I_col].values.tolist(), label=str(time) + " s", marker="o",
+                 ls="")
+    # print(VI_data)
 
-    # fig = plt.figure()
-    # ax1 = fig.add_subplot(111)
+    #safe the VI data as csv file (comma separated)
+
+    # data_filename = input("Enter a name for the datafile")
+    # VI_data.to_csv("output_files/" + data_filename + '.csv', na_rep='NULL')
+
+
+
+    # axis labels
+    if "ECSA" in I_col:
+        ax1.set_ylabel('i / $\mu$A cm$^{-2}$$_{ECSA}$')
+    else:
+        ax1.set_ylabel(I_col)
+    ax1.set_xlabel('E vs. RHE / V')
+
+    # set axis limits
+    # ax1.set_ylim(0,1)
+    ax1.set_xlim(0.6, 1.3)
+
+    #add legend
+    ax1.legend()
+    # plotname = input("Enter a name for saving the plot:")
+    # plt.savefig("output_files/" + plotname + '.png')
+
+    plt.show()
 
 
 

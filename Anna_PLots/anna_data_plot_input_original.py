@@ -91,11 +91,11 @@ elif load_new_data:
                 # '20180201_Pd_100',
                 # '20180208_Pd_101',
                 '20180209_Pd_102',
-                # '20180216_Pd_103',
+                '20180216_Pd_103',
                 # '20180220_Pd_104',
                 # '20180220_Pd_105',
-                # '20180222_Pd_106',
-                # '20180222_Pd_107',
+                '20180222_Pd_106',
+                '20180222_Pd_107',
                 # '20180222_Pd_108',
                 # '20180223_Pd_109',
                 # '20180226_Pd_110',
@@ -272,11 +272,11 @@ elif load_new_data:
                                                   # '20180209_Pd_102_saeval_04_CVA_C01.mpt',
                                                   # '20180209_Pd_102_saeval_05_OCV_C01.mpt'
                                                 ]),
-                            #   ('20180216_Pd_103', [#'20180216_Pd_103_03_CA_C01.mpt',
-                            #                        # '20180216_Pd_103_02_CA_C01.mpt',
-                            #                        # '20180216_Pd_103_SAeval_05_OCV_C01.mpt',
-                            #                        '20180216_Pd_103_SAeval_04_CVA_C01.mpt'
-                            #                        ]),
+                              ('20180216_Pd_103', ['20180216_Pd_103_03_CA_C01.mpt',
+                                                   # '20180216_Pd_103_02_CA_C01.mpt',
+                                                   # '20180216_Pd_103_SAeval_05_OCV_C01.mpt',
+                                                   # '20180216_Pd_103_SAeval_04_CVA_C01.mpt'
+                                                   ]),
                             # ('20180220_Pd_104', [#'20180220_Pd_104_05_CA_C01.mpt',
                             #                      '20180220_Pd_104_SAeval_04_CVA_C01.mpt',
                             #                      # '20180220_Pd_104_SAeval_05_OCV_C01.mpt',
@@ -291,16 +291,16 @@ elif load_new_data:
                             #                      # '20180220_Pd_105_SAeval_05_OCV_C01.mpt',
                             #                      # '20180220_Pd_105_01_SPEIS_C01.mpt'
                             #                      ]),
-                            # ('20180222_Pd_106', ['20180222_Pd_106_SAeval_04_CVA_C01.mpt',
-                            #                        # '20180222_Pd_106_SAeval_05_OCV_C01.mpt',
-                            #                        # '20180222_Pd_106_02_CA_C01.mpt',
-                            #                        #  '20180222_Pd_106_03_CA_C01.mpt'
-                            #                      ]),
-                            # ('20180222_Pd_107', [#'20180222_Pd_107_03_CA_C01.mpt',
-                            #                      '20180222_Pd_107_SAeval_04_CVA_C01.mpt',
-                            #                      # '20180222_Pd_107_SAeval_05_OCV_C01.mpt',
-                            #                      # '20180222_Pd_107_02_CA_C01.mpt'
-                            #                      ]),
+                            ('20180222_Pd_106', [#'20180222_Pd_106_SAeval_04_CVA_C01.mpt',
+                                                   # '20180222_Pd_106_SAeval_05_OCV_C01.mpt',
+                                                   # '20180222_Pd_106_02_CA_C01.mpt',
+                                                    '20180222_Pd_106_03_CA_C01.mpt'
+                                                 ]),
+                            ('20180222_Pd_107', ['20180222_Pd_107_03_CA_C01.mpt',
+                                                 # '20180222_Pd_107_SAeval_04_CVA_C01.mpt',
+                                                 # '20180222_Pd_107_SAeval_05_OCV_C01.mpt',
+                                                 # '20180222_Pd_107_02_CA_C01.mpt'
+                                                 ]),
                             # ('20180222_Pd_108', [#'20180222_Pd_108_03_CA_C01.mpt',
                             #                       '20180222_Pd_108_SAeval_04_CVA_C01.mpt',
                             #                       # '20180222_Pd_108_SAeval_05_OCV_C01.mpt',
@@ -787,7 +787,7 @@ def main():
 
     # dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
 
-    dpf.current_at_time_plot(datalist, times=[100, 500, 1000], I_col="i/mAcm^-2_ECSA")
+    dpf.current_at_time_plot(datalist, times=[250, 3000], I_col="i/mAcm^-2_ECSA")
 
     # try:
     # except IndexError:
