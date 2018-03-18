@@ -209,13 +209,14 @@ def select_data(dataline, selection_columns_conditions, operator = "&"):
     Selects a subset of data (line-wise selection) and returns shortened DataFrame
     input: dataline (dictionary with DataFrame of one experiment ("data") and additional information),
     selection_columns_conditions: dictionary of selected colums (key) and selection conditions as list of lambda functions (value)
+    Operator is AND: "&" if not specified, other option OR: "|"
     SIMILAR CODE TO THIS FUNCTION IS USED ELSEWHERE IN THE CODE AND SHOULD BE REFACTORED TO USE THE FUNCTION
     returns: dataline with shortened dataset "data"
     """
     print("Cutting data ...")
     ops={"&": lambda x,y: x & y, "|": lambda x,y: x | y}
     dataline2 = copy.deepcopy(dataline)
-    cut_df = True
+    cut_df = operator == "&" #True if operator is &, False if operator is not
     for selected_column in selection_columns_conditions:
         for item in selection_columns_conditions[selected_column]:
             #returns (probably?) an array of indices and whether the condition is fulfilled (boolean) (dtype=bool)
