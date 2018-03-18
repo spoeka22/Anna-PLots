@@ -17,6 +17,7 @@ from pandas import DataFrame
 import pandas as pd
 import itertools
 import os
+import copy
 
 from EC_MS import Data_Importing as Data_Importing_Scott
 from EC_MS import EC as EC_Scott
@@ -174,11 +175,11 @@ def current_at_time_plot(datalist, times, I_col):
             # print(VI_data_dataline)
             # print(VI_data)
             # print("current and potential are {0} and {1}".format(str(current), str(potential)))
-        print(VI_data.ix[time, 'EvsRHE/V'].values.tolist())
-        print(VI_data.ix[time, I_col].values.tolist())
-        ax1.plot(VI_data.ix[time, 'EvsRHE/V'].values.tolist(),VI_data.ix[time, I_col].values.tolist(), label=str(time) + " s", marker="o",
-                 ls="")
-    # print(VI_data)
+        # print(VI_data.ix[time, 'EvsRHE/V'].values.tolist())
+        # print(VI_data.ix[time, I_col].values.tolist())
+        # ax1.plot(VI_data.ix[time, 'EvsRHE/V'].values.tolist(),VI_data.ix[time, I_col].values.tolist(), label=str(time) + " s", marker="o",
+        #          ls="")
+    print(VI_data)
 
     # axis labels
     if "ECSA" in I_col:
@@ -203,6 +204,35 @@ def current_at_time_plot(datalist, times, I_col):
     # data_filename = input("Enter a name for the datafile")
     # VI_data.to_csv("output_files/" + data_filename + '.csv', na_rep='NULL')
 
+def select_data(dataline, selection_columns_conditions, operator = "&"):
+    """
+    Selects a subset of data (line-wise selection) and returns shortened DataFrame
+    input: dataline (dictionary with DataFrame of one experiment ("data") and additional information),
+    selection_columns_conditions: dictionary of selected colums (key) and selection conditions as list of lambda functions (value)
+    SIMILAR CODE TO THIS FUNCTION IS USED ELSEWHERE IN THE CODE AND SHOULD BE REFACTORED TO USE THE FUNCTION
+    returns: dataline with shortened dataset "data"
+    """
+    ops={"&": lambda x,y: x & y, "|": lambda x,y: x | y}
+    dataline2 = copy.deepcopy(dataline)
+    cut_df = True
+    for selected_column in selection_columns_conditions:
+        for item in selection_columns_conditions[selected_column]:
+            #returns (probably?) an array of indices and whether the condition is fulfilled (boolean) (dtype=bool)
+            cut_df_1column = item(dataline['data'][selected_column])
+            print("next lambda results")
+            print(cut_df_1column)
+            #combine the lines that fulfill all previous plus the current condition
+            cut_df = ops[operator](cut_df,cut_df_1column)
+            # print(cut_df)
+
+    dataline2['data']=dataline['data'][cut_df]
+    return dataline2
+
+
+
+    #DataFrame.tail([n]) 	Return the last n rows.
+    #DataFrame.truncate([before, after, axis, copy]) Truncates a sorted DataFrame/Series before and/or after some particular index value
+
 
 def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], charge_p_area=1):
     """ Input: list of 2 dictionaries containing data (file in datalist), one with surface area specific peak,
@@ -216,6 +246,8 @@ def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], cha
         Vspan=[0.6, 1.2] #V vs. RHE, taken from Mittermeier et.al 2017
         ox_red = 1
     elif type == "oxide_red":
+        selection_conditions = {"EvsRHE/V": [lambda x: x >= 0.4, lambda x: x <= 0.9],  #V vs. RHE, taken from Mittermeier et.al 2017
+                            "ox/red": [lambda x: x == 0]}
         Vspan=[0.4, 0.9] #V vs. RHE, taken from Mittermeier et.al 2017
         ox_red = 0
 
@@ -228,12 +260,27 @@ def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], cha
     if type == "oxide_red":
         deltaQ=[]
         for dataline in datalines:
-            reduction_charge = abs(integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red))
-            dQ.append(reduction_charge)
+            #select the data in the right potential region
+            oxide_red_peak = select_data(dataline,selection_conditions) #shortened dictionary like dataline just around the oxide reducton peak)
+            DL_current = abs(find_ave_current(dataline, Vspan=[0.37, 0.46], ox_red=ox_red)) #absolute(!) average current in the DL region
+            #check if the current on the anodic side of the peak is < than DL_current (would give error in
+            #correction for DL current
+            if not abs(oxide_red_peak["data"]["<I>/mA"][0]) < DL_current:
+                print("DL current larger than current at 0.9 V/RHE.")
+                #-> sets a lower anodic limit for peak region
+                adjust_peak_region = {"<I>/mA": lambda x: abs(x) < DL_current,
+                                      "Evs/RHE": lambda x: x < 0.7}
+                #and cuts peak region accordingly
+                oxide_red_peak = select_data(oxide_red_peak,adjust_peak_region,operator="|")
+                #update Vspan for calculating the DL charge
+                Vspan = [0.4, oxide_red_peak["data"]["EvsRHE"][0]]
+                print("The potential region was corrected according to DL current to end at " + str(Vspan[1]))
+
+            reduction_charge=abs(oxide_red_peak["data"]["Q-Q0"].tail(1)-oxide_red_peak["data"]["Q-Q0"][0])
             #correction: subtraction of double layer charge calculated by finding current in DL region,
             #and multiplying that with time found from potential difference (Vspan) multiplied with scanrate to get correct units
-            reduction_peak_time = (Vspan[1]-Vspan[0])*scanrate*0.001 #time in s from start to end of integration area
-            reduction_charge_corr = reduction_charge - abs(find_ave_current(dataline, Vspan=[0.37, 0.46], ox_red=ox_red))*0.001 * reduction_peak_time
+            reduction_peak_time = (Vspan[1]-Vspan[0])/ (scanrate*0.001) #time in s from start to end of integration area
+            reduction_charge_corr = reduction_charge - DL_current*0.001 * reduction_peak_time
             deltaQ.append(reduction_charge_corr)
 
             print("The oxide reduction charge for file: " + str(dataline['filename']) +

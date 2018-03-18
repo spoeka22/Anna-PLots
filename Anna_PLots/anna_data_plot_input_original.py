@@ -13,6 +13,8 @@ from pandas import DataFrame
 import anna_data_plot_functions as dpf
 import json
 from collections import OrderedDict
+import matplotlib as plt
+import numpy as np
 
 load_new_data = True #False if saved set of data files should be used.
 input_plot_settings = True #False if saved settings for plot (size, colours etc.) should be used.
@@ -58,22 +60,22 @@ elif load_new_data:
 
     folders = [
                 # '20171122_Pd_064',
-                # # '20171122_GC_005',
-                '20171123_Pd_065',
-                '20171123_Pd_066',
-                # #'20171127_Pd_068b',
+                # '20171122_GC_005',
+                # '20171123_Pd_065',
+                # '20171123_Pd_066',
+                #'20171127_Pd_068b',
                 # '20171203_Pd_069',
                 # '20171203_Pd_070',
                 # '20171212_Pd_073',
                 # '20171213_Pd_074',
-                # # '20171213_Pd_075',
+                # '20171213_Pd_075',
                 # '20171214_Pd_076',
                 # '20171214_Pd_077',
                 # '20171214_Pd_078',
                 # '20171219_Pd_079',
                 # '20171219_Pd_080',
                 # '20180103_Pd_081',
-                # # '20180103_Pd_082',
+                # '20180103_Pd_082',
                 # '20180104_Pd_084',
                 # '20180104_Pd_085',
                 # '20180110_Pd_089',
@@ -81,8 +83,8 @@ elif load_new_data:
                 # '20180111_Pd_090',
                 # '20180109_Pd_087',
                 # '20180111_Pd_091'
-                # '20180124_Pd_092',
-                # '20180124_Pd_093',
+                '20180124_Pd_092',
+                '20180124_Pd_093',
                 # '20180130_Pd_094',
                 # '20180130_Pd_095',
                 # '20180130_Pd_096',
@@ -223,16 +225,16 @@ elif load_new_data:
                              #                         '20180111_Pd_091_PO4_04_CA_C01.mpt'
                              #                         ])
 
-                            #    ('20180124_Pd_092',  ['20180124_Pd_092_04_CVA_C01.mpt',
-                            #                          # '20180124_Pd_092_02_CA_C01.mpt',
-                            #                          # '20180124_Pd_092_05_CA_C01.mpt'
-                            #                          ]),
-                            #
-                            #    ('20180124_Pd_093', [#'20180124_Pd_093_02_CA_C01.mpt',
-                            #                          # '20180124_Pd_093_06_CA_C01.mpt',
-                            #                          '20180124_Pd_093_04_CVA_C01.mpt',
-                            #                          # '20180124_Pd_093_05_CA_C01.mpt'
-                            #                          ]),
+                               ('20180124_Pd_092',  ['20180124_Pd_092_04_CVA_C01.mpt',
+                                                     # '20180124_Pd_092_02_CA_C01.mpt',
+                                                     # '20180124_Pd_092_05_CA_C01.mpt'
+                                                     ]),
+
+                               ('20180124_Pd_093', [#'20180124_Pd_093_02_CA_C01.mpt',
+                                                     # '20180124_Pd_093_06_CA_C01.mpt',
+                                                     '20180124_Pd_093_04_CVA_C01.mpt',
+                                                     # '20180124_Pd_093_05_CA_C01.mpt'
+                                                     ]),
                             #    ('20180130_Pd_094', ['20180130_Pd_094_SAeval_05_OCV_C01.mpt',
                             #                         '20180130_Pd_094_SAeval_04_CVA_C01.mpt',
                             #                         '20180130_Pd_094_25mM_allyl_alcohol_03_CA_C01.mpt',
@@ -299,11 +301,11 @@ elif load_new_data:
                             #                        # '20180222_Pd_106_02_CA_C01.mpt',
                             #                         '20180222_Pd_106_03_CA_C01.mpt'
                             #                      ]),
-                            # ('20180222_Pd_107', ['20180222_Pd_107_03_CA_C01.mpt',
-                            #                      # '20180222_Pd_107_SAeval_04_CVA_C01.mpt',
-                            #                      # '20180222_Pd_107_SAeval_05_OCV_C01.mpt',
-                            #                      # '20180222_Pd_107_02_CA_C01.mpt'
-                            #                      ]),
+                            ('20180222_Pd_107', [#'20180222_Pd_107_03_CA_C01.mpt',
+                                                 '20180222_Pd_107_SAeval_04_CVA_C01.mpt',
+                                                 # '20180222_Pd_107_SAeval_05_OCV_C01.mpt',
+                                                 # '20180222_Pd_107_02_CA_C01.mpt'
+                                                 ]),
                             # ('20180222_Pd_108', [#'20180222_Pd_108_03_CA_C01.mpt',
                             #                       '20180222_Pd_108_SAeval_04_CVA_C01.mpt',
                             #                       # '20180222_Pd_108_SAeval_05_OCV_C01.mpt',
@@ -430,7 +432,7 @@ elif load_new_data:
                          '20180104_POR_Pd_085_03_CA_C01.mpt': {'label': "0.85 V/RHE (085)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
-                                                               'electrode area ecsa': 45.05,
+                                                               'electrode area ecsa': 79.69,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
                          '20180208_Pd_101_03_CA_C01.mpt': {'label': "0.8 V/RHE (101)",
@@ -457,7 +459,7 @@ elif load_new_data:
                                                                'electrode area ecsa': 58.88,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
-                         '20180222_Pd_107_03_CA_C01.mpt': {'label': "0.90 V/RHE (107)",
+                         '20180222_Pd_107_03_CA_C01.mpt': {'label': "0.90 V/RHE, Ar (107)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
                                                                'electrode area ecsa': 75.78,
@@ -560,14 +562,14 @@ elif load_new_data:
                                                                        'electrode area ecsa': 0,
                                                                        # 'individual ohmicdrop': 43.3
                                                                       },
-                         '20180124_Pd_092_04_CVA_C01.mpt': {'label': "Pd foil (092, cycle 20)",
-                                                                       'cycles to extract': [20],
+                         '20180124_Pd_092_04_CVA_C01.mpt': {'label': "Pd foil (092, cycle 2)",
+                                                                       'cycles to extract': [2],
                                                                        'electrode area geom': 1,
                                                                        'electrode area ecsa': 0,
                                                                        # 'individual ohmicdrop': 43.3
                                                                        },
-                         '20180124_Pd_093_04_CVA_C01.mpt': {'label': "Pd foil (093, cycle 10)",
-                                                                       'cycles to extract': [10],
+                         '20180124_Pd_093_04_CVA_C01.mpt': {'label': "Pd foil (093, cycle 3)",
+                                                                       'cycles to extract': [3],
                                                                        'electrode area geom': 1,
                                                                        'electrode area ecsa': 0,
                                                                        # 'individual ohmicdrop': 43.3
@@ -614,16 +616,16 @@ elif load_new_data:
                                                             'electrode area ecsa': 0,
                                                             # 'individual ohmicdrop': 43.3
                                                             },
-                         '20180222_Pd_107_SAeval_04_CVA_C01.mpt': {'label': "Pd (107, cycle 8)",
-                                                                   'cycles to extract': [8],
+                         '20180222_Pd_107_SAeval_04_CVA_C01.mpt': {'label': "Pd (107, cycle 10)",
+                                                                   'cycles to extract': [10],
                                                                    'electrode area geom': 1,
-                                                                   'electrode area ecsa': 0,
+                                                                   'electrode area ecsa': 75.78,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
                          '20180222_Pd_108_SAeval_04_CVA_C01.mpt': {'label': "Pd (108, cycle 3)",
                                                                    'cycles to extract': [1],
                                                                    'electrode area geom': 1,
-                                                                   'electrode area ecsa': 0,
+                                                                   'electrode area ecsa': 75.78,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
                          '20180223_Pd_109_SAeval_04_CVA_C01.mpt': {'label': "Pd (109, cycle 3)",
@@ -683,75 +685,88 @@ if not input_plot_settings:
 
 else:
     # settings for the plot - CV settings
-    # plot_settings = {'safeplot': True,
-    #                  'plotname': "20180282_CVs_Pd108-115",
-    #                  'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
-    #                  'grid': True,
-    #                  'second axis':  False,
-    #                  'x_lim': (0.2, 1.6),
-    #                  'y_lim': (-15, 10),
-    #                  'y2_lim': (0, 0.025),
-    #                  'top_pad': 0.2,
-    #                  'bottom_pad': 0.1,
-    #                  'l_pad': [],
-    #                  'r_pad': [],
-    #                  'colors': ['g', 'b', 'grey','orange', 'r', '#4a235a', 'k', 'c', '#538612', 'c', 'm', '0.50',"#538612", '0.75'],
-    #                  # 'colors': [ '#bd4de0' , 'k', 'orange', 'g', 'b', 'r', '#d816ff', "#ff8a16"],
-    #                  # 'colors': ['#bd4de0', 'k', '#6b12ad', 'g', '#266f0e', 'grey'],
-    #                  # 'colors': ['#bd4de0', 'orange', '#d816ff', "#ff8a16"],
-    #                  'linestyle': ['-', '-'],
-    #                  'colors2': ['0.25', 'grey', '0.75'],
-    #                  'linestyle2': ['--','--','--'],
-    #                  # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
-    #                  # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
-    #                  #options to select which data is plotted
-    #                  'plot type': "cv", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
-    #                  #custom column selection, will overrule plottype, if given. Possibilities are all data column names,
-    #                  #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
-    #                  # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
-    #                  'x_data':"EvsRHE/V",
-    #                  'y_data':"i/mAcm^-2_geom",
-    #                  'x_data2':"", #not implemented yet
-    #                  "y_data2":""
-    #                  }
-    #settings for the plot - CA settings
-    plot_settings = {'safeplot': False,
-                     'plotname': "20180222_CAs_Pd_dissolution_tests",
-                     'coplot_evsrhe': False,
-                     # for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
+    plot_settings = {'safeplot': True,
+                     'plotname': "20180310_CV_Pdfoil_cycle2_3_zoom_redo",
+                     'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': True,
-                     'second axis': False,
-                     'x_lim': (-100, 3700),
-                     'y_lim': (-0.1, 1),
+                     'second axis':  False,
+                     'x_lim': (0.2, 1.6),
+                     'y_lim': (-0.5, 0.5),
                      'y2_lim': (0, 0.025),
                      'top_pad': 0.2,
                      'bottom_pad': 0.1,
                      'l_pad': [],
                      'r_pad': [],
-                     # 'colors': ['g', 'b', 'grey', 'orange', 'r', '#4a235a', 'k', 'c', '#538612', 'c', 'm', '0.50',
-                     #            "#538612", '0.75'],
+                     'colors': ['k','g', 'b', 'grey','orange', 'r', '#4a235a', 'k', 'c', '#538612', 'c', 'm', '0.50',"#538612", '0.75'],
                      # 'colors': [ '#bd4de0' , 'k', 'orange', 'g', 'b', 'r', '#d816ff', "#ff8a16"],
-                     'colors': ['#bd4de0', '#6b12ad', #purple
-                                'grey', 'k',
-                                'g', '#266f0e'
-                                ],
+                     # 'colors': ['#bd4de0', 'k', '#6b12ad', 'g', '#266f0e', 'grey'],
                      # 'colors': ['#bd4de0', 'orange', '#d816ff', "#ff8a16"],
                      'linestyle': ['-', '-'],
                      'colors2': ['0.25', 'grey', '0.75'],
-                     'linestyle2': ['--', '--', '--'],
+                     'linestyle2': ['--','--','--'],
                      # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
                      # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
-                     # options to select which data is plotted
-                     'plot type': "cv",
-                     # possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
-                     # custom column selection, will overrule plottype, if given. Possibilities are all data column names,
-                     # most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
+                     #options to select which data is plotted
+                     'plot type': "cv", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
+                     #custom column selection, will overrule plottype, if given. Possibilities are all data column names,
+                     #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
                      # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
-                     'x_data': "time/s",
-                     'y_data': "i/mAcm^-2_ECSA",
-                     'x_data2': "",  # not implemented yet
-                     "y_data2": ""
+                     'x_data':"EvsRHE/V",
+                     'y_data':"i/mAcm^-2_geom",
+                     'x_data2':"", #not implemented yet
+                     "y_data2":""
                      }
+    #settings for the plot - CA settings
+    # plot_settings = {'safeplot': True,
+    #                  'plotname': "20180307_CAs_for_PORonPd_article",
+    #                  'coplot_evsrhe': False,
+    #                  # for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
+    #                  'grid': False,
+    #                  'second axis': False,
+    #                  'x_lim': (-100, 3700),
+    #                  'y_lim': (-0.1, 10),
+    #                  'y2_lim': (0, 0.025),
+    #                  'top_pad': 0.2,
+    #                  'bottom_pad': 0.1,
+    #                  'l_pad': [],
+    #                  'r_pad': [],
+    #                  # 'colors': ['g', 'b', 'grey', 'orange', 'r', '#4a235a', 'k', 'c', '#538612', 'c', 'm', '0.50',
+    #                  #            "#538612", '0.75'],
+    #                  # 'colors': [ '#bd4de0' , 'k', 'orange', 'g', 'b', 'r', '#d816ff', "#ff8a16"],
+    #                  # 'colors': ['#bd4de0', '#6b12ad', #purple
+    #                  #            'grey', 'k',
+    #                  #            'g', '#266f0e'
+    #                  #            ],
+    #                  # 'colors': ['#bd4de0', 'orange', '#d816ff', "#ff8a16"],
+    #                  # 'colors': plt.cm.gist_earth(range(255, 10, 10)),
+    #                  'colors': #plt.cm.Blues([50,100,150,200,250,255]),
+    #                          [[0.10249904, 0.40868897, 0.68289121, 1.], #4
+    #                           [0.59215688, 0.77708575, 0.87643215, 1.],  # 2
+    #                           [0.03137255, 0.1882353, 0.41960785, 1.], #6
+    #                           [0.03137255, 0.20853518, 0.4497501, 1.], #5
+    #
+    #                           [0.30611305, 0.60484431, 0.79492504, 1.], #3
+    #                           [0,0,0,1.], #black
+    #                           [0.81707037, 0.88589005, 0.95078816, 1.]], #1
+    #
+    #
+    #                  'linestyle': ['-', '-'],
+    #                  'colors2': ['0.25', 'grey', '0.75'],
+    #                  'linestyle2': ['--', '--', '--'],
+    #                  # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
+    #                  # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
+    #
+    #                  # options to select which data is plotted
+    #                  'plot type': "cv",
+    #                  # possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
+    #                  # custom column selection, will overrule plottype, if given. Possibilities are all data column names,
+    #                  # most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
+    #                  # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
+    #                  'x_data': "time/s",
+    #                  'y_data': "i/mAcm^-2_ECSA",
+    #                  'x_data2': "",  # not implemented yet
+    #                  "y_data2": ""
+    #                  }
 
     # schwarz
     # 0.7
@@ -837,20 +852,24 @@ def main():
 
 
     #Calculate ESCA from a list of 2 data dictionaries (all further items in the list will be disregarded).
-    # esca_data = dpf.calc_esca(datalist[0:9], type='oxide_red')
+    #esca_data = dpf.calc_esca(datalist[0:9], type='oxide_red', scanrate=20)
     # print(esca_data)
 
-    esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
+    # esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
     #plot the data from the list of data dictionaries
     # print(datalist)
 
-    # dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
+    #dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
 
-    dpf.current_at_time_plot(datalist, times=[140], I_col="i/mAcm^-2_ECSA")
+    # dpf.current_at_time_plot(datalist, times=[60, 600, 3300], I_col="i/mAcm^-2_ECSA")
 
-    # try:
-    # except IndexError:
+    print("Original" + str(datalist[0]))
 
+    select_data_conditions={"EvsRHE/V": [lambda x: x > 0.4, lambda x: x <= 0.8],
+                            "ox/red": [lambda x: x == 0]}
+    cut_dict=dpf.select_data(datalist[0], select_data_conditions)
+    print("cut" + str(cut_dict))
+    # print(cut_dict["data"]["<I>/mA"].tail(1))
     print("FINISHED")
 
 if __name__ == "__main__":
