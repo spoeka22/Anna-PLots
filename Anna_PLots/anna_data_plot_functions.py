@@ -212,6 +212,7 @@ def select_data(dataline, selection_columns_conditions, operator = "&"):
     SIMILAR CODE TO THIS FUNCTION IS USED ELSEWHERE IN THE CODE AND SHOULD BE REFACTORED TO USE THE FUNCTION
     returns: dataline with shortened dataset "data"
     """
+    print("Cutting data ...")
     ops={"&": lambda x,y: x & y, "|": lambda x,y: x | y}
     dataline2 = copy.deepcopy(dataline)
     cut_df = True
@@ -219,8 +220,8 @@ def select_data(dataline, selection_columns_conditions, operator = "&"):
         for item in selection_columns_conditions[selected_column]:
             #returns (probably?) an array of indices and whether the condition is fulfilled (boolean) (dtype=bool)
             cut_df_1column = item(dataline['data'][selected_column])
-            print("next lambda results")
-            print(cut_df_1column)
+            # print("next lambda results")
+            # print(cut_df_1column)
             #combine the lines that fulfill all previous plus the current condition
             cut_df = ops[operator](cut_df,cut_df_1column)
             # print(cut_df)
@@ -265,18 +266,27 @@ def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], cha
             DL_current = abs(find_ave_current(dataline, Vspan=[0.37, 0.46], ox_red=ox_red)) #absolute(!) average current in the DL region
             #check if the current on the anodic side of the peak is < than DL_current (would give error in
             #correction for DL current
-            if not abs(oxide_red_peak["data"]["<I>/mA"][0]) < DL_current:
+
+            # Series.last_valid_index()
+            # Series.first_valid_index()
+
+            current_anodic_end=abs(oxide_red_peak["data"]["<I>/mA"][oxide_red_peak["data"]["<I>/mA"].first_valid_index()])
+            print("Current anodic end: " + str(current_anodic_end))
+            if current_anodic_end < DL_current:  #"anodic end" is a series, therefore necessary to add this .all() -> seems stupid
                 print("DL current larger than current at 0.9 V/RHE.")
                 #-> sets a lower anodic limit for peak region
-                adjust_peak_region = {"<I>/mA": lambda x: abs(x) < DL_current,
-                                      "Evs/RHE": lambda x: x < 0.7}
+                adjust_peak_region = {"<I>/mA": [lambda x: abs(x) < DL_current],
+                                      "EvsRHE/V": [lambda x: x < 0.7]}
                 #and cuts peak region accordingly
                 oxide_red_peak = select_data(oxide_red_peak,adjust_peak_region,operator="|")
                 #update Vspan for calculating the DL charge
-                Vspan = [0.4, oxide_red_peak["data"]["EvsRHE"][0]]
+                Vspan = [0.4, oxide_red_peak["data"]["<I>/mA"][oxide_red_peak["data"]["<I>/mA"].first_valid_index()]]
                 print("The potential region was corrected according to DL current to end at " + str(Vspan[1]))
 
-            reduction_charge=abs(oxide_red_peak["data"]["Q-Q0"].tail(1)-oxide_red_peak["data"]["Q-Q0"][0])
+            index_anodic_end = oxide_red_peak["data"]["<I>/mA"].first_valid_index()
+            index_cathodic_end = oxide_red_peak["data"]["<I>/mA"].last_valid_index()
+            print("anodic/cathodic end indices" + str(index_anodic_end) + " and " + str(index_cathodic_end))
+            reduction_charge=abs(oxide_red_peak["data"]["(Q-Qo)/C"][index_anodic_end]-oxide_red_peak["data"]["(Q-Qo)/C"][index_cathodic_end])
             #correction: subtraction of double layer charge calculated by finding current in DL region,
             #and multiplying that with time found from potential difference (Vspan) multiplied with scanrate to get correct units
             reduction_peak_time = (Vspan[1]-Vspan[0])/ (scanrate*0.001) #time in s from start to end of integration area

@@ -685,7 +685,7 @@ if not input_plot_settings:
 
 else:
     # settings for the plot - CV settings
-    plot_settings = {'safeplot': True,
+    plot_settings = {'safeplot': False,
                      'plotname': "20180310_CV_Pdfoil_cycle2_3_zoom_redo",
                      'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': True,
@@ -852,23 +852,25 @@ def main():
 
 
     #Calculate ESCA from a list of 2 data dictionaries (all further items in the list will be disregarded).
-    #esca_data = dpf.calc_esca(datalist[0:9], type='oxide_red', scanrate=20)
-    # print(esca_data)
+    esca_data = dpf.calc_esca(datalist[0:9], type='oxide_red', scanrate=50)
+    print(esca_data)
 
     # esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
     #plot the data from the list of data dictionaries
     # print(datalist)
 
-    #dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
+    dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
 
     # dpf.current_at_time_plot(datalist, times=[60, 600, 3300], I_col="i/mAcm^-2_ECSA")
 
-    print("Original" + str(datalist[0]))
 
-    select_data_conditions={"EvsRHE/V": [lambda x: x > 0.4, lambda x: x <= 0.8],
-                            "ox/red": [lambda x: x == 0]}
-    cut_dict=dpf.select_data(datalist[0], select_data_conditions)
-    print("cut" + str(cut_dict))
+    #TEST of the select_data function:
+    # print("Original" + str(datalist[0]))
+    #
+    # select_data_conditions={"EvsRHE/V": [lambda x: x > 0.4, lambda x: x <= 0.8],
+    #                         "ox/red": [lambda x: x == 0]}
+    # cut_dict=dpf.select_data(datalist[0], select_data_conditions)
+    # print("cut" + str(cut_dict))
     # print(cut_dict["data"]["<I>/mA"].tail(1))
     print("FINISHED")
 
