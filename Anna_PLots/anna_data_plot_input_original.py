@@ -16,7 +16,7 @@ from collections import OrderedDict
 import matplotlib as plt
 import numpy as np
 
-load_new_data = False #False if saved set of data files should be used.
+load_new_data = True #False if saved set of data files should be used.
 input_plot_settings = True #False if saved settings for plot (size, colours etc.) should be used.
 savesettings = False #True if the new input settings should be saved.
 
@@ -83,8 +83,8 @@ elif load_new_data:
                 # '20180111_Pd_090',
                 # '20180109_Pd_087',
                 # '20180111_Pd_091'
-                '20180124_Pd_092',
-                '20180124_Pd_093',
+                # '20180124_Pd_092',
+                # '20180124_Pd_093',
                 # '20180130_Pd_094',
                 # '20180130_Pd_095',
                 # '20180130_Pd_096',
@@ -102,10 +102,13 @@ elif load_new_data:
                 # '20180222_Pd_108',
                 # '20180223_Pd_109',
                 # '20180226_Pd_110',
-                # '20180226_Pd_112',
-                # '20180226_Pd_113',
-                # '20180227_Pd_114',
-                # '20180227_Pd_115',
+                '20180226_Pd_112',
+                '20180226_Pd_113',
+                '20180227_Pd_114',
+                '20180227_Pd_115',
+                '20180312_Pd_118',
+                '20180312_Pd_119'
+
     ]  # list of folders from which data is going to be plotted
 
     filenames = OrderedDict([
@@ -133,53 +136,53 @@ elif load_new_data:
                                                   ]),
                              ('20171212_Pd_073', [#'20171212_AW_Pd_073_02_CA_C01.mpt',
                                                   #'20171212_AW_Pd_073_04_CA_C01.mpt',
-                                                  '20171212_AW_Pd_073_05_CA_C01.mpt',
-                                                  # '20171212_AW_Pd_073_SA_eval_04_CVA_C01.mpt'
+                                                  # '20171212_AW_Pd_073_05_CA_C01.mpt',
+                                                  '20171212_AW_Pd_073_SA_eval_04_CVA_C01.mpt'
                                                   ]),
-                             ('20171213_Pd_074', ['20171213_AW_Pd_074_05_CA_C01.mpt',
+                             ('20171213_Pd_074', [#'20171213_AW_Pd_074_05_CA_C01.mpt',
                                                    #'20171213_AW_Pd_074_04_CA_C01.mpt',
-                                                   #'20171213_AW_Pd_074_SA_eval_04_CVA_C01.mpt'
+                                                   '20171213_AW_Pd_074_SA_eval_04_CVA_C01.mpt'
                                                  ]),
                              # ('20171213_Pd_075', ['20171213_AW_Pd_075_SA_eval_04_CVA_C01.mpt',
                              #                        # '20171213_AW_Pd_075_05_CA_C01.mpt',
                              #                        # '20171213_AW_Pd_075_04_CA_C01.mpt',
                              #                        # '20171213_AW_Pd_075_02_CA_C01.mpt'
                              #                        ]),
-                             ('20171214_Pd_076', [#'20171214_AW_Pd_076_SA_eval_04_CVA_C01.mpt',
+                             ('20171214_Pd_076', ['20171214_AW_Pd_076_SA_eval_04_CVA_C01.mpt',
                                                   # '20171214_AW_Pd_076_02_CA_C01.mpt',
                                                   #'20171214_AW_Pd_076_04_CA_C01.mpt',
-                                                  '20171214_AW_Pd_076_05_CA_C01.mpt'
+                                                  # '20171214_AW_Pd_076_05_CA_C01.mpt'
                                                   ]),
 
-                             ('20171214_Pd_077', ['20171214_AW_Pd_077_05_CA_C01.mpt',
+                             ('20171214_Pd_077', [#'20171214_AW_Pd_077_05_CA_C01.mpt',
                                                   # '20171214_AW_Pd_077_OCV_C01.mpt',
                                                   # '20171214_AW_Pd_077_04_CA_C01.mpt',
                                                   # '20171214_AW_Pd_077_SA_eval_05_OCV_C01.mpt',
-                                                  # '20171214_AW_Pd_077_SA_eval_04_CVA_C01.mpt',
+                                                  '20171214_AW_Pd_077_SA_eval_04_CVA_C01.mpt',
                                                   # '20171214_AW_Pd_077_02_CA_C01.mpt'
                                                   ]),
-                             ('20171214_Pd_078', ['20171214_AW_Pd_078_05_CA_C01.mpt',
+                             ('20171214_Pd_078', [#'20171214_AW_Pd_078_05_CA_C01.mpt',
                                                   # '20171214_AW_Pd_078_04_CA_C01.mpt',
                                                   # '20171214_AW_Pd_078_02_CA_C01.mpt',
                                                   # '20171214_AW_Pd_078_SA_eval_05_OCV_C01.mpt',
-                                                  # '20171214_AW_Pd_078_SA_eval_04_CVA_C01.mpt'
+                                                  '20171214_AW_Pd_078_SA_eval_04_CVA_C01.mpt'
                                                   ]),
-                             ('20171219_Pd_079', [#'20171219_AW_Pd_079_CA_eval_04_CVA_C01.mpt',
-                                                  '20171219_AW_Pd_079_05_CA_C01.mpt',
+                             ('20171219_Pd_079', ['20171219_AW_Pd_079_CA_eval_04_CVA_C01.mpt',
+                                                  # '20171219_AW_Pd_079_05_CA_C01.mpt',
                                                   # '20171219_AW_Pd_079_02_CA_C01.mpt',
                                                   # '20171219_AW_Pd_079_04_CA_C01.mpt',
                                                   # '20171219_AW_Pd_079_CA_eval_05_OCV_C01.mpt'
                                                   ]),
-                             ('20171219_Pd_080',
-                                                ['20171219_AW_Pd_080_05_CA_C01.mpt',
+                             ('20171219_Pd_080',[
+                                                 # '20171219_AW_Pd_080_05_CA_C01.mpt',
                                                  # '20171219_AW_Pd_080_02_CA_C01.mpt',
                                                  # '20171219_AW_Pd_080_04_CA_C01.mpt',
                                                  # '20171219_AW_Pd_080_SAeval_05_OCV_C01.mpt',
-                                                 # '20171219_AW_Pd_080_SAeval_04_CVA_C01.mpt'
+                                                 '20171219_AW_Pd_080_SAeval_04_CVA_C01.mpt'
                                                  ]),
                              ('20180103_Pd_081', [#'20180103_POR_Pd_081_02_CA_C01.mpt',
-                                                  '20180103_POR_Pd_081_03_CA_C01.mpt',
-                                                  # '20180103_POR_Pd_081_SAeval_04_CVA_C01.mpt',
+                                                  # '20180103_POR_Pd_081_03_CA_C01.mpt',
+                                                  '20180103_POR_Pd_081_SAeval_04_CVA_C01.mpt',
                                                   # '20180103_POR_Pd_081_SAeval_05_OCV_C01.mpt'
                                                   ]),
                              # ('20180103_Pd_082', [#'20180103_POR_Pd_082_02_CA_C01.mpt',
@@ -188,13 +191,13 @@ elif load_new_data:
                              #                      # '20180103_POR_Pd_082_SAeval_05_OCV_C01.mpt'
                              #                      ]),
                              ('20180104_Pd_084', [#'20180104_POR_Pd_084_02_CA_C01.mpt',
-                                                  '20180104_POR_Pd_084_03_CA_C01.mpt',
-                                                  # '20180104_POR_Pd_084_SAeval_04_CVA_C01.mpt',
+                                                  # '20180104_POR_Pd_084_03_CA_C01.mpt',
+                                                  '20180104_POR_Pd_084_SAeval_04_CVA_C01.mpt',
                                                   # '20180104_POR_Pd_084_SAeval_05_OCV_C01.mpt'
                                                   ]),
                              ('20180104_Pd_085',  [#'20180104_POR_Pd_085_02_CA_C01.mpt',
-                                                   '20180104_POR_Pd_085_03_CA_C01.mpt',
-                                                   # '20180104_POR_Pd_085_SAeval_04_CVA_C01.mpt',
+                                                   # '20180104_POR_Pd_085_03_CA_C01.mpt',
+                                                   '20180104_POR_Pd_085_SAeval_04_CVA_C01.mpt',
                                                    # '20180104_POR_Pd_085_SAeval_05_OCV_C01.mpt'
                                                    ]),
                              # ('20180109_Pd_086', ['20180109_POR_Pd_086_100muMPdCl2_03_CA_C01.mpt',
@@ -321,26 +324,37 @@ elif load_new_data:
                             #                      # '20180224_Pd_110_03_CA_C01.mpt',
                             #                      # '20180224_Pd_110_02_CA_C01.mpt'
                             #                      ]),
-                            ('20180226_Pd_112', [#'20180226_POR_Pd_112_SAeval_04_CVA_C01.mpt',
+                            ('20180226_Pd_112', ['20180226_POR_Pd_112_SAeval_04_CVA_C01.mpt',
                                                  # '20180226_POR_Pd_112_SAeval_05_OCV_C01.mpt',
                                                  # '20180226_POR_Pd_112_02_CA_C01.mpt',
-                                                 '20180226_POR_Pd_112_03_CA_C01.mpt'
+                                                 # '20180226_POR_Pd_112_03_CA_C01.mpt'
                                                  ]),
-                            ('20180226_Pd_113', ['20180226_POR_Pd_113_03_CA_C01.mpt',
-                                                 # '20180226_POR_Pd_113_SAeval_04_CVA_C01.mpt',
+                            ('20180226_Pd_113', [#'20180226_POR_Pd_113_03_CA_C01.mpt',
+                                                 '20180226_POR_Pd_113_SAeval_04_CVA_C01.mpt',
                                                  # '20180226_POR_Pd_113_SAeval_05_OCV_C01.mpt',
                                                  # '20180226_POR_Pd_113_02_CA_C01.mpt'
                                                  ]),
-                            ('20180227_Pd_114', ['20180227_POR_Pd_114_03_CA_C01.mpt',
-                                                 #'20180227_POR_Pd_114_SAeval_04_CVA_C01.mpt',
+                            ('20180227_Pd_114', [#'20180227_POR_Pd_114_03_CA_C01.mpt',
+                                                 '20180227_POR_Pd_114_SAeval_04_CVA_C01.mpt',
                                                  # '20180227_POR_Pd_114_SAeval_05_OCV_C01.mpt',
                                                  # '20180227_POR_Pd_114_02_CA_C01.mpt'
                                                  ]),
-                            ('20180227_Pd_115', ['20180227_POR_Pd_115_03_CA_C01.mpt',
-                                                 # '20180227_POR_Pd_115_SAeval_04_CVA_C01.mpt',
+                            ('20180227_Pd_115', [#'20180227_POR_Pd_115_03_CA_C01.mpt',
+                                                 '20180227_POR_Pd_115_SAeval_04_CVA_C01.mpt',
                                                  # '20180227_POR_Pd_115_SAeval_05_OCV_C01.mpt',
                                                  # '20180227_POR_Pd_115_02_CA_C01.mpt'
                                                  ]),
+                            ('20180312_Pd_118',  [
+                                                 '20180313_Pd_118_saeval_04_CVA_C01.mpt',
+                                                 # '20180313_Pd_118_02_CA_C01.mpt',
+                                                 # '20180313_Pd_118_03_CA_C01.mpt'
+                                                    ]),
+                            ('20180312_Pd_119',   [
+                                                 '20180313_Pd_119_saeval_04_CVA_C01.mpt',
+                                                 # '20180313_Pd_119_02_CA_C01.mpt',
+                                                 # '20180313_Pd_119_03_CA_C01.mpt'
+                                                  ])
+
     ])
 
 
@@ -351,150 +365,162 @@ elif load_new_data:
 
     filespec_settings = {'20171122_Pd_064_05_CA_C01.mpt': {'label': "1.10 V/RHE (064))",
                                                      # 'cycles to extract': [2],
-                                                     'electrode area geom': 2, 'electrode area ecsa': 64.75,
+                                                     'electrode area geom': 2, 'electrode area ecsa': 80.64,
                                                       #'individual ohmicdrop': 43.3
                                                     },
                         '20171123_Pd_065_05_CA_C01.mpt': {'label': "0.70 V/RHE (065))",
                                                                # 'cycles to extract': [2],
-                                                               'electrode area geom': 2, 'electrode area ecsa': 64.75,
+                                                               'electrode area geom': 2, 'electrode area ecsa': 80.64,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
                         '20171123_Pd_066_05_CA_C01.mpt': {'label': "1.20 V/RHE (066))",
                                                                 # 'cycles to extract': [2],
-                                                                'electrode area geom': 2, 'electrode area ecsa': 64.75,
+                                                                'electrode area geom': 2, 'electrode area ecsa': 80.64,
                                                                 # 'individual ohmicdrop': 43.3
                                                                 },
                         '20171203_Pd_069_05_CA_C01.mpt': {'label': "0.85 V/RHE (069))",
                                                                  # 'cycles to extract': [2],
-                                                                 'electrode area geom': 2, 'electrode area ecsa': 64.75,
+                                                                 'electrode area geom': 2, 'electrode area ecsa': 80.64,
                                                                  # 'individual ohmicdrop': 43.3
                                                                  },
                         '20171203_Pd_070_05_CA_C01.mpt': {'label': "1.00 V/RHE (070))",
                                                                   # 'cycles to extract': [2],
                                                                   'electrode area geom': 2,
-                                                                  'electrode area ecsa': 64.75,
+                                                                  'electrode area ecsa': 80.64,
                                                                   # 'individual ohmicdrop': 43.3
                                                                   },
                         '20171212_AW_Pd_073_05_CA_C01.mpt': {'label': "0.90 V/RHE (073))",
                                                      # 'cycles to extract': [2],
-                                                     'electrode area geom': 2, 'electrode area ecsa': 87.88,
+                                                     'electrode area geom': 2, 'electrode area ecsa': 89.47,
                                                       #'individual ohmicdrop': 43.3
                                                     },
                          '20171213_AW_Pd_074_05_CA_C01.mpt': {'label': "0.70 V/RHE (074)",
                                                             # 'cycles to extract': [3],
-                                                           'electrode area geom': 2, 'electrode area ecsa': 51.04,
+                                                           'electrode area geom': 2, 'electrode area ecsa': 55.43,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                          '20171213_AW_Pd_075_05_CA_C01.mpt': {'label': "0.95 V/RHE (075)",
                                                            # 'cycles to extract': [3],
-                                                           'electrode area geom': 2, 'electrode area ecsa': 19.57,
+                                                           'electrode area geom': 2, 'electrode area ecsa': 0,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                          '20171214_AW_Pd_076_05_CA_C01.mpt': {'label': "0.80 V/RHE (076)",
                                                             # 'cycles to extract': [3],
-                                                           'electrode area geom': 2, 'electrode area ecsa': 91.26,
+                                                           'electrode area geom': 2, 'electrode area ecsa': 99.44,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                          '20171214_AW_Pd_077_05_CA_C01.mpt': {'label': "0.85 V/RHE (077)",
                                                            # 'cycles to extract': [3],
-                                                           'electrode area geom': 2, 'electrode area ecsa': 48.92,
+                                                           'electrode area geom': 2, 'electrode area ecsa': 53.14,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                          '20171214_AW_Pd_078_05_CA_C01.mpt': {'label': "1.00 V/RHE (078)",
                                                            # 'cycles to extract': [2],
-                                                           'electrode area geom': 2, 'electrode area ecsa': 79.34,
+                                                           'electrode area geom': 2, 'electrode area ecsa': 86.57,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                          '20171219_AW_Pd_079_05_CA_C01.mpt': {'label': "0.90 V/RHE (079)",
                                                                        # 'cycles to extract': [2],
                                                                        'electrode area geom': 2,
-                                                                       'electrode area ecsa': 79.87,
+                                                                       'electrode area ecsa': 87.19,
                                                                        # 'individual ohmicdrop': 43.3
                                                                        },
                          '20171219_AW_Pd_080_05_CA_C01.mpt': {'label': "0.95 V/RHE (080)",
                                                                        # 'cycles to extract': [2],
                                                                        'electrode area geom': 2,
-                                                                       'electrode area ecsa': 72.76,
+                                                                       'electrode area ecsa': 79.72,
                                                                        # 'individual ohmicdrop': 43.3
                                                                       },
                          '20180103_POR_Pd_081_03_CA_C01.mpt': {'label': "0.95 V/RHE (081)",
                                                               # 'cycles to extract': [2],
                                                               'electrode area geom': 2,
-                                                              'electrode area ecsa': 69.55,
+                                                              'electrode area ecsa': 76.39,
                                                               # 'individual ohmicdrop': 43.3
                                                               },
                          '20180104_POR_Pd_084_03_CA_C01.mpt': {'label': "0.80 V/RHE (084)",
                                                               # 'cycles to extract': [2],
                                                               'electrode area geom': 2,
-                                                              'electrode area ecsa': 77.792,
+                                                              'electrode area ecsa': 85.53,
                                                               # 'individual ohmicdrop': 43.3
                                                               },
                          '20180104_POR_Pd_085_03_CA_C01.mpt': {'label': "0.85 V/RHE (085)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
-                                                               'electrode area ecsa': 79.69,
+                                                               'electrode area ecsa': 87.60,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
                          '20180208_Pd_101_03_CA_C01.mpt': {'label': "0.8 V/RHE (101)",
                                                               # 'cycles to extract': [2],
                                                               'electrode area geom': 2,
-                                                              'electrode area ecsa': 66.17,
+                                                              'electrode area ecsa': 0,
                                                               # 'individual ohmicdrop': 43.3
                                                               },
                          '20180209_Pd_102_03_CA_C01.mpt': {'label': "0.79 V/RHE (102)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
-                                                               'electrode area ecsa': 49.81,
+                                                               'electrode area ecsa': 0,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
                          '20180216_Pd_103_03_CA_C01.mpt': {'label': "0.89 V/RHE (103)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
-                                                               'electrode area ecsa': 57.64,
+                                                               'electrode area ecsa': 0,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
                          '20180222_Pd_106_03_CA_C01.mpt': {'label': "0.89 V/RHE (106)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
-                                                               'electrode area ecsa': 58.88,
+                                                               'electrode area ecsa': 0,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
                          '20180222_Pd_107_03_CA_C01.mpt': {'label': "0.90 V/RHE, Ar (107)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
-                                                               'electrode area ecsa': 75.78,
+                                                               'electrode area ecsa': 0,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
                          '20180222_Pd_108_03_CA_C01.mpt': {'label': "0.90 V/RHE (108)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
-                                                               'electrode area ecsa': 53.72,
+                                                               'electrode area ecsa': 0,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
                          '20180226_POR_Pd_112_03_CA_C01.mpt': {'label': "0.70 V/RHE (112)",
                                                            # 'cycles to extract': [2],
                                                            'electrode area geom': 2,
-                                                           'electrode area ecsa': 78.27,
+                                                           'electrode area ecsa': 85.11,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                          '20180226_POR_Pd_113_03_CA_C01.mpt': {'label': "0.80 V/RHE (113)",
                                                            # 'cycles to extract': [2],
                                                            'electrode area geom': 2,
-                                                           'electrode area ecsa': 46.78,
+                                                           'electrode area ecsa': 51.07,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                          '20180227_POR_Pd_114_03_CA_C01.mpt': {'label': "0.90 V/RHE (114)",
                                                            # 'cycles to extract': [2],
                                                            'electrode area geom': 2,
-                                                           'electrode area ecsa': 74.18,
+                                                           'electrode area ecsa': 80.13,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                          '20180227_POR_Pd_115_03_CA_C01.mpt': {'label': "0.95 V/RHE (115)",
                                                            # 'cycles to extract': [2],
                                                            'electrode area geom': 2,
-                                                           'electrode area ecsa': 32.38,
+                                                           'electrode area ecsa': 34.88,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
+                         '20180313_Pd_118_03_CA_C01.mpt': {'label': "1.10 V/RHE (118)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 34.88,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
+                         '20180313_Pd_119_03_CA_C01.mpt': {'label': "1.20 V/RHE (119)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 34.88,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
 
                          '20171212_AW_Pd_073_SA_eval_04_CVA_C01.mpt': {'label': "0.90 V/RHE (073))",
                                                      'cycles to extract': [2],
@@ -663,7 +689,19 @@ elif load_new_data:
                                                                    'electrode area geom': 2,
                                                                    'electrode area ecsa': 0,
                                                                    # 'individual ohmicdrop': 43.3
-                                                                   }
+                                                                   },
+                         '20180313_Pd_118_saeval_04_CVA_C01.mpt': {'label': "Pd (118, cycle 2)",
+                                                                       'cycles to extract': [2],
+                                                                       'electrode area geom': 2,
+                                                                       'electrode area ecsa': 0,
+                                                                       # 'individual ohmicdrop': 43.3
+                                                                       },
+                         '20180313_Pd_119_saeval_04_CVA_C01.mpt': {'label': "Pd (119, cycle 2)",
+                                                                       'cycles to extract': [2],
+                                                                       'electrode area geom': 2,
+                                                                       'electrode area ecsa': 0,
+                                                                       # 'individual ohmicdrop': 43.3
+                                                                       },
                          }
     if savesettings:
         data_load_settings = [folder_path, folders, filenames, filespec_settings]
@@ -685,8 +723,8 @@ if not input_plot_settings:
 
 else:
     # settings for the plot - CV settings
-    plot_settings = {'safeplot': False,
-                     'plotname': "20180319_CV_049-052_50mVps_cycles",
+    plot_settings = {'safeplot': True,
+                     'plotname': "20180319_CV_112-119_50mVps_cycles",
                      'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': True,
                      'second axis':  False,
