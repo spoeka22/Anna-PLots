@@ -16,7 +16,7 @@ from collections import OrderedDict
 import matplotlib as plt
 import numpy as np
 
-load_new_data = True #False if saved set of data files should be used.
+load_new_data = False #False if saved set of data files should be used.
 input_plot_settings = True #False if saved settings for plot (size, colours etc.) should be used.
 savesettings = False #True if the new input settings should be saved.
 
@@ -562,105 +562,105 @@ elif load_new_data:
                                                                        'electrode area ecsa': 0,
                                                                        # 'individual ohmicdrop': 43.3
                                                                       },
-                         '20180124_Pd_092_04_CVA_C01.mpt': {'label': "Pd foil (092, cycle 2)",
-                                                                       'cycles to extract': [2],
+                         '20180124_Pd_092_04_CVA_C01.mpt': {'label': "Pd foil (092, cycle 20)",
+                                                                       'cycles to extract': [20],
                                                                        'electrode area geom': 1,
                                                                        'electrode area ecsa': 0,
                                                                        # 'individual ohmicdrop': 43.3
                                                                        },
-                         '20180124_Pd_093_04_CVA_C01.mpt': {'label': "Pd foil (093, cycle 3)",
-                                                                       'cycles to extract': [3],
+                         '20180124_Pd_093_04_CVA_C01.mpt': {'label': "Pd foil (093, cycle 10)",
+                                                                       'cycles to extract': [10],
                                                                        'electrode area geom': 1,
                                                                        'electrode area ecsa': 0,
                                                                        # 'individual ohmicdrop': 43.3
                                                                        },
                          '20180201_Pd_100_saeval_04_CVA_C01.mpt': {'label': "Pd (100, cycle 3)",
                                                                    'cycles to extract': [3],
-                                                                   'electrode area geom': 1,
+                                                                   'electrode area geom': 2,
                                                                    'electrode area ecsa': 0,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
                          '20180208_Pd_101_SAeval_04_CVA_C01.mpt': {'label': "Pd (101, cycle 3)",
                                                             'cycles to extract': [3],
-                                                            'electrode area geom': 1,
+                                                            'electrode area geom': 2,
                                                             'electrode area ecsa': 0,
                                                             # 'individual ohmicdrop': 43.3
                                                             },
                          '20180209_Pd_102_saeval_04_CVA_C01.mpt': {'label': "Pd (102, cycle 4)",
                                                             'cycles to extract': [4],
-                                                            'electrode area geom': 1,
+                                                            'electrode area geom': 2,
                                                             'electrode area ecsa': 0,
                                                             # 'individual ohmicdrop': 43.3
                                                             },
                          '20180216_Pd_103_SAeval_04_CVA_C01.mpt': {'label': "Pd (103, cycle 3)",
                                                             'cycles to extract': [3],
-                                                            'electrode area geom': 1,
+                                                            'electrode area geom': 2,
                                                             'electrode area ecsa': 0,
                                                             # 'individual ohmicdrop': 43.3
                                                             },
                          '20180220_Pd_104_SAeval_04_CVA_C01.mpt': {'label': "Pd (104, cycle 3)",
                                                             'cycles to extract': [3],
-                                                            'electrode area geom': 1,
+                                                            'electrode area geom': 2,
                                                             'electrode area ecsa': 0,
                                                             # 'individual ohmicdrop': 43.3
                                                             },
                          '20180220_Pd_105_SAeval_04_CVA_C01.mpt': {'label': "Pd (105, cycle 3)",
                                                             'cycles to extract': [3],
-                                                            'electrode area geom': 1,
+                                                            'electrode area geom': 2,
                                                             'electrode area ecsa': 0,
                                                             # 'individual ohmicdrop': 43.3
                                                             },
                          '20180222_Pd_106_SAeval_04_CVA_C01.mpt': {'label': "Pd (106, cycle 8)",
                                                             'cycles to extract': [8],
-                                                            'electrode area geom': 1,
+                                                            'electrode area geom': 2,
                                                             'electrode area ecsa': 0,
                                                             # 'individual ohmicdrop': 43.3
                                                             },
                          '20180222_Pd_107_SAeval_04_CVA_C01.mpt': {'label': "Pd (107, cycle 10)",
                                                                    'cycles to extract': [10],
-                                                                   'electrode area geom': 1,
+                                                                   'electrode area geom': 2,
                                                                    'electrode area ecsa': 75.78,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
                          '20180222_Pd_108_SAeval_04_CVA_C01.mpt': {'label': "Pd (108, cycle 3)",
                                                                    'cycles to extract': [1],
-                                                                   'electrode area geom': 1,
+                                                                   'electrode area geom': 2,
                                                                    'electrode area ecsa': 75.78,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
                          '20180223_Pd_109_SAeval_04_CVA_C01.mpt': {'label': "Pd (109, cycle 3)",
                                                                    'cycles to extract': [3],
-                                                                   'electrode area geom': 1,
+                                                                   'electrode area geom': 2,
                                                                    'electrode area ecsa': 0,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
                          '20180224_Pd_110_SAeval_04_CVA_C01.mpt': {'label': "Pd (110, cycle 3)",
                                                                    'cycles to extract': [3],
-                                                                   'electrode area geom': 1,
+                                                                   'electrode area geom': 2,
                                                                    'electrode area ecsa': 0,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
                          '20180226_POR_Pd_112_SAeval_04_CVA_C01.mpt': {'label': "Pd (112, cycle 4)",
                                                                    'cycles to extract': [4],
-                                                                   'electrode area geom': 1,
+                                                                   'electrode area geom': 2,
                                                                    'electrode area ecsa': 0,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
                          '20180226_POR_Pd_113_SAeval_04_CVA_C01.mpt': {'label': "Pd (113, cycle 5)",
                                                                     'cycles to extract': [5],
-                                                                    'electrode area geom': 1,
+                                                                    'electrode area geom': 2,
                                                                      'electrode area ecsa': 0,
                                                                      # 'individual ohmicdrop': 43.3
                                                                          },
                          '20180227_POR_Pd_114_SAeval_04_CVA_C01.mpt': {'label': "Pd (114, cycle 3)",
                                                                    'cycles to extract': [3],
-                                                                   'electrode area geom': 1,
+                                                                   'electrode area geom': 2,
                                                                    'electrode area ecsa': 0,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
                          '20180227_POR_Pd_115_SAeval_04_CVA_C01.mpt': {'label': "Pd (115, cycle 3)",
                                                                    'cycles to extract': [3],
-                                                                   'electrode area geom': 1,
+                                                                   'electrode area geom': 2,
                                                                    'electrode area ecsa': 0,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    }
@@ -686,12 +686,12 @@ if not input_plot_settings:
 else:
     # settings for the plot - CV settings
     plot_settings = {'safeplot': False,
-                     'plotname': "20180310_CV_Pdfoil_cycle2_3_zoom_redo",
+                     'plotname': "20180319_CV_049-052_50mVps_cycles",
                      'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': True,
                      'second axis':  False,
                      'x_lim': (0.2, 1.6),
-                     'y_lim': (-0.5, 0.5),
+                     'y_lim': (-15, 10),
                      'y2_lim': (0, 0.025),
                      'top_pad': 0.2,
                      'bottom_pad': 0.1,
