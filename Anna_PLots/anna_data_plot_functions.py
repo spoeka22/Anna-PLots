@@ -477,7 +477,7 @@ def find_axis_label(data_col):
         if data_col == "i/mAcm^-2_geom":
             axis_label = "i / mA cm$^{-2}$$_{geom.}$"
         elif data_col == "i/mAcm^-2_ECSA":
-            axis_label = "i / $\mu$A cm$^{-2}$$_{ECSA}$"
+            axis_label = "Current density / $\mu$A cm$^{-2}$$_{ECSA}$"
         elif data_col == "<I>/mA":
             axis_label = "I / mA"
         else:
@@ -497,6 +497,7 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     print('Preparing a figure with 2 x-axes for plotting.')
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
+
 
     #imports linestyle/colours
     linestyle_list = plot_settings['linestyle']
@@ -533,21 +534,28 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
         y_data_col = ""
 
 
-    for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
-        # print(each_file['data']['i/mAcm^-2_geom'])
-        # print(each_file['data'][x_data_col])
-        # x=each_file['data'][x_data_col]
-        #.values.tolist()
-        # y=each_file['data'][y_data_col] #.values.tolist()
-        # ax1.plot(x,y)
-        try:
-            ax1.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y_data_col].values.tolist(), color=color,
-                 linestyle=linestyle, label=makelabel(each_file))
-        except TypeError:
-            if len(datalist) < len(color_list) or len(datalist) < len(linestyle_list):
-                continue
-            else:
-                print("Problem plotting datalist...")
+    if plot_settings['y_logscale']:
+        print("Plot with logscale on y1 axis...")
+        for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
+            try:
+                ax1.semilogy(each_file['data'][x_data_col].values.tolist(), each_file['data'][y_data_col].values.tolist(), color=color,
+                     linestyle=linestyle, label=makelabel(each_file))
+            except TypeError:
+                if len(datalist) < len(color_list) or len(datalist) < len(linestyle_list):
+                    continue
+                else:
+                    print("Problem plotting datalist...")
+
+    else:
+        for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
+            try:
+                ax1.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y_data_col].values.tolist(), color=color,
+                     linestyle=linestyle, label=makelabel(each_file))
+            except TypeError:
+                if len(datalist) < len(color_list) or len(datalist) < len(linestyle_list):
+                    continue
+                else:
+                    print("Problem plotting datalist...")
 
     #color the integrated are in the CO CVs grey if calculation of esca is done
     #This doesnt work, probably because the two cycles dont have the same number of points.
@@ -653,6 +661,8 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
                 esca_data[1])
             ax1.annotate(anno_esca, xy=(0.6, 0.05), xycoords="axes fraction")
 
+    plt.show()
+
     #safes figure as png and pdf
     if plot_settings['safeplot']:
         if os.path.exists("output_files/" + plot_settings['plotname']+'.png'):
@@ -664,7 +674,7 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
 
         plt.savefig("output_files/" + plot_settings['plotname']+'.png', dpi=400, bbox_inches='tight')
         plt.savefig("output_files/" + plot_settings['plotname']+'.pdf', dpi=400, bbox_inches='tight')
-    plt.show()
+
 
 
 
