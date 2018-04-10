@@ -236,7 +236,7 @@ def select_data(dataline, selection_columns_conditions, operator = "&"):
     #DataFrame.truncate([before, after, axis, copy]) Truncates a sorted DataFrame/Series before and/or after some particular index value
 
 
-def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], charge_p_area=1):
+def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], charge_p_area=1):
     """ Input: list of 2 dictionaries containing data (file in datalist), one with surface area specific peak,
     one with reference peak. Calls integrate_CV function to evaluate charge difference in selected Vspan.
     calculates absolute difference between these charge differences & multiplies with a selected factor
@@ -255,8 +255,9 @@ def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], cha
     #Integrate CV in selected area (using the charge calculated already by EC lab) for the first 2 CVs in the
     #list of data (datalines) only
     dQ=[]
-    esca = None
+    esca = []
     esca_co = None
+    plot_label = []
 
     if type == "oxide_red":
         deltaQ=[]
@@ -315,6 +316,11 @@ def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], cha
             # print("You need to find some reference for the relation between surface area and oxide reduction "
             #       "current before I can calulate the ECSA for you.")
 
+            each_esca = reduction_charge / charge_p_area
+            print("An ECSA of " + str(esca) + "cm^2 was estimated based on a charge per area of " + str(charge_p_area) + ".")
+            esca.append(each_esca)
+            plot_label.append(dataline['filename'])
+
     else:  #compares two consecutive cycles (meant for CO-strip)
         for dataline in datalines:
             dQ.append(integrate_CV(dataline, Vspan=Vspan, ox_red=ox_red))
@@ -325,6 +331,7 @@ def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], cha
         deltaQ = abs(dQ[0]-dQ[1])
         print("The charge difference between following CVs: (" +str(datalines[0]['filename']) + " and " +
             str(datalines[1]['filename']) + ") is " + str(deltaQ) + " C.")
+
         #calculate ECSA
         if type == "CO_strip":
             esca_co = deltaQ * 1000000 / (2*205)  #taken from Mittermeier et.al 2017, only valid for Pd!!
@@ -334,6 +341,18 @@ def calc_esca(datalines,  type="CO_strip", scanrate=50, Vspan=[], ox_red=[], cha
             print("An ECSA of " + str(esca) + "cm^2 was estimated based on the value you entered for charge per area.")
 
     esca_data=[deltaQ, esca_co, esca]
+
+    #plot the SA as a barchart with lable of name/cycle no
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+
+    x = np.arange(len(esca))
+
+    ax1.bar(x, esca)
+    ax1.set_ylabel("ESCA / cm2")
+    # plt.xticks(x, x)
+
+    plt.show()
 
     # return deltaQ, esca_co, esca
     return  esca_data
@@ -459,6 +478,7 @@ def makelabel(file):
         plot_label = file['settings']['label']
     else:
         plot_label = file['filename'] #for now
+        print("Filename chosen for label.")
     return plot_label
 
 def find_axis_label(data_col):
@@ -497,6 +517,8 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     print('Preparing a figure with 2 x-axes for plotting.')
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
+    #Set the aspect ratio
+    # ax1.set_aspect(aspect=plot_settings["aspect"])
 
 
     #imports linestyle/colours
@@ -596,10 +618,13 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
 
 
     # axis labels
-    ax1.set_xlabel(find_axis_label(x_data_col))
-    ax1.set_ylabel(find_axis_label(y_data_col))
+    ax1.set_xlabel(find_axis_label(x_data_col), size=plot_settings["axis label size"])
+    ax1.set_ylabel(find_axis_label(y_data_col), size=plot_settings["axis label size"])
     if not plot_settings['y_data2'] == "":
         ax2.set_ylabel(find_axis_label(y2_data_col))
+
+    #set tick label size
+    ax1.tick_params(axis="both", labelsize=plot_settings["tick label size"], pad=8, direction="in", which="both", width=1.5)
 
     #set axis limits according to info given in settings
     ax1.set_xlim(plot_settings['x_lim'])
