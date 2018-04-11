@@ -716,8 +716,8 @@ elif load_new_data:
                                                                        'electrode area ecsa': 0,
                                                                        # 'individual ohmicdrop': 43.3
                                                                        },
-                         '20180313_Pd_119_saeval_04_CVA_C01.mpt': {'label': "Pd (119, cycle 2)",
-                                                                       'cycles to extract': [1,2,3,4,5,6,7,8,9,10], #[2]
+                         '20180313_Pd_119_saeval_04_CVA_C01.mpt': {#'label': "Pd (119, cycle 2)",
+                                                                       'cycles to extract': [1,2,3], #[2]
                                                                        'electrode area geom': 2,
                                                                        'electrode area ecsa': 0,
                                                                        # 'individual ohmicdrop': 43.3
@@ -917,16 +917,19 @@ def main():
      #TODO: find set potential in CA and print it/annotate it in plot
 
 
-    #Calculate ESCA from a list of 2 data dictionaries (all further items in the list will be disregarded).
+    #CALCULATE ESCA: type="CO_strip": difference between the first 2 cycles in list of data, rest of list is ignored.
+    #type="oxide_red": finds oxide red charge and calculates ESCA with given charge_p_area for each item in list, also
+    #plots the calculated data as bar chart
     esca_data = dpf.calc_esca(datalist[0:12], type='oxide_red', scanrate=50, charge_p_area=0.000481709)
     print(esca_data)
 
     # esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
-    # plot the data from the list of data dictionaries
-    # print(datalist)
 
+    #PLOT THE DATA FROM THE LIST OF DATA DICTIONARIES
+    # print(datalist)
     # dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
 
+    #PLOT THE CURRENT AT A GIVEN TIME AS A FUNCTION OF POTENTIAL
     # dpf.current_at_time_plot(datalist, times=[60, 600, 3300], I_col="i/mAcm^-2_ECSA")
 
 

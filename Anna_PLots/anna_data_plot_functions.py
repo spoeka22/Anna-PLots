@@ -319,7 +319,8 @@ def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], ch
             each_esca = reduction_charge / charge_p_area
             print("An ECSA of " + str(esca) + "cm^2 was estimated based on a charge per area of " + str(charge_p_area) + ".")
             esca.append(each_esca)
-            plot_label.append(dataline['filename'])
+            plot_label.append(makelabel(dataline))
+
 
     else:  #compares two consecutive cycles (meant for CO-strip)
         for dataline in datalines:
@@ -348,9 +349,10 @@ def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], ch
 
     x = np.arange(len(esca))
 
+
     ax1.bar(x, esca)
     ax1.set_ylabel("ESCA / cm2")
-    # plt.xticks(x, x)
+    plt.xticks(x, plot_label)
 
     plt.show()
 
@@ -477,8 +479,12 @@ def makelabel(file):
     if 'label' in file['settings'] and file['settings']['label'] is not "":
         plot_label = file['settings']['label']
     else:
-        plot_label = file['filename'] #for now
-        print("Filename chosen for label.")
+        filename = file['filename']
+        electrode_no = filename[filename.find("Pd"):filename.find("Pd")+6]
+        cycle = None
+        if "cycle" in filename: cycle = filename[filename.find("cycle"):filename.find("cycle")+9]
+        plot_label = electrode_no + " " + cycle #for now
+        print("Label automatically selected to" + plot_label)
     return plot_label
 
 def find_axis_label(data_col):
