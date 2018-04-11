@@ -107,7 +107,8 @@ elif load_new_data:
                 # '20180227_Pd_114',
                 # '20180227_Pd_115',
                 # '20180312_Pd_118',
-                '20180312_Pd_119'
+                # '20180312_Pd_119',
+                '20180410_Pd_123'
 
     ]  # list of folders from which data is going to be plotted
 
@@ -368,9 +369,16 @@ elif load_new_data:
                                                  '20180313_Pd_119_saeval_04_CVA_C01.mpt',
                                                  # '20180313_Pd_119_02_CA_C01.mpt',
                                                  # '20180313_Pd_119_03_CA_C01.mpt'
+                                                  ]),
+                             ('20180410_Pd_123',  [
+                                                 # '20180410_Pd_123_RDE_3rdtry_08_CVA_C01.mpt',
+                                                 # '20180410_Pd_123_RDE_3rdtry_07_CA_C01.mpt',
+                                                 '20180410_Pd_123_RDE_3rdtry_06_CVA_C01.mpt',
+                                                 # '20180410_Pd_123_RDE_3rdtry_05_CA_C01.mpt',
+                                                 '20180410_Pd_123_RDE_3rdtry_04_CVA_C01.mpt'
                                                   ])
 
-    ])
+                             ])
 
 
 
@@ -539,6 +547,12 @@ elif load_new_data:
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
                                                                'electrode area ecsa': 116.5,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
+                         '20180410_Pd_123_RDE_3rdtry_07_CA_C01.mpt': {'label': "0.90 V/RHE (123)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 0.19635,
+                                                               'electrode area ecsa': 18.0,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
 
@@ -722,6 +736,21 @@ elif load_new_data:
                                                                        'electrode area ecsa': 0,
                                                                        # 'individual ohmicdrop': 43.3
                                                                        },
+                         '20180410_Pd_123_RDE_3rdtry_08_CVA_C01.mpt': {'label':"", #Propene/Ar after
+                                                                      'cycles to extract': np.arange(15)[1:],
+                                                                      'electrode area geom': 0.19635,
+                                                                      'electrode area ecsa': 15.1,
+                                                                      },
+                         '20180410_Pd_123_RDE_3rdtry_06_CVA_C01.mpt': {'label': "", #Propene/before
+                                                                       'cycles to extract': [8], #np.arange(11)[1:],
+                                                                       'electrode area geom': 0.19635,
+                                                                       'electrode area ecsa': 0,
+                                                                       },
+                         '20180410_Pd_123_RDE_3rdtry_04_CVA_C01.mpt': {'label': "", #Ar/before
+                                                                       'cycles to extract': [2], #np.arange(11),
+                                                                       'electrode area geom': 0.19635,
+                                                                       'electrode area ecsa': 0,
+                                                                       },
                          }
     if savesettings:
         data_load_settings = [folder_path, folders, filenames, filespec_settings]
@@ -744,12 +773,12 @@ if not input_plot_settings:
 else:
     # settings for the plot - CV settings
     plot_settings = {'safeplot': True,
-                     'plotname': "20180405_CV_Pd_foil_Ar_Propene_cycle13",
+                     'plotname': "20180411_CV_Pd_RDE_Ar_Propene_no_rot",
                      'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': False,
                      'second axis':  False,
                      'x_lim': (0.2, 1.5),
-                     'y_lim': (-0.39, 0.39),
+                     'y_lim': (-30, 20),
                      'y_logscale': False,
                      'y2_lim': (0, 0.025),
                      'top_pad': 0.2,
@@ -781,14 +810,14 @@ else:
 
     #settings for the plot - CA settings
     # plot_settings = {'safeplot': True,
-    #                  'plotname': "20180405_CAs_for_PORonPd_article_middle_potentials_log",
+    #                  'plotname': "20180411_CA_Pd123_RDEtests_lowesca_withcomp",
     #                  'coplot_evsrhe': False,
     #                  # for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
     #                  'grid': False,
     #                  'second axis': False,
     #                  'x_lim': (-100, 3700),
-    #                  'y_lim': (-0.1, 50),
-    #                  'y_logscale': True,
+    #                  'y_lim': (-0.1, 10),
+    #                  'y_logscale': False,
     #                  'y2_lim': (0, 0.025),
     #                  'top_pad': 0.2,
     #                  'bottom_pad': 0.15,
@@ -812,7 +841,7 @@ else:
     #                           # [0.03137255, 0.1882353, 0.41960785, 1.],
     #
     #                           [0.30611305, 0.60484431, 0.79492504, 1.],   #0.85 85
-    #                           "grey",  #Ar #0.9 Ar 107
+    #                           # "grey",  #Ar #0.9 Ar 107
     #                           [0.81707037, 0.88589005, 0.95078816, 1.], #0.7 112
     #                           [0.03137255, 0.1882353, 0.41960785, 1.],  # 0.95 115
     #                              #1.1 118 (missing!!)
@@ -920,14 +949,14 @@ def main():
     #CALCULATE ESCA: type="CO_strip": difference between the first 2 cycles in list of data, rest of list is ignored.
     #type="oxide_red": finds oxide red charge and calculates ESCA with given charge_p_area for each item in list, also
     #plots the calculated data as bar chart
-    esca_data = dpf.calc_esca(datalist[0:12], type='oxide_red', scanrate=50, charge_p_area=0.000481709)
-    print(esca_data)
+    # esca_data = dpf.calc_esca(datalist[0:12], type='oxide_red', scanrate=50, charge_p_area=0.000481709)
+    # print(esca_data)
 
-    # esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
+    esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
 
     #PLOT THE DATA FROM THE LIST OF DATA DICTIONARIES
     # print(datalist)
-    # dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
+    dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
 
     #PLOT THE CURRENT AT A GIVEN TIME AS A FUNCTION OF POTENTIAL
     # dpf.current_at_time_plot(datalist, times=[60, 600, 3300], I_col="i/mAcm^-2_ECSA")

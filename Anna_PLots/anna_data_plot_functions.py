@@ -93,6 +93,59 @@ def integrate_CV(dataline, Vspan, ox_red):
     # print(len(data_keep))
     return dQ
 
+def find_charge_at_peaksstart(dataline):
+    # find the starting charge of the first peak
+    deltacharge = 50
+    prev_charge = 0
+    for charge in dataline['data']['(Q-Qo)/C']:
+        deltacharge_new = charge - prev_charge
+        if deltacharge_new > deltacharge:
+            selection_conditions = {"(Q-Qo)/C": [lambda x: x <= charge]}
+            break
+        else:
+            deltacharge = deltacharge_new
+            continue
+    return selection_conditions
+
+def merge_dicts(dict1, dict2):
+    dict1.update(dict2)
+    return dict1
+
+def integrate_cas(datalist, t_start="auto", t_end=600, makeplot=True):
+    """ "Integrates" CA current as function of time from q-q0 data
+    """
+    caintegral = None
+    for dataline in datalist:
+
+        #select data in selectdd time region
+        if type(t_start) == str:
+            dataline = select_data(dataline, selection_columns_conditions=merge_dicts({"time/s": [lambda x: x <= t_end]}, find_charge_at_peaksstart(dataline)))
+
+        else:
+            dataline = select_data(dataline, selection_columns_conditions=merge_dicts({"time/s": [lambda x: x>= t_start, lambda x: x <= t_end]}, find_charge_at_peaksstart(dataline)))
+
+        index_start = dataline['data'].first_valid_index()
+        index_end = dataline['data'].last_valid_index()
+
+        delta_q = dataline['data'][index_end] - dataline['data'][index_start]
+        caintegral = caintegral.append(delta_q)
+
+    # safe the Integral dataas csv file (comma separated)
+
+    # data_filename = input("Enter a name for the datafile")
+    # caintegral.to_csv("output_files/" + data_filename + '.csv', na_rep='NULL')
+
+    if makeplot == True
+        fig = plt.figure()
+        ax1 = fig.add_subplot(111)
+        #usw
+
+
+
+
+
+
+
 def find_ave_current(dataline, Vspan=0, ox_red = 0, tspan=0, I_col="<I>/mA"):
     """Calculates the average current in a given region(Vspan) (for example the current in the the DL region """
 
@@ -346,15 +399,15 @@ def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], ch
     #plot the SA as a barchart with lable of name/cycle no
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
-
     x = np.arange(len(esca))
-
-
-    ax1.bar(x, esca)
+    ax1.bar(x, esca, align="center")
     ax1.set_ylabel("ESCA / cm2")
+    ax1.set_ylim((0,max(esca)+5*max(esca)/100))
     plt.xticks(x, plot_label)
-
+    for i,j in zip(x, esca):
+        ax1.annotate('{:.1f}'.format(j), xy=(i-0.25,j+j/100))
     plt.show()
+
 
     # return deltaQ, esca_co, esca
     return  esca_data
@@ -482,8 +535,8 @@ def makelabel(file):
         filename = file['filename']
         electrode_no = filename[filename.find("Pd"):filename.find("Pd")+6]
         cycle = None
-        if "cycle" in filename: cycle = filename[filename.find("cycle"):filename.find("cycle")+9]
-        plot_label = electrode_no + " " + cycle #for now
+        if "cycle" in filename: cycle = filename[filename.find("cycle")+6:filename.find("cycle")+9]
+        plot_label = electrode_no + " c" + cycle #for now
         print("Label automatically selected to" + plot_label)
     return plot_label
 
