@@ -97,50 +97,111 @@ def find_charge_at_peaksstart(dataline):
     # find the starting charge of the first peak
     deltacharge = 50
     prev_charge = 0
+    selection_conditions = {}
     for charge in dataline['data']['(Q-Qo)/C']:
-        deltacharge_new = charge - prev_charge
-        if deltacharge_new > deltacharge:
-            selection_conditions = {"(Q-Qo)/C": [lambda x: x <= charge]}
+        deltacharge_new = abs(charge - prev_charge)
+        # print("Charge: " + str(charge))
+        # print("Prev Charge: " + str(prev_charge))
+        # print("deltacharge_new: " + str(deltacharge_new))
+        if deltacharge_new > deltacharge and deltacharge_new > abs(charge)/500:
+            selection_conditions = {"(Q-Qo)/C": [lambda x: x >= charge]}
+            # print(str(selection_conditions))
             break
         else:
             deltacharge = deltacharge_new
-            continue
+            prev_charge = charge
+
+    if selection_conditions == {}:
+        print("Error: No peak found.")
+
     return selection_conditions
 
-def merge_dicts(dict1, dict2):
-    dict1.update(dict2)
-    return dict1
+# def merge_dicts(dict1, dict2):
+#     dict1.update(dict2)
+#     return dict1
 
-def integrate_cas(datalist, t_start="auto", t_end=600, makeplot=True):
+def integrate_cas(datalist, t_start=0, t_end=600, makeplot=True):
     """ "Integrates" CA current as function of time from q-q0 data
     """
-    caintegral = None
+    caintegral = []
+    salist = []
     for dataline in datalist:
 
         #select data in selectdd time region
-        if type(t_start) == str:
-            dataline = select_data(dataline, selection_columns_conditions=merge_dicts({"time/s": [lambda x: x <= t_end]}, find_charge_at_peaksstart(dataline)))
-
-        else:
-            dataline = select_data(dataline, selection_columns_conditions=merge_dicts({"time/s": [lambda x: x>= t_start, lambda x: x <= t_end]}, find_charge_at_peaksstart(dataline)))
-
+        dataline = select_data(dataline, selection_columns_conditions={"time/s": [lambda x: x >= t_start, lambda x: x <= t_end]})
+        # print(dataline['data'])
+        #find the point where peak starts and cut data accordingly
+        dataline = select_data(dataline, selection_columns_conditions=find_charge_at_peaksstart(dataline))
+        print(dataline['filename'])
+        # print(dataline['data'])
         index_start = dataline['data'].first_valid_index()
         index_end = dataline['data'].last_valid_index()
 
-        delta_q = dataline['data'][index_end] - dataline['data'][index_start]
-        caintegral = caintegral.append(delta_q)
+        print(index_start, dataline['data']['time/s'][index_start])
+        print(index_end)
 
+        delta_q = dataline['data']['(Q-Qo)/C'][index_end] - dataline['data']['(Q-Qo)/C'][index_start]
+        print(delta_q)
+        caintegral.append(delta_q*1000) #save charge in mC
+        salist.append(dataline['settings']['electrode area ecsa'])
+
+    print(caintegral)
+    print(salist)
     # safe the Integral dataas csv file (comma separated)
 
     # data_filename = input("Enter a name for the datafile")
     # caintegral.to_csv("output_files/" + data_filename + '.csv', na_rep='NULL')
 
-    if makeplot == True
+    #calculate regression & R2
+    reg_data = lin_regression(salist, caintegral)
+    r2_string = "R2 = {:.2f}".format(reg_data[1])
+    print(reg_data[1])
+    print(reg_data[0])
+
+    #charge per area
+    charge_per_area = np.divide(caintegral,salist)
+    print(charge_per_area)
+
+
+    if makeplot == True:
         fig = plt.figure()
         ax1 = fig.add_subplot(111)
-        #usw
+        ax1.plot(salist, caintegral, linestyle = "None", marker="o")
+        ax1.set_xlabel("ECSA / cm^2")
+        ax1.set_ylabel("Propene adsorption charge / mC")
+        ax1.set_ylim(0, 25)
+        ax1.plot(reg_data[0](np.arange(150)))
+        ax1.annotate(r2_string, xy=(0.5, 0.75), xycoords="axes fraction")
+        ax2 = ax1.twinx()
+        ax2.plot(salist, charge_per_area, linestyle = "None", marker="x", color="r")
+        ax2.set_ylabel("Propene adsorption charge per area / mC/cm^2")
+        ax2.set_ylim(0,0.5)
+        plt.show()
 
 
+def lin_regression(xvalues, yvalues):
+    """Performs linear regression on lists of x and y values -> y=kx+d
+    returns: [coefficients, R2]
+    written by Lukas
+    """
+    x = np.array(xvalues)
+    y = np.array(yvalues)
+
+    coeff = np.polyfit(x, y, 1)
+
+    p = np.poly1d(coeff)
+    # print(p)
+    y_dach = p(x)
+
+    abw = y - np.mean(y)
+    abw2 = np.square(abw)
+    b_gesch = y_dach
+    abw_gesch = y - b_gesch
+    abw_gesch2 = np.square(abw_gesch)
+
+    R2 = 1 - (np.sum(abw_gesch2) / np.sum(abw2))
+
+    return [p, R2]
 
 
 

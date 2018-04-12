@@ -67,14 +67,14 @@ elif load_new_data:
                 # '20171203_Pd_069',
                 # '20171203_Pd_070',
                 # '20171212_Pd_073',
-                # '20171213_Pd_074',
-                # '20171213_Pd_075',
-                # '20171214_Pd_076',
-                # '20171214_Pd_077',
-                # '20171214_Pd_078',
-                # '20171219_Pd_079',
-                # '20171219_Pd_080',
-                # '20180103_Pd_081',
+                '20171213_Pd_074',
+                '20171213_Pd_075',
+                '20171214_Pd_076',
+                '20171214_Pd_077',
+                '20171214_Pd_078',
+                '20171219_Pd_079',
+                '20171219_Pd_080',
+                '20180103_Pd_081',
                 # '20180103_Pd_082',
                 # '20180104_Pd_084',
                 # '20180104_Pd_085',
@@ -102,13 +102,13 @@ elif load_new_data:
                 # '20180222_Pd_108',
                 # '20180223_Pd_109',
                 # '20180226_Pd_110',
-                # '20180226_Pd_112',
-                # '20180226_Pd_113',
-                # '20180227_Pd_114',
-                # '20180227_Pd_115',
-                # '20180312_Pd_118',
-                # '20180312_Pd_119',
-                '20180410_Pd_123'
+                '20180226_Pd_112',
+                '20180226_Pd_113',
+                '20180227_Pd_114',
+                '20180227_Pd_115',
+                '20180312_Pd_118',
+                '20180312_Pd_119',
+                # '20180410_Pd_123'
 
     ]  # list of folders from which data is going to be plotted
 
@@ -129,34 +129,38 @@ elif load_new_data:
                                             # 'l_CV_Pd_025_Propene_afterPOR2_C01_cycle5.mpt'
                                             ]),
 
-                            ('20171122_Pd_064', ['20171122_Pd_064_05_CA_C01.mpt',
-                                                 # '20171122_Pd_064_04_CA_C01.mpt'
+                            ('20171122_Pd_064', [
+                                                # '20171122_Pd_064_05_CA_C01.mpt',
+                                                 '20171122_Pd_064_04_CA_C01.mpt'
                                                  ]),
-                            ('20171123_Pd_065', [#'20171123_Pd_065_04_CA_C01.mpt',
-                                                 '20171123_Pd_065_05_CA_C01.mpt'
+                            ('20171123_Pd_065', [
+                                                '20171123_Pd_065_04_CA_C01.mpt',
+                                                 # '20171123_Pd_065_05_CA_C01.mpt'
                                                  ]),
-                            ('20171123_Pd_066', [#'20171123_Pd_066_04_CA_C01.mpt',
-                                                 '20171123_Pd_066_05_CA_C01.mpt'
+                            ('20171123_Pd_066', [
+                                                '20171123_Pd_066_04_CA_C01.mpt',
+                                                 # '20171123_Pd_066_05_CA_C01.mpt'
                                                  ]),
                              #('20171127_Pd_068b', ['20171127_Pd_068_b_02_CA_C01.mpt',
                                                    # '20171127_Pd_068_b_04_CA_C01.mpt',
                                                    # '20171127_Pd_068_b_05_CA_C01.mpt'
                                                    # ]),
                              ('20171203_Pd_069', [#'20171203_Pd_069_02_CA_C01.mpt',
-                                                  # '20171203_Pd_069_04_CA_C01.mpt',
-                                                  '20171203_Pd_069_05_CA_C01.mpt'
+                                                  '20171203_Pd_069_04_CA_C01.mpt',
+                                                  # '20171203_Pd_069_05_CA_C01.mpt'
                                                   ]),
                              ('20171203_Pd_070', [#'20171203_Pd_070_02_CA_C01.mpt',
-                                                  # '20171203_Pd_070_04_CA_C01.mpt',
-                                                  '20171203_Pd_070_05_CA_C01.mpt'
+                                                  '20171203_Pd_070_04_CA_C01.mpt',
+                                                  # '20171203_Pd_070_05_CA_C01.mpt'
                                                   ]),
                              ('20171212_Pd_073', [#'20171212_AW_Pd_073_02_CA_C01.mpt',
-                                                  #'20171212_AW_Pd_073_04_CA_C01.mpt',
-                                                  '20171212_AW_Pd_073_05_CA_C01.mpt',
+                                                  '20171212_AW_Pd_073_04_CA_C01.mpt',
+                                                  # '20171212_AW_Pd_073_05_CA_C01.mpt',
                                                   # '20171212_AW_Pd_073_SA_eval_04_CVA_C01.mpt'
                                                   ]),
-                             ('20171213_Pd_074', ['20171213_AW_Pd_074_05_CA_C01.mpt',
-                                                   #'20171213_AW_Pd_074_04_CA_C01.mpt',
+                             ('20171213_Pd_074', [
+                                                   # '20171213_AW_Pd_074_05_CA_C01.mpt',
+                                                   '20171213_AW_Pd_074_04_CA_C01.mpt',
                                                    # '20171213_AW_Pd_074_SA_eval_04_CVA_C01.mpt'
                                                  ]),
                              # ('20171213_Pd_075', ['20171213_AW_Pd_075_SA_eval_04_CVA_C01.mpt',
@@ -166,38 +170,41 @@ elif load_new_data:
                              #                        ]),
                              ('20171214_Pd_076', [#'20171214_AW_Pd_076_SA_eval_04_CVA_C01.mpt',
                                                   # '20171214_AW_Pd_076_02_CA_C01.mpt',
-                                                  #'20171214_AW_Pd_076_04_CA_C01.mpt',
-                                                  '20171214_AW_Pd_076_05_CA_C01.mpt'
+                                                  '20171214_AW_Pd_076_04_CA_C01.mpt',
+                                                  # '20171214_AW_Pd_076_05_CA_C01.mpt'
                                                   ]),
 
-                             ('20171214_Pd_077', ['20171214_AW_Pd_077_05_CA_C01.mpt',
+                             ('20171214_Pd_077', [
+                                                  # '20171214_AW_Pd_077_05_CA_C01.mpt',
                                                   # '20171214_AW_Pd_077_OCV_C01.mpt',
-                                                  # '20171214_AW_Pd_077_04_CA_C01.mpt',
+                                                  '20171214_AW_Pd_077_04_CA_C01.mpt',
                                                   # '20171214_AW_Pd_077_SA_eval_05_OCV_C01.mpt',
                                                   # '20171214_AW_Pd_077_SA_eval_04_CVA_C01.mpt',
                                                   # '20171214_AW_Pd_077_02_CA_C01.mpt'
                                                   ]),
-                             ('20171214_Pd_078', ['20171214_AW_Pd_078_05_CA_C01.mpt',
-                                                  # '20171214_AW_Pd_078_04_CA_C01.mpt',
+                             ('20171214_Pd_078', [
+                                                  # '20171214_AW_Pd_078_05_CA_C01.mpt',
+                                                  '20171214_AW_Pd_078_04_CA_C01.mpt',
                                                   # '20171214_AW_Pd_078_02_CA_C01.mpt',
                                                   # '20171214_AW_Pd_078_SA_eval_05_OCV_C01.mpt',
                                                   # '20171214_AW_Pd_078_SA_eval_04_CVA_C01.mpt'
                                                   ]),
                              ('20171219_Pd_079', [#'20171219_AW_Pd_079_CA_eval_04_CVA_C01.mpt',
-                                                  '20171219_AW_Pd_079_05_CA_C01.mpt',
+                                                  # '20171219_AW_Pd_079_05_CA_C01.mpt',
                                                   # '20171219_AW_Pd_079_02_CA_C01.mpt',
-                                                  # '20171219_AW_Pd_079_04_CA_C01.mpt',
+                                                  '20171219_AW_Pd_079_04_CA_C01.mpt',
                                                   # '20171219_AW_Pd_079_CA_eval_05_OCV_C01.mpt'
                                                   ]),
                              ('20171219_Pd_080',[
-                                                 '20171219_AW_Pd_080_05_CA_C01.mpt',
+                                                 # '20171219_AW_Pd_080_05_CA_C01.mpt',
                                                  # '20171219_AW_Pd_080_02_CA_C01.mpt',
-                                                 # '20171219_AW_Pd_080_04_CA_C01.mpt',
+                                                 '20171219_AW_Pd_080_04_CA_C01.mpt',
                                                  # '20171219_AW_Pd_080_SAeval_05_OCV_C01.mpt',
                                                  #'20171219_AW_Pd_080_SAeval_04_CVA_C01.mpt'
                                                  ]),
-                             ('20180103_Pd_081', [#'20180103_POR_Pd_081_02_CA_C01.mpt',
-                                                  '20180103_POR_Pd_081_03_CA_C01.mpt',
+                             ('20180103_Pd_081', [
+                                                  '20180103_POR_Pd_081_02_CA_C01.mpt',
+                                                  # '20180103_POR_Pd_081_03_CA_C01.mpt',
                                                   # '20180103_POR_Pd_081_SAeval_04_CVA_C01.mpt',
                                                   # '20180103_POR_Pd_081_SAeval_05_OCV_C01.mpt'
                                                   ]),
@@ -206,13 +213,15 @@ elif load_new_data:
                              #                      '20180103_POR_Pd_082_SAeval_04_CVA_C01.mpt',
                              #                      # '20180103_POR_Pd_082_SAeval_05_OCV_C01.mpt'
                              #                      ]),
-                             ('20180104_Pd_084', [#'20180104_POR_Pd_084_02_CA_C01.mpt',
-                                                  '20180104_POR_Pd_084_03_CA_C01.mpt',
+                             ('20180104_Pd_084', [
+                                                  '20180104_POR_Pd_084_02_CA_C01.mpt',
+                                                  # '20180104_POR_Pd_084_03_CA_C01.mpt',
                                                   # '20180104_POR_Pd_084_SAeval_04_CVA_C01.mpt',
                                                   # '20180104_POR_Pd_084_SAeval_05_OCV_C01.mpt'
                                                   ]),
-                             ('20180104_Pd_085',  [#'20180104_POR_Pd_085_02_CA_C01.mpt',
-                                                   '20180104_POR_Pd_085_03_CA_C01.mpt',
+                             ('20180104_Pd_085',  [
+                                                  '20180104_POR_Pd_085_02_CA_C01.mpt',
+                                                   # '20180104_POR_Pd_085_03_CA_C01.mpt',
                                                    # '20180104_POR_Pd_085_SAeval_04_CVA_C01.mpt',
                                                    # '20180104_POR_Pd_085_SAeval_05_OCV_C01.mpt'
                                                    ]),
@@ -342,34 +351,38 @@ elif load_new_data:
                             #                      ]),
                             ('20180226_Pd_112', [#'20180226_POR_Pd_112_SAeval_04_CVA_C01.mpt',
                                                  # '20180226_POR_Pd_112_SAeval_05_OCV_C01.mpt',
-                                                 # '20180226_POR_Pd_112_02_CA_C01.mpt',
-                                                 '20180226_POR_Pd_112_03_CA_C01.mpt'
+                                                 '20180226_POR_Pd_112_02_CA_C01.mpt',
+                                                 # '20180226_POR_Pd_112_03_CA_C01.mpt'
                                                  ]),
-                            ('20180226_Pd_113', ['20180226_POR_Pd_113_03_CA_C01.mpt',
+                            ('20180226_Pd_113', [
+                                                # '20180226_POR_Pd_113_03_CA_C01.mpt',
                                                  # '20180226_POR_Pd_113_SAeval_04_CVA_C01.mpt',
                                                  # '20180226_POR_Pd_113_SAeval_05_OCV_C01.mpt',
-                                                 # '20180226_POR_Pd_113_02_CA_C01.mpt'
+                                                 '20180226_POR_Pd_113_02_CA_C01.mpt'
                                                  ]),
-                            ('20180227_Pd_114', ['20180227_POR_Pd_114_03_CA_C01.mpt',
+                            ('20180227_Pd_114', [
+                                                # '20180227_POR_Pd_114_03_CA_C01.mpt',
                                                  # '20180227_POR_Pd_114_SAeval_04_CVA_C01.mpt',
                                                  # '20180227_POR_Pd_114_SAeval_05_OCV_C01.mpt',
-                                                 # '20180227_POR_Pd_114_02_CA_C01.mpt'
+                                                 '20180227_POR_Pd_114_02_CA_C01.mpt'
                                                  ]),
-                            ('20180227_Pd_115', ['20180227_POR_Pd_115_03_CA_C01.mpt',
+                            ('20180227_Pd_115', [
+                                                # '20180227_POR_Pd_115_03_CA_C01.mpt',
                                                  # '20180227_POR_Pd_115_SAeval_04_CVA_C01.mpt',
                                                  # '20180227_POR_Pd_115_SAeval_05_OCV_C01.mpt',
-                                                 # '20180227_POR_Pd_115_02_CA_C01.mpt'
+                                                 '20180227_POR_Pd_115_02_CA_C01.mpt'
                                                  ]),
                             ('20180312_Pd_118',  [
                                                  # '20180313_Pd_118_saeval_04_CVA_C01.mpt',
-                                                 # '20180313_Pd_118_02_CA_C01.mpt',
-                                                 '20180313_Pd_118_03_CA_C01.mpt'
+                                                 '20180313_Pd_118_02_CA_C01.mpt',
+                                                 # '20180313_Pd_118_03_CA_C01.mpt'
                                                     ]),
                             ('20180312_Pd_119',   [
-                                                 '20180313_Pd_119_saeval_04_CVA_C01.mpt',
-                                                 # '20180313_Pd_119_02_CA_C01.mpt',
+                                                 # '20180313_Pd_119_saeval_04_CVA_C01.mpt',
+                                                 '20180313_Pd_119_02_CA_C01.mpt',
                                                  # '20180313_Pd_119_03_CA_C01.mpt'
                                                   ]),
+
                              ('20180410_Pd_123',  [
                                                  # '20180410_Pd_123_RDE_3rdtry_08_CVA_C01.mpt',
                                                  # '20180410_Pd_123_RDE_3rdtry_07_CA_C01.mpt',
@@ -396,37 +409,73 @@ elif load_new_data:
                                                      'electrode area geom': 2, 'electrode area ecsa': 80.64,
                                                       #'individual ohmicdrop': 43.3
                                                     },
+                        '20171122_Pd_064_04_CA_C01.mpt': {'label': "1.10 V/RHE (064))",
+                                                           # 'cycles to extract': [2],
+                                                           'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                           # 'individual ohmicdrop': 43.3
+                                                           },
                         '20171123_Pd_065_05_CA_C01.mpt': {'label': "0.70 V/RHE (065))",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2, 'electrode area ecsa': 80.64,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
+                        '20171123_Pd_065_04_CA_C01.mpt': {'label': "0.70 V/RHE (065))",
+                                                           # 'cycles to extract': [2],
+                                                           'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                           # 'individual ohmicdrop': 43.3
+                                                           },
                         '20171123_Pd_066_05_CA_C01.mpt': {'label': "1.20 V/RHE (066))",
                                                                 # 'cycles to extract': [2],
                                                                 'electrode area geom': 2, 'electrode area ecsa': 80.64,
                                                                 # 'individual ohmicdrop': 43.3
                                                                 },
+                        '20171123_Pd_066_04_CA_C01.mpt': {'label': "1.20 V/RHE (066))",
+                                                           # 'cycles to extract': [2],
+                                                           'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                           # 'individual ohmicdrop': 43.3
+                                                           },
                         '20171203_Pd_069_05_CA_C01.mpt': {'label': "0.85 V/RHE (069))",
                                                                  # 'cycles to extract': [2],
                                                                  'electrode area geom': 2, 'electrode area ecsa': 80.64,
                                                                  # 'individual ohmicdrop': 43.3
                                                                  },
+                        '20171203_Pd_069_04_CA_C01.mpt': {'label': "0.85 V/RHE (069))",
+                                                           # 'cycles to extract': [2],
+                                                           'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                           # 'individual ohmicdrop': 43.3
+                                                           },
                         '20171203_Pd_070_05_CA_C01.mpt': {'label': "1.00 V/RHE (070))",
                                                                   # 'cycles to extract': [2],
                                                                   'electrode area geom': 2,
                                                                   'electrode area ecsa': 80.64,
                                                                   # 'individual ohmicdrop': 43.3
                                                                   },
+                         '20171203_Pd_070_04_CA_C01.mpt': {'label': "1.00 V/RHE (070))",
+                                                           # 'cycles to extract': [2],
+                                                           'electrode area geom': 2,
+                                                           'electrode area ecsa': 80.64,
+                                                           # 'individual ohmicdrop': 43.3
+                                                           },
                         '20171212_AW_Pd_073_05_CA_C01.mpt': {'label': "0.90 V/RHE (073))",
                                                      # 'cycles to extract': [2],
                                                      'electrode area geom': 2, 'electrode area ecsa': 89.47,
                                                       #'individual ohmicdrop': 43.3
                                                     },
+                         '20171212_AW_Pd_073_04_CA_C01.mpt': {'label': "0.90 V/RHE (073))",
+                                                              # 'cycles to extract': [2],
+                                                              'electrode area geom': 2, 'electrode area ecsa': 89.47,
+                                                              # 'individual ohmicdrop': 43.3
+                                                              },
                          '20171213_AW_Pd_074_05_CA_C01.mpt': {'label': "0.70 V/RHE (074)",
                                                             # 'cycles to extract': [3],
                                                            'electrode area geom': 2, 'electrode area ecsa': 55.43,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
+                         '20171213_AW_Pd_074_04_CA_C01.mpt': {'label': "0.70 V/RHE (074)",
+                                                              # 'cycles to extract': [3],
+                                                              'electrode area geom': 2, 'electrode area ecsa': 55.43,
+                                                              # 'individual ohmicdrop': 43.3
+                                                              },
                          '20171213_AW_Pd_075_05_CA_C01.mpt': {'label': "0.95 V/RHE (075)",
                                                            # 'cycles to extract': [3],
                                                            'electrode area geom': 2, 'electrode area ecsa': 0,
@@ -437,41 +486,86 @@ elif load_new_data:
                                                            'electrode area geom': 2, 'electrode area ecsa': 99.44,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
+                         '20171214_AW_Pd_076_04_CA_C01.mpt': {'label': "0.80 V/RHE (076)",
+                                                              # 'cycles to extract': [3],
+                                                              'electrode area geom': 2, 'electrode area ecsa': 99.44,
+                                                              # 'individual ohmicdrop': 43.3
+                                                              },
                          '20171214_AW_Pd_077_05_CA_C01.mpt': {'label': "0.85 V/RHE (077)",
                                                            # 'cycles to extract': [3],
                                                            'electrode area geom': 2, 'electrode area ecsa': 53.14,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
+                         '20171214_AW_Pd_077_04_CA_C01.mpt': {'label': "0.85 V/RHE (077)",
+                                                              # 'cycles to extract': [3],
+                                                              'electrode area geom': 2, 'electrode area ecsa': 53.14,
+                                                              # 'individual ohmicdrop': 43.3
+                                                              },
                          '20171214_AW_Pd_078_05_CA_C01.mpt': {'label': "1.00 V/RHE (078)",
                                                            # 'cycles to extract': [2],
                                                            'electrode area geom': 2, 'electrode area ecsa': 86.57,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
+                         '20171214_AW_Pd_078_04_CA_C01.mpt': {'label': "1.00 V/RHE (078)",
+                                                              # 'cycles to extract': [2],
+                                                              'electrode area geom': 2, 'electrode area ecsa': 86.57,
+                                                              # 'individual ohmicdrop': 43.3
+                                                              },
                          '20171219_AW_Pd_079_05_CA_C01.mpt': {'label': "0.90 V/RHE (079)",
                                                                        # 'cycles to extract': [2],
                                                                        'electrode area geom': 2,
                                                                        'electrode area ecsa': 87.19,
                                                                        # 'individual ohmicdrop': 43.3
                                                                        },
+                         '20171219_AW_Pd_079_04_CA_C01.mpt': {'label': "0.90 V/RHE (079)",
+                                                              # 'cycles to extract': [2],
+                                                              'electrode area geom': 2,
+                                                              'electrode area ecsa': 87.19,
+                                                              # 'individual ohmicdrop': 43.3
+                                                              },
                          '20171219_AW_Pd_080_05_CA_C01.mpt': {'label': "0.95 V/RHE (080)",
                                                                        # 'cycles to extract': [2],
                                                                        'electrode area geom': 2,
                                                                        'electrode area ecsa': 79.72,
                                                                        # 'individual ohmicdrop': 43.3
                                                                       },
+                         '20171219_AW_Pd_080_04_CA_C01.mpt': {'label': "0.95 V/RHE (080)",
+                                                              # 'cycles to extract': [2],
+                                                              'electrode area geom': 2,
+                                                              'electrode area ecsa': 79.72,
+                                                              # 'individual ohmicdrop': 43.3
+                                                              },
                          '20180103_POR_Pd_081_03_CA_C01.mpt': {'label': "0.95 V/RHE (081)",
                                                               # 'cycles to extract': [2],
                                                               'electrode area geom': 2,
                                                               'electrode area ecsa': 76.39,
                                                               # 'individual ohmicdrop': 43.3
                                                               },
+                         '20180103_POR_Pd_081_02_CA_C01.mpt': {'label': "0.95 V/RHE (081)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 76.39,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
                          '20180104_POR_Pd_084_03_CA_C01.mpt': {'label': "0.80 V/RHE (084)",
                                                               # 'cycles to extract': [2],
                                                               'electrode area geom': 2,
                                                               'electrode area ecsa': 85.53,
                                                               # 'individual ohmicdrop': 43.3
                                                               },
+                         '20180104_POR_Pd_084_02_CA_C01.mpt': {'label': "0.80 V/RHE (084)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 85.53,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
                          '20180104_POR_Pd_085_03_CA_C01.mpt': {'label': "0.85 V/RHE (085)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 87.60,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
+                         '20180104_POR_Pd_085_02_CA_C01.mpt': {'label': "0.85 V/RHE (085)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
                                                                'electrode area ecsa': 87.60,
@@ -519,36 +613,72 @@ elif load_new_data:
                                                            'electrode area ecsa': 85.11,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
+                         '20180226_POR_Pd_112_02_CA_C01.mpt': {'label': "0.70 V/RHE (112)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 85.11,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
                          '20180226_POR_Pd_113_03_CA_C01.mpt': {'label': "0.80 V/RHE (113)",
                                                            # 'cycles to extract': [2],
                                                            'electrode area geom': 2,
                                                            'electrode area ecsa': 51.07,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
+                         '20180226_POR_Pd_113_02_CA_C01.mpt': {'label': "0.80 V/RHE (113)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 51.07,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
                          '20180227_POR_Pd_114_03_CA_C01.mpt': {'label': "0.90 V/RHE (114)",
                                                            # 'cycles to extract': [2],
                                                            'electrode area geom': 2,
                                                            'electrode area ecsa': 80.13,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
+                         '20180227_POR_Pd_114_02_CA_C01.mpt': {'label': "0.90 V/RHE (114)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 80.13,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
                          '20180227_POR_Pd_115_03_CA_C01.mpt': {'label': "0.95 V/RHE (115)",
                                                            # 'cycles to extract': [2],
                                                            'electrode area geom': 2,
                                                            'electrode area ecsa': 34.88,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
+                         '20180227_POR_Pd_115_02_CA_C01.mpt': {'label': "0.95 V/RHE (115)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 34.88,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
                          '20180313_Pd_118_03_CA_C01.mpt': {'label': "1.10 V/RHE (118)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
                                                                'electrode area ecsa': 123.42,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
+                         '20180313_Pd_118_02_CA_C01.mpt': {'label': "1.10 V/RHE (118)",
+                                                           # 'cycles to extract': [2],
+                                                           'electrode area geom': 2,
+                                                           'electrode area ecsa': 123.42,
+                                                           # 'individual ohmicdrop': 43.3
+                                                           },
                          '20180313_Pd_119_03_CA_C01.mpt': {'label': "1.20 V/RHE (119)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
                                                                'electrode area ecsa': 116.5,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
+                         '20180313_Pd_119_02_CA_C01.mpt': {'label': "1.20 V/RHE (119)",
+                                                           # 'cycles to extract': [2],
+                                                           'electrode area geom': 2,
+                                                           'electrode area ecsa': 116.5,
+                                                           # 'individual ohmicdrop': 43.3
+                                                           },
                          '20180410_Pd_123_RDE_3rdtry_07_CA_C01.mpt': {'label': "0.90 V/RHE (123)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 0.19635,
@@ -772,105 +902,106 @@ if not input_plot_settings:
 
 else:
     # settings for the plot - CV settings
-    plot_settings = {'safeplot': True,
-                     'plotname': "20180411_CV_Pd_RDE_Ar_Propene_no_rot",
-                     'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
-                     'grid': False,
-                     'second axis':  False,
-                     'x_lim': (0.2, 1.5),
-                     'y_lim': (-30, 20),
-                     'y_logscale': False,
-                     'y2_lim': (0, 0.025),
-                     'top_pad': 0.2,
-                     'bottom_pad': 0.1,
-                     'l_pad': [],
-                     'r_pad': [],
-                     'colors': ['0.25',[0.03137255, 0.20853518, 0.4497501, 1.], 'b', 'grey','k', 'r', '#4a235a', 'c', '#538612', 'c', 'm', '0.50',"#538612", '0.75'],
-                     # 'colors': [ '#bd4de0' , 'k', 'orange', 'g', 'b', 'r', '#d816ff', "#ff8a16"],
-                     # 'colors': ['#bd4de0', 'k', '#6b12ad', 'g', '#266f0e', 'grey'],
-                     # 'colors': ['#bd4de0', 'orange', '#d816ff', "#ff8a16"],
-                     'linestyle': ['-', '-'],
-                     'colors2': ['0.25', 'grey', '0.75'],
-                     'linestyle2': ['--','--','--'],
-                     # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
-                     # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
-                     #options to select which data is plotted
-                     'plot type': "cv", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
-                     #custom column selection, will overrule plottype, if given. Possibilities are all data column names,
-                     #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
-                     # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
-                     'x_data':"EvsRHE/V",
-                     'y_data':"i/mAcm^-2_geom",
-                     'x_data2':"", #not implemented yet
-                     "y_data2":"",
-                     "aspect": 0.95,
-                     "axis label size": 16,
-                     "tick label size": 14
-                     }
-
-    #settings for the plot - CA settings
     # plot_settings = {'safeplot': True,
-    #                  'plotname': "20180411_CA_Pd123_RDEtests_lowesca_withcomp",
-    #                  'coplot_evsrhe': False,
-    #                  # for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
+    #                  'plotname': "20180411_CV_Pd_RDE_Ar_Propene_no_rot",
+    #                  'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
     #                  'grid': False,
-    #                  'second axis': False,
-    #                  'x_lim': (-100, 3700),
-    #                  'y_lim': (-0.1, 10),
+    #                  'second axis':  False,
+    #                  'x_lim': (0.2, 1.5),
+    #                  'y_lim': (-30, 20),
     #                  'y_logscale': False,
     #                  'y2_lim': (0, 0.025),
     #                  'top_pad': 0.2,
-    #                  'bottom_pad': 0.15,
-    #                  'l_pad': 0.2,
+    #                  'bottom_pad': 0.1,
+    #                  'l_pad': [],
     #                  'r_pad': [],
-    #                  # 'colors': ['g', 'b', 'grey', 'orange', 'r', '#4a235a', 'k', 'c', '#538612', 'c', 'm', '0.50',
-    #                  #            "#538612", '0.75'],
+    #                  'colors': ['0.25',[0.03137255, 0.20853518, 0.4497501, 1.], 'b', 'grey','k', 'r', '#4a235a', 'c', '#538612', 'c', 'm', '0.50',"#538612", '0.75'],
     #                  # 'colors': [ '#bd4de0' , 'k', 'orange', 'g', 'b', 'r', '#d816ff', "#ff8a16"],
-    #                  # 'colors': ['#bd4de0', '#6b12ad', #purple
-    #                  #            'grey', 'k',
-    #                  #            'g', '#266f0e'
-    #                  #            ],
+    #                  # 'colors': ['#bd4de0', 'k', '#6b12ad', 'g', '#266f0e', 'grey'],
     #                  # 'colors': ['#bd4de0', 'orange', '#d816ff', "#ff8a16"],
-    #                  # 'colors': plt.cm.gist_earth(range(255, 10, 10)),
-    #                  'colors': #plt.cm.Blues([50,100,150,200,250,255]),
-    #                          [
-    #                           [0.10249904, 0.40868897, 0.68289121, 1.],  #0.9 73
-    #                           # [0.59215688, 0.77708575, 0.87643215, 1.],  #0.8 76
-    #                           # [0.03137255, 0.20853518, 0.4497501, 1.],  # 1.0 78
-    #
-    #                           # [0.03137255, 0.1882353, 0.41960785, 1.],
-    #
-    #                           [0.30611305, 0.60484431, 0.79492504, 1.],   #0.85 85
-    #                           # "grey",  #Ar #0.9 Ar 107
-    #                           [0.81707037, 0.88589005, 0.95078816, 1.], #0.7 112
-    #                           [0.03137255, 0.1882353, 0.41960785, 1.],  # 0.95 115
-    #                              #1.1 118 (missing!!)
-    #                           [0, 0, 0, 1.],  #black 1.2 119
-    #
-    #                           ],
-    #
-    #
-    #                  # 'linestyle': ['-', '-','-', '-','--', '-','-', '-'],
-    #                  'linestyle': ['-', '-', '--', '-', '-', '-', '-', '-'],
+    #                  'linestyle': ['-', '-'],
     #                  'colors2': ['0.25', 'grey', '0.75'],
-    #                  'linestyle2': ['--', '--', '--'],
+    #                  'linestyle2': ['--','--','--'],
     #                  # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
     #                  # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
-    #
-    #                  # options to select which data is plotted
-    #                  'plot type': "ca",
-    #                  # possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
-    #                  # custom column selection, will overrule plottype, if given. Possibilities are all data column names,
-    #                  # most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
+    #                  #options to select which data is plotted
+    #                  'plot type': "cv", #possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
+    #                  #custom column selection, will overrule plottype, if given. Possibilities are all data column names,
+    #                  #most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
     #                  # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
-    #                  'x_data': "time/s",
-    #                  'y_data': "i/mAcm^-2_ECSA",
-    #                  'x_data2': "",  # not implemented yet
-    #                  "y_data2": "",
-    #                  # "aspect": 100,
+    #                  'x_data':"EvsRHE/V",
+    #                  'y_data':"i/mAcm^-2_geom",
+    #                  'x_data2':"", #not implemented yet
+    #                  "y_data2":"",
+    #                  "aspect": 0.95,
     #                  "axis label size": 16,
     #                  "tick label size": 14
     #                  }
+
+    #settings for the plot - CA settings
+    plot_settings = {'safeplot': False,
+                     'plotname': "20180411_CA_Pd123_RDEtests_lowesca_withcomp",
+                     'coplot_evsrhe': False,
+                     # for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
+                     'grid': False,
+                     'second axis': False,
+                     'x_lim': (-10, 1000),
+                     'y_lim': (-0.1, 1),
+                     'y_logscale': False,
+                     'y2_lim': (0, 0.025),
+                     'top_pad': 0.2,
+                     'bottom_pad': 0.15,
+                     'l_pad': 0.2,
+                     'r_pad': [],
+                     'colors': ['g', 'b', 'grey', 'orange', 'r', '#4a235a', 'k', 'c', '#538612', 'c', 'm', '0.50',
+                                "#538612", '0.75'],
+                     # 'colors': [ '#bd4de0' , 'k', 'orange', 'g', 'b', 'r', '#d816ff', "#ff8a16"],
+                     # 'colors': ['#bd4de0', '#6b12ad', #purple
+                     #            'grey', 'k',
+                     #            'g', '#266f0e'
+                     #            ],
+                     # 'colors': ['#bd4de0', 'orange', '#d816ff', "#ff8a16"],
+                     # 'colors': plt.cm.gist_earth(range(255, 10, 10)),
+                     # 'colors': #plt.cm.Blues([50,100,150,200,250,255]),
+                     #         [
+                     #          [0.10249904, 0.40868897, 0.68289121, 1.],  #0.9 73
+                     #          # [0.59215688, 0.77708575, 0.87643215, 1.],  #0.8 76
+                     #          # [0.03137255, 0.20853518, 0.4497501, 1.],  # 1.0 78
+                     #
+                     #          # [0.03137255, 0.1882353, 0.41960785, 1.],
+                     #
+                     #          [0.30611305, 0.60484431, 0.79492504, 1.],   #0.85 85
+                     #          # "grey",  #Ar #0.9 Ar 107
+                     #          [0.81707037, 0.88589005, 0.95078816, 1.], #0.7 112
+                     #          [0.03137255, 0.1882353, 0.41960785, 1.],  # 0.95 115
+                     #             #1.1 118 (missing!!)
+                     #          [0, 0, 0, 1.],  #black 1.2 119
+                     #
+                     #          ],
+
+
+                     'linestyle': ['-', '-','-', '-','-', '-','-', '-'],
+                     # 'linestyle': ['-', '-', '--', '-', '-', '-', '-', '-'],
+                     'colors2': ['0.25', 'grey', '0.75'],
+                     'linestyle2': ['--', '--', '--'],
+                     # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
+                     # color_list = plt.cm.gist_earth(np.linspace(0, 1, 14))
+
+                     # options to select which data is plotted
+                     'plot type': "ca",
+                     # possibilies: ca or cv, for standard selection of columns: EvsRHE (E_corr vsRHE), i_geom and time/s
+                     # custom column selection, will overrule plottype, if given. Possibilities are all data column names,
+                     # most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
+                     # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
+                     'x_data': "time/s",
+                     'y_data': "<I>/mA",
+                     # 'y_data': "i/mAcm^-2_ECSA",
+                     'x_data2': "",  # not implemented yet
+                     "y_data2": "",
+                     # "aspect": 100,
+                     "axis label size": 16,
+                     "tick label size": 14
+                     }
 
 
     # legend:
@@ -952,15 +1083,20 @@ def main():
     # esca_data = dpf.calc_esca(datalist[0:12], type='oxide_red', scanrate=50, charge_p_area=0.000481709)
     # print(esca_data)
 
-    esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
+
 
     #PLOT THE DATA FROM THE LIST OF DATA DICTIONARIES
+    # esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
     # print(datalist)
-    dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
-
+    # dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
+    #
     #PLOT THE CURRENT AT A GIVEN TIME AS A FUNCTION OF POTENTIAL
     # dpf.current_at_time_plot(datalist, times=[60, 600, 3300], I_col="i/mAcm^-2_ECSA")
 
+
+    #INTEGRATE (find difference in Q-Qo) the first peak in a CA after a given starting time (assumed 0 if not given) and plot
+    # currently as a function of electrode area as given in input file
+    dpf.integrate_cas(datalist, t_start=20, t_end=700, makeplot=True)
 
     #TEST of the select_data function:
     # print("Original" + str(datalist[0]))
