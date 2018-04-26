@@ -41,7 +41,7 @@ ohm_drop_corr = False  # to turn on/off ohmic drop correction
 ohmicdrop = 50
 
 # insert filename in list if starting time is notzero, AND should be plotted as nonzero (ie NOT BE CHANGED)
-no_timezero = {}
+no_timezero = {'20180415_Pd_127_RDE_2_03_CA_C01.mpt'}
 
 if not load_new_data:
     settings_file = 'import_settings/' + input("Enter the name of the file containing data path and settings: ")
@@ -64,27 +64,27 @@ elif load_new_data:
                 # '20171123_Pd_065',
                 # '20171123_Pd_066',
                 # '20171127_Pd_068b',
-                # '20171203_Pd_069',
+                '20171203_Pd_069', #0.85
                 # '20171203_Pd_070',
-                # '20171212_Pd_073',
+                '20171212_Pd_073', #0.9
                 # '20171213_Pd_074',
                 # '20171213_Pd_075',
                 # '20171214_Pd_076',
-                # '20171214_Pd_077',
+                '20171214_Pd_077', #0.85
                 # '20171214_Pd_078',
-                # '20171219_Pd_079',
-                '20171219_Pd_080',
-                '20180103_Pd_081',
+                '20171219_Pd_079', #0.9
+                '20171219_Pd_080', #0.95
+                '20180103_Pd_081', #0.95
                 # '20180103_Pd_082',
                 # '20180104_Pd_084',
-                # '20180104_Pd_085',
+                '20180104_Pd_085', #0.85
                 # '20180110_Pd_089',
                 # '20180109_Pd_086',
                 # '20180111_Pd_090',
                 # '20180109_Pd_087',
                 # '20180111_Pd_091'
                 # '20180124_Pd_092',
-                '20180124_Pd_093',
+                # '20180124_Pd_093',
                 # '20180130_Pd_094',
                 # '20180130_Pd_095',
                 # '20180130_Pd_096',
@@ -104,11 +104,14 @@ elif load_new_data:
                 # '20180226_Pd_110',
                 # '20180226_Pd_112',
                 # '20180226_Pd_113',
-                # '20180227_Pd_114',
-                '20180227_Pd_115',
+                '20180227_Pd_114', #0.9
+                '20180227_Pd_115', #0.95
                 # '20180312_Pd_118',
                 # '20180312_Pd_119',
-                # '20180410_Pd_123'
+                # '20180410_Pd_123', #RDE, noisy
+                #   '20180415_Pd_126', #RDE
+                #   '20180415_Pd_127'  #RDE
+
 
     ]  # list of folders from which data is going to be plotted
 
@@ -130,37 +133,37 @@ elif load_new_data:
                                             ]),
 
                             ('20171122_Pd_064', [
-                                                # '20171122_Pd_064_05_CA_C01.mpt',
-                                                 '20171122_Pd_064_04_CA_C01.mpt'
+                                                '20171122_Pd_064_05_CA_C01.mpt',
+                                                 # '20171122_Pd_064_04_CA_C01.mpt'
                                                  ]),
                             ('20171123_Pd_065', [
-                                                '20171123_Pd_065_04_CA_C01.mpt',
-                                                 # '20171123_Pd_065_05_CA_C01.mpt'
+                                                # '20171123_Pd_065_04_CA_C01.mpt',
+                                                 '20171123_Pd_065_05_CA_C01.mpt'
                                                  ]),
                             ('20171123_Pd_066', [
-                                                '20171123_Pd_066_04_CA_C01.mpt',
-                                                 # '20171123_Pd_066_05_CA_C01.mpt'
+                                                # '20171123_Pd_066_04_CA_C01.mpt',
+                                                 '20171123_Pd_066_05_CA_C01.mpt'
                                                  ]),
                              #('20171127_Pd_068b', ['20171127_Pd_068_b_02_CA_C01.mpt',
                                                    # '20171127_Pd_068_b_04_CA_C01.mpt',
                                                    # '20171127_Pd_068_b_05_CA_C01.mpt'
                                                    # ]),
                              ('20171203_Pd_069', [#'20171203_Pd_069_02_CA_C01.mpt',
-                                                  '20171203_Pd_069_04_CA_C01.mpt',
-                                                  # '20171203_Pd_069_05_CA_C01.mpt'
+                                                  # '20171203_Pd_069_04_CA_C01.mpt',
+                                                  '20171203_Pd_069_05_CA_C01.mpt'
                                                   ]),
                              ('20171203_Pd_070', [#'20171203_Pd_070_02_CA_C01.mpt',
-                                                  '20171203_Pd_070_04_CA_C01.mpt',
-                                                  # '20171203_Pd_070_05_CA_C01.mpt'
+                                                  # '20171203_Pd_070_04_CA_C01.mpt',
+                                                  '20171203_Pd_070_05_CA_C01.mpt'
                                                   ]),
                              ('20171212_Pd_073', [#'20171212_AW_Pd_073_02_CA_C01.mpt',
-                                                  '20171212_AW_Pd_073_04_CA_C01.mpt',
-                                                  # '20171212_AW_Pd_073_05_CA_C01.mpt',
+                                                  # '20171212_AW_Pd_073_04_CA_C01.mpt',
+                                                  '20171212_AW_Pd_073_05_CA_C01.mpt',
                                                   # '20171212_AW_Pd_073_SA_eval_04_CVA_C01.mpt'
                                                   ]),
                              ('20171213_Pd_074', [
-                                                   # '20171213_AW_Pd_074_05_CA_C01.mpt',
-                                                   '20171213_AW_Pd_074_04_CA_C01.mpt',
+                                                   '20171213_AW_Pd_074_05_CA_C01.mpt',
+                                                   # '20171213_AW_Pd_074_04_CA_C01.mpt',
                                                    # '20171213_AW_Pd_074_SA_eval_04_CVA_C01.mpt'
                                                  ]),
                              # ('20171213_Pd_075', ['20171213_AW_Pd_075_SA_eval_04_CVA_C01.mpt',
@@ -170,29 +173,29 @@ elif load_new_data:
                              #                        ]),
                              ('20171214_Pd_076', [#'20171214_AW_Pd_076_SA_eval_04_CVA_C01.mpt',
                                                   # '20171214_AW_Pd_076_02_CA_C01.mpt',
-                                                  '20171214_AW_Pd_076_04_CA_C01.mpt',
-                                                  # '20171214_AW_Pd_076_05_CA_C01.mpt'
+                                                  # '20171214_AW_Pd_076_04_CA_C01.mpt',
+                                                  '20171214_AW_Pd_076_05_CA_C01.mpt'
                                                   ]),
 
                              ('20171214_Pd_077', [
-                                                  # '20171214_AW_Pd_077_05_CA_C01.mpt',
+                                                  '20171214_AW_Pd_077_05_CA_C01.mpt',
                                                   # '20171214_AW_Pd_077_OCV_C01.mpt',
-                                                  '20171214_AW_Pd_077_04_CA_C01.mpt',
+                                                  # '20171214_AW_Pd_077_04_CA_C01.mpt',
                                                   # '20171214_AW_Pd_077_SA_eval_05_OCV_C01.mpt',
                                                   # '20171214_AW_Pd_077_SA_eval_04_CVA_C01.mpt',
                                                   # '20171214_AW_Pd_077_02_CA_C01.mpt'
                                                   ]),
                              ('20171214_Pd_078', [
-                                                  # '20171214_AW_Pd_078_05_CA_C01.mpt',
-                                                  '20171214_AW_Pd_078_04_CA_C01.mpt',
+                                                  '20171214_AW_Pd_078_05_CA_C01.mpt',
+                                                  # '20171214_AW_Pd_078_04_CA_C01.mpt',
                                                   # '20171214_AW_Pd_078_02_CA_C01.mpt',
                                                   # '20171214_AW_Pd_078_SA_eval_05_OCV_C01.mpt',
                                                   # '20171214_AW_Pd_078_SA_eval_04_CVA_C01.mpt'
                                                   ]),
                              ('20171219_Pd_079', [#'20171219_AW_Pd_079_CA_eval_04_CVA_C01.mpt',
-                                                  # '20171219_AW_Pd_079_05_CA_C01.mpt',
+                                                  '20171219_AW_Pd_079_05_CA_C01.mpt',
                                                   # '20171219_AW_Pd_079_02_CA_C01.mpt',
-                                                  '20171219_AW_Pd_079_04_CA_C01.mpt',
+                                                  # '20171219_AW_Pd_079_04_CA_C01.mpt',
                                                   # '20171219_AW_Pd_079_CA_eval_05_OCV_C01.mpt'
                                                   ]),
                              ('20171219_Pd_080',[
@@ -214,14 +217,14 @@ elif load_new_data:
                              #                      # '20180103_POR_Pd_082_SAeval_05_OCV_C01.mpt'
                              #                      ]),
                              ('20180104_Pd_084', [
-                                                  '20180104_POR_Pd_084_02_CA_C01.mpt',
-                                                  # '20180104_POR_Pd_084_03_CA_C01.mpt',
+                                                  # '20180104_POR_Pd_084_02_CA_C01.mpt',
+                                                  '20180104_POR_Pd_084_03_CA_C01.mpt',
                                                   # '20180104_POR_Pd_084_SAeval_04_CVA_C01.mpt',
                                                   # '20180104_POR_Pd_084_SAeval_05_OCV_C01.mpt'
                                                   ]),
                              ('20180104_Pd_085',  [
-                                                  '20180104_POR_Pd_085_02_CA_C01.mpt',
-                                                   # '20180104_POR_Pd_085_03_CA_C01.mpt',
+                                                  # '20180104_POR_Pd_085_02_CA_C01.mpt',
+                                                   '20180104_POR_Pd_085_03_CA_C01.mpt',
                                                    # '20180104_POR_Pd_085_SAeval_04_CVA_C01.mpt',
                                                    # '20180104_POR_Pd_085_SAeval_05_OCV_C01.mpt'
                                                    ]),
@@ -261,7 +264,7 @@ elif load_new_data:
 
                                ('20180124_Pd_093', [
                                                     #'20180124_Pd_093_02_CA_C01.mpt',
-                                                     '20180124_Pd_093_06_CA_C01.mpt',
+                                                     # '20180124_Pd_093_06_CA_C01.mpt',
                                                      # '20180124_Pd_093_04_CVA_C01.mpt',
                                                      # '20180124_Pd_093_05_CA_C01.mpt'
                                                      ]),
@@ -353,20 +356,20 @@ elif load_new_data:
                             #                      ]),
                             ('20180226_Pd_112', [#'20180226_POR_Pd_112_SAeval_04_CVA_C01.mpt',
                                                  # '20180226_POR_Pd_112_SAeval_05_OCV_C01.mpt',
-                                                 '20180226_POR_Pd_112_02_CA_C01.mpt',
-                                                 # '20180226_POR_Pd_112_03_CA_C01.mpt'
+                                                 # '20180226_POR_Pd_112_02_CA_C01.mpt',
+                                                 '20180226_POR_Pd_112_03_CA_C01.mpt'
                                                  ]),
                             ('20180226_Pd_113', [
-                                                # '20180226_POR_Pd_113_03_CA_C01.mpt',
+                                                '20180226_POR_Pd_113_03_CA_C01.mpt',
                                                  # '20180226_POR_Pd_113_SAeval_04_CVA_C01.mpt',
                                                  # '20180226_POR_Pd_113_SAeval_05_OCV_C01.mpt',
-                                                 '20180226_POR_Pd_113_02_CA_C01.mpt'
+                                                 # '20180226_POR_Pd_113_02_CA_C01.mpt'
                                                  ]),
                             ('20180227_Pd_114', [
-                                                # '20180227_POR_Pd_114_03_CA_C01.mpt',
+                                                '20180227_POR_Pd_114_03_CA_C01.mpt',
                                                  # '20180227_POR_Pd_114_SAeval_04_CVA_C01.mpt',
                                                  # '20180227_POR_Pd_114_SAeval_05_OCV_C01.mpt',
-                                                 '20180227_POR_Pd_114_02_CA_C01.mpt'
+                                                 # '20180227_POR_Pd_114_02_CA_C01.mpt'
                                                  ]),
                             ('20180227_Pd_115', [
                                                 '20180227_POR_Pd_115_03_CA_C01.mpt',
@@ -376,22 +379,39 @@ elif load_new_data:
                                                  ]),
                             ('20180312_Pd_118',  [
                                                  # '20180313_Pd_118_saeval_04_CVA_C01.mpt',
-                                                 '20180313_Pd_118_02_CA_C01.mpt',
-                                                 # '20180313_Pd_118_03_CA_C01.mpt'
+                                                 # '20180313_Pd_118_02_CA_C01.mpt',
+                                                 '20180313_Pd_118_03_CA_C01.mpt'
                                                     ]),
                             ('20180312_Pd_119',   [
                                                  # '20180313_Pd_119_saeval_04_CVA_C01.mpt',
-                                                 '20180313_Pd_119_02_CA_C01.mpt',
-                                                 # '20180313_Pd_119_03_CA_C01.mpt'
+                                                 # '20180313_Pd_119_02_CA_C01.mpt',
+                                                 '20180313_Pd_119_03_CA_C01.mpt'
                                                   ]),
 
                              ('20180410_Pd_123',  [
                                                  # '20180410_Pd_123_RDE_3rdtry_08_CVA_C01.mpt',
-                                                 # '20180410_Pd_123_RDE_3rdtry_07_CA_C01.mpt',
-                                                 '20180410_Pd_123_RDE_3rdtry_06_CVA_C01.mpt',
+                                                 '20180410_Pd_123_RDE_3rdtry_07_CA_C01.mpt',
+                                                 # '20180410_Pd_123_RDE_3rdtry_06_CVA_C01.mpt',
                                                  # '20180410_Pd_123_RDE_3rdtry_05_CA_C01.mpt',
-                                                 '20180410_Pd_123_RDE_3rdtry_04_CVA_C01.mpt'
-                                                  ])
+                                                 # '20180410_Pd_123_RDE_3rdtry_04_CVA_C01.mpt'
+                                                  ]),
+                             ('20180415_Pd_126',[
+                                             # '20180415_Pd_126_RDE_04_CVA_C01.mpt',
+                                             # '20180415_Pd_126_RDE_3_02_CA_C01.mpt',
+                                             # '20180415_Pd_126_RDE_3_03_CVA_C01.mpt',
+                                             # '20180415_Pd_126_RDE_4_03_CVA_C01.mpt',
+                                             '20180415_Pd_126_RDE_4_04_CA_C01.mpt',
+                                             # '20180415_Pd_126_RDE_4_06_CVA_C01.mpt'
+                             ]),
+                             ('20180415_Pd_127', [
+                                             # '20180415_Pd_127_RDE_04_CVA_C01.mpt',
+                                             # '20180415_Pd_127_RDE_05_CA_C01.mpt',
+                                             # '20180415_Pd_127_RDE_06_CVA_C01.mpt',
+                                             # '20180415_Pd_127_RDE_2_02_CA_C01.mpt',
+                                             '20180415_Pd_127_RDE_2_03_CA_C01.mpt',
+                                             # '20180415_Pd_127_RDE_2_04_CVA_C01.mpt',
+                                             # '20180415_Pd_127_RDE_3_02_CVA_C01.mpt'
+                             ])
 
                              ])
 
@@ -408,54 +428,54 @@ elif load_new_data:
                                                     },
                         '20171122_Pd_064_05_CA_C01.mpt': {'label': "1.10 V/RHE (064))",
                                                      # 'cycles to extract': [2],
-                                                     'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                     'electrode area geom': 2, 'electrode area ecsa': 111.59,
                                                       #'individual ohmicdrop': 43.3
                                                     },
                         '20171122_Pd_064_04_CA_C01.mpt': {'label': "1.10 V/RHE (064))",
                                                            # 'cycles to extract': [2],
-                                                           'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                           'electrode area geom': 2, 'electrode area ecsa': 111.59,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                         '20171123_Pd_065_05_CA_C01.mpt': {'label': "0.70 V/RHE (065))",
                                                                # 'cycles to extract': [2],
-                                                               'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                               'electrode area geom': 2, 'electrode area ecsa': 62.45,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
                         '20171123_Pd_065_04_CA_C01.mpt': {'label': "0.70 V/RHE (065))",
                                                            # 'cycles to extract': [2],
-                                                           'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                           'electrode area geom': 2, 'electrode area ecsa': 62.45,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                         '20171123_Pd_066_05_CA_C01.mpt': {'label': "1.20 V/RHE (066))",
                                                                 # 'cycles to extract': [2],
-                                                                'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                                'electrode area geom': 2, 'electrode area ecsa': 79.42,
                                                                 # 'individual ohmicdrop': 43.3
                                                                 },
                         '20171123_Pd_066_04_CA_C01.mpt': {'label': "1.20 V/RHE (066))",
                                                            # 'cycles to extract': [2],
-                                                           'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                           'electrode area geom': 2, 'electrode area ecsa': 79.42,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                         '20171203_Pd_069_05_CA_C01.mpt': {'label': "0.85 V/RHE (069))",
                                                                  # 'cycles to extract': [2],
-                                                                 'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                                 'electrode area geom': 2, 'electrode area ecsa': 86.71,
                                                                  # 'individual ohmicdrop': 43.3
                                                                  },
                         '20171203_Pd_069_04_CA_C01.mpt': {'label': "0.85 V/RHE (069))",
                                                            # 'cycles to extract': [2],
-                                                           'electrode area geom': 2, 'electrode area ecsa': 80.64,
+                                                           'electrode area geom': 2, 'electrode area ecsa': 86.71,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                         '20171203_Pd_070_05_CA_C01.mpt': {'label': "1.00 V/RHE (070))",
                                                                   # 'cycles to extract': [2],
                                                                   'electrode area geom': 2,
-                                                                  'electrode area ecsa': 80.64,
+                                                                  'electrode area ecsa': 57.06,
                                                                   # 'individual ohmicdrop': 43.3
                                                                   },
                          '20171203_Pd_070_04_CA_C01.mpt': {'label': "1.00 V/RHE (070))",
                                                            # 'cycles to extract': [2],
                                                            'electrode area geom': 2,
-                                                           'electrode area ecsa': 80.64,
+                                                           'electrode area ecsa': 57.06,
                                                            # 'individual ohmicdrop': 43.3
                                                            },
                         '20171212_AW_Pd_073_05_CA_C01.mpt': {'label': "0.90 V/RHE (073))",
@@ -693,6 +713,27 @@ elif load_new_data:
                                                                'electrode area ecsa': 18.0,
                                                                # 'individual ohmicdrop': 43.3
                                                                },
+                         '20180415_Pd_126_RDE_4_04_CA_C01.mpt': {'label': "0.90 V/RHE, RDE (126)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 0.19635,
+                                                               'electrode area ecsa': 13.3, #15.8,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
+                         '20180415_Pd_127_RDE_2_02_CA_C01.mpt': {'label': "0.721 V/RHE, RDE (127)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 0.19635,
+                                                               'electrode area ecsa': 4.02, #5.00,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
+                        '20180415_Pd_127_RDE_2_03_CA_C01.mpt': {'label': "0.90 V/RHE, RDE (127)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 0.19635,
+                                                               'electrode area ecsa': 4.02, #5.00,
+                                                               # 'individual ohmicdrop': 43.3
+                                                               },
+
+
+                         #CVs
 
                          '20171212_AW_Pd_073_SA_eval_04_CVA_C01.mpt': {'label': "0.90 V/RHE (073))",
                                                      'cycles to extract': [2],
@@ -889,6 +930,50 @@ elif load_new_data:
                                                                        'electrode area geom': 0.19635,
                                                                        'electrode area ecsa': 0,
                                                                        },
+                         '20180415_Pd_126_RDE_04_CVA_C01.mpt': {'label': "Ar before", #Ar/before
+                                                                       'cycles to extract': [5], #np.arange(15)[1:],
+                                                                       'electrode area geom': 0.19635,
+                                                                       'electrode area ecsa': 0,
+                                                                       },
+
+                        '20180415_Pd_126_RDE_3_03_CVA_C01.mpt': {'label': "Propene before", #propene/before
+                                                                       'cycles to extract': [5],#np.arange(15)[1:],
+                                                                       'electrode area geom': 0.19635,
+                                                                       'electrode area ecsa': 0,
+                                                                       },
+                        '20180415_Pd_126_RDE_4_03_CVA_C01.mpt': {'label': "", #propene/before-control
+                                                                       'cycles to extract': [1,2], #np.arange(11),
+                                                                       'electrode area geom': 0.19635,
+                                                                       'electrode area ecsa': 0,
+                                                                       },
+
+                        '20180415_Pd_126_RDE_4_06_CVA_C01.mpt': {'label': "after", #propene + Ar/after (1-8 and 9-11)
+                                                                       'cycles to extract': [5,11],#np.arange(12)[1:],
+                                                                       'electrode area geom': 0.19635,
+                                                                       'electrode area ecsa': 0,
+                                                                       },
+                        '20180415_Pd_127_RDE_04_CVA_C01.mpt':{'label': "Ar before",
+                                                                       'cycles to extract': [6], # np.arange(18)[1:],
+                                                                       'electrode area geom': 0.19635,
+                                                                       'electrode area ecsa': 0,
+                                                                       },
+                        '20180415_Pd_127_RDE_06_CVA_C01.mpt': {'label': "Propene before",
+                                                                       'cycles to extract': [3], # np.arange(10)[1:],
+                                                                       'electrode area geom': 0.19635,
+                                                                       'electrode area ecsa': 0,
+                                                                       },
+                        '20180415_Pd_127_RDE_2_04_CVA_C01.mpt': {'label': "Propene after",
+                                                                       'cycles to extract': [3], #np.arange(10)[1:],
+                                                                       'electrode area geom': 0.19635,
+                                                                       'electrode area ecsa': 0,
+                                                                       },
+                        '20180415_Pd_127_RDE_3_02_CVA_C01.mpt': {'label': "Ar after",
+                                                                       'cycles to extract':  [6], #np.arange(11)[1:],
+                                                                       'electrode area geom': 0.19635,
+                                                                       'electrode area ecsa': 0,
+                                                                       },
+
+
                          }
     if savesettings:
         data_load_settings = [folder_path, folders, filenames, filespec_settings]
@@ -947,14 +1032,14 @@ else:
     #                  }
 
     #settings for the plot - CA settings
-    plot_settings = {'safeplot': True,
+    plot_settings = {'safeplot': False,
                      'plotname': "20180413_Comparison_095V_foamvsfoil",
                      'coplot_evsrhe': False,
                      # for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': False,
                      'second axis': False,
-                     'x_lim': (-10, 3700),
-                     'y_lim': (-0.1, 35),
+                     'x_lim': (-1, 61),
+                     'y_lim': (-0.1, 10),
                      'y_logscale': False,
                      'y2_lim': (0, 0.025),
                      'top_pad': 0.2,
@@ -988,8 +1073,8 @@ else:
                      #          ],
 
 
-                     'linestyle': ['-', '-','-', '-','-', '-','-', '-'],
-                     # 'linestyle': ['-', '-', '--', '-', '-', '-', '-', '-'],
+                     # 'linestyle': ['-', '-','-', '-','-', '-','-', '-'],
+                     'linestyle': ['-', '-', '--', '-', '-', '-', '-', '-'],
                      'colors2': ['0.25', 'grey', '0.75'],
                      'linestyle2': ['--', '--', '--'],
                      # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
@@ -1001,14 +1086,15 @@ else:
                      # custom column selection, will overrule plottype, if given. Possibilities are all data column names,
                      # most likely useful: "Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
                      # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
-                     'x_data': "time/s",
+                     'x_data': "time/min",
                      # 'y_data': "<I>/mA",
                      'y_data': "i/mAcm^-2_ECSA",
                      'x_data2': "",  # not implemented yet
                      "y_data2": "",
                      # "aspect": 100,
                      "axis label size": 16,
-                     "tick label size": 14
+                     "tick label size": 14,
+                     "plot_average_cond": {"EvsRHE/V":[0.85]} #,0.9,0.95]}
                      }
 
 
@@ -1077,10 +1163,10 @@ def main():
             file['data']['time/s'] = file['data']['time/s'] - file['data']['time/s'].ix[0]
         # print(file['data']['time/s'])
 
-        # TODO: update find and print the difference in current in the double layer capacitance region
-        # current_file = cv_data[j]['filename']
-        # e_range = annotation_settings['e_range']
-        # find_deltaI_DLcapacitance(e_vs_rhe=x, i_mApscm=y, e_range=e_range, file=current_file)
+        #add a column that contains time in min
+        time_in_min = file['data']['time/s'].divide(60)
+        # print(time_in_min)
+        file['data'] = file['data'].add(DataFrame([time_in_min], index=['time/min']).T, fill_value=0)
 
      #TODO: find set potential in CA and print it/annotate it in plot
 
@@ -1088,7 +1174,7 @@ def main():
     #CALCULATE ESCA: type="CO_strip": difference between the first 2 cycles in list of data, rest of list is ignored.
     #type="oxide_red": finds oxide red charge and calculates ESCA with given charge_p_area for each item in list, also
     #plots the calculated data as bar chart
-    # esca_data = dpf.calc_esca(datalist[0:12], type='oxide_red', scanrate=50, charge_p_area=0.000481709)
+    # esca_data = dpf.calc_esca(datalist[0:17], type='oxide_red', scanrate=50, charge_p_area=0.000481709)
     # print(esca_data)
 
 
@@ -1099,7 +1185,7 @@ def main():
     dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
     #
     #PLOT THE CURRENT AT A GIVEN TIME AS A FUNCTION OF POTENTIAL
-    # dpf.current_at_time_plot(datalist, times=[60, 600, 3300], I_col="i/mAcm^-2_ECSA")
+    # dpf.current_at_time_plot(datalist, times=[60, 180, 600, 3300], I_col="i/mAcm^-2_ECSA")
 
 
     #INTEGRATE (find difference in Q-Qo) the first peak in a CA after a given starting time (assumed 0 if not given) and plot
@@ -1114,6 +1200,12 @@ def main():
     # cut_dict=dpf.select_data(datalist[0], select_data_conditions)
     # print("cut" + str(cut_dict))
     # print(cut_dict["data"]["<I>/mA"].tail(1))
+
+    #TEST of grouping datalines
+    # selection_conditions = {"EvsRHE/V":[0.85, 0.90, 0.95]}
+    # dpf.group_datalines(datalist, selection_conditions)
+
+
     print("FINISHED")
 
 if __name__ == "__main__":

@@ -143,27 +143,30 @@ def integrate_cas(datalist, t_start=0, t_end=600, makeplot=True):
         delta_q = dataline['data']['(Q-Qo)/C'][index_end] - dataline['data']['(Q-Qo)/C'][index_start]
         print(delta_q)
         caintegral.append(delta_q*1000) #save charge in mC
-        salist.append(dataline['settings']['electrode area ecsa'])
+        try:
+            salist.append(dataline['settings']['electrode area ecsa'])
+        except KeyError:
+            continue
 
     print(caintegral)
     print(salist)
     # safe the Integral dataas csv file (comma separated)
+    save_to_csv([caintegral, salist])
 
-    # data_filename = input("Enter a name for the datafile")
-    # caintegral.to_csv("output_files/" + data_filename + '.csv', na_rep='NULL')
 
-    #calculate regression & R2
-    reg_data = lin_regression(salist, caintegral)
-    r2_string = "R2 = {:.2f}".format(reg_data[1])
-    print(reg_data[1])
-    print(reg_data[0])
-
-    #charge per area
-    charge_per_area = np.divide(caintegral,salist)
-    print(charge_per_area)
 
 
     if makeplot == True:
+        # calculate regression & R2
+        reg_data = lin_regression(salist, caintegral)
+        r2_string = "R2 = {:.2f}".format(reg_data[1])
+        print(reg_data[1])
+        print(reg_data[0])
+
+        # charge per area
+        charge_per_area = np.divide(caintegral, salist)
+        print(charge_per_area)
+
         fig = plt.figure()
         ax1 = fig.add_subplot(111)
         ax1.plot(salist, caintegral, linestyle = "None", marker="o")
@@ -314,9 +317,19 @@ def current_at_time_plot(datalist, times, I_col):
     plt.show()
 
     # safe the VI data as csv file (comma separated)
+    save_to_csv(VI_data)
 
-    # data_filename = input("Enter a name for the datafile")
-    # VI_data.to_csv("output_files/" + data_filename + '.csv', na_rep='NULL')
+
+def save_to_csv(data, data_filename=None):
+    """Converts data to dataframe (if necessary) and exports  as csv (comma sep)"""
+    if type(data) is not DataFrame:
+        df = pd.DataFrame(data)
+    else:
+        df = data
+    if data_filename == None:
+        data_filename = input("Enter a name for the datafile")
+    df.to_csv("output_files/" + data_filename + '.csv', na_rep='NULL')
+    print("Data saved as " + data_filename)
 
 def select_data(dataline, selection_columns_conditions, operator = "&"):
     """
@@ -344,13 +357,11 @@ def select_data(dataline, selection_columns_conditions, operator = "&"):
     dataline2['data']=dataline['data'][cut_df]
     return dataline2
 
-
-
     #DataFrame.tail([n]) 	Return the last n rows.
     #DataFrame.truncate([before, after, axis, copy]) Truncates a sorted DataFrame/Series before and/or after some particular index value
 
 
-def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], charge_p_area=1):
+def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], charge_p_area=1, makeplot=True):
     """ Input: list of 2 dictionaries containing data (file in datalist), one with surface area specific peak,
     one with reference peak. Calls integrate_CV function to evaluate charge difference in selected Vspan.
     calculates absolute difference between these charge differences & multiplies with a selected factor
@@ -435,6 +446,8 @@ def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], ch
             esca.append(each_esca)
             plot_label.append(makelabel(dataline))
 
+        save_to_csv([esca, plot_label])
+
 
     else:  #compares two consecutive cycles (meant for CO-strip)
         for dataline in datalines:
@@ -455,19 +468,25 @@ def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], ch
             esca=deltaQ/charge_p_area
             print("An ECSA of " + str(esca) + "cm^2 was estimated based on the value you entered for charge per area.")
 
+        save_to_csv([deltaQ, esca_co])
+
     esca_data=[deltaQ, esca_co, esca]
 
-    #plot the SA as a barchart with lable of name/cycle no
-    fig = plt.figure()
-    ax1 = fig.add_subplot(111)
-    x = np.arange(len(esca))
-    ax1.bar(x, esca, align="center")
-    ax1.set_ylabel("ESCA / cm2")
-    ax1.set_ylim((0,max(esca)+5*max(esca)/100))
-    plt.xticks(x, plot_label)
-    for i,j in zip(x, esca):
-        ax1.annotate('{:.1f}'.format(j), xy=(i-0.25,j+j/100))
-    plt.show()
+
+
+    #plot the SA as a barchart with label of name/cycle no
+    if makeplot:
+        fig = plt.figure()
+        ax1 = fig.add_subplot(111)
+        x = np.arange(len(esca))
+        ax1.bar(x, esca, align="center")
+        ax1.set_ylabel("ESCA / cm2")
+        ax1.set_ylim((0,max(esca)+5*max(esca)/100))
+        ax1.set_xlim(-0.5, len(esca))
+        plt.xticks(x, plot_label)
+        for i,j in zip(x, esca):
+            ax1.annotate('{:.2f}'.format(j), xy=(i-0.25,j+j/100))
+        plt.show()
 
 
     # return deltaQ, esca_co, esca
@@ -590,29 +609,41 @@ def find_set_potential(file):
 
 def makelabel(file):
     """Creates label from filename or selects label from "settings" part of data dictionary"""
+    filename = file['filename']
     if 'label' in file['settings'] and file['settings']['label'] is not "":
         plot_label = file['settings']['label']
+        # if "cycle" in filename:
+        #     cycle = filename[filename.find("cycle")+6:filename.find("cycle")+9]
+        #     # plot_label ="c" + cycle  # for now
+        #     plot_label = plot_label + " c" + cycle #for now
     else:
-        filename = file['filename']
         electrode_no = filename[filename.find("Pd"):filename.find("Pd")+6]
         cycle = None
-        if "cycle" in filename: cycle = filename[filename.find("cycle")+6:filename.find("cycle")+9]
-        plot_label = electrode_no + " c" + cycle #for now
-        print("Label automatically selected to" + plot_label)
+        if "cycle" in filename:
+            cycle = filename[filename.find("cycle")+6:filename.find("cycle")+9]
+            plot_label ="c" + cycle  # for now
+            # plot_label = electrode_no + " c" + cycle #for now
+        else:
+            plot_label = electrode_no
+        print("Label automatically selected to " + plot_label)
+
     return plot_label
 
 def find_axis_label(data_col):
-    """Finds the appropriate axis label for different kinds of plotted data."""
+    """Finds the appropriate axis label for different kinds of plotted data.
+    :return axis_label"""
     axis_label = None
     if "E" in data_col and not "mA" in data_col:
         if data_col == "EvsRHE/V" or data_col =="E_corr_vsRHE/V":
-            axis_label = "E vs. RHE / V"
+            axis_label = "U vs. RHE / V"
         elif data_col == "Ewe/V" or data_col == "E_corr/V":
-            axis_label = "E vs. Ref / V"
+            axis_label = "U vs. Ref / V"
         else:
             print("Something wrong with potential axis labelling.")
     elif data_col == "time/s":
         axis_label = "Time / s"
+    elif data_col == "time/min":
+        axis_label = "Time / min"
     elif "i" in data_col or "I" in data_col:
         if data_col == "i/mAcm^-2_geom":
             axis_label = "i / mA cm$^{-2}$$_{geom.}$"
@@ -687,6 +718,28 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
                     continue
                 else:
                     print("Problem plotting datalist...")
+
+    #possibility for CA plots to take an average over several CAs at the same potential & show STDdev
+    #as shaded area (or median/quartiles)
+    elif plot_settings['plot_average_cond']:
+        print("Preparing averaged y values for plotting...")
+        datagroups = group_datalines(datalist, plot_settings['plot_average_cond'])
+        print(len(datagroups[0]))
+        for (group, color) in zip(datagroups, color_list): #necessary to have a longer colour list than groups!!
+            x_data = group[0]["data"][x_data_col].values.tolist()
+            print("x_length: " + str(len(x_data)))
+            y_data =[]
+            for line in group:
+                x_data_line=line['data'][x_data_col].values.tolist()
+                if len(x_data_line) > len(x_data):
+                    x_data = x_data_line
+                    print("x_length updated: " + str(len(x_data)))
+                y_data_line = line["data"][y_data_col].values.tolist()
+                print(len(y_data_line))
+                y_data.append(y_data_line)
+            print(y_data)
+
+            update_one_plot(ax1, color=color, label="Label", x_data=x_data, y_data=y_data, central_tend='mean', alpha_transparency=0.5)
 
     else:
         for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
@@ -806,6 +859,13 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
                 esca_data[1])
             ax1.annotate(anno_esca, xy=(0.6, 0.05), xycoords="axes fraction")
 
+    #addition of vertical lines (manual change in here, because not expected to be used often)
+    plt.axvline(x=1,  color='#3FBB00', linestyle=':', linewidth='2.5')
+    plt.axvline(x=3,  color='#2A8F00', linestyle=':', linewidth='2.5')
+    plt.axvline(x=10,  color='#155700', linestyle=':', linewidth='2.5')
+    plt.axvline(x=55,  color='k', linestyle=':',linewidth='2.5')
+
+
     plt.show()
 
     #safes figure as png and pdf
@@ -878,3 +938,65 @@ def convert_datadict_to_dataframe(datadict):
     data = DataFrame(data_in_datadict)
     return data
 
+
+
+
+def update_one_plot(ax, color, label, x_data, y_data, central_tend, alpha_transparency=0.5):
+    """
+    :param ax: axes
+    :param color: one color
+    :param label: label for this series
+    :param x_data: list or array with x data
+    :param y_data: list of lists - each list contains a set of y data for this series, to be averaged
+    :param central_tend: central tendency measure - 'mean' or 'median'
+    :return:
+    function written by Andrea
+    """
+    x = list(x_data)
+    y_mean = []
+    y_upper = []
+    y_lower = []
+    max_len = max([len(x_) for x_ in y_data])
+    for i in range(max_len):
+        y_data = [item for item in y_data if i<len(item)]
+        values = [lst[i] for lst in y_data]
+        if central_tend== 'mean':
+            y_mean.append(np.mean(values))
+            y_lower.append(y_mean[-1] - np.std(values))
+            y_upper.append(y_mean[-1] + np.std(values))
+        elif central_tend== 'median':
+            y_mean.append(np.median(values))
+            y_lower.append(np.percentile(values, 25))
+            y_upper.append(np.percentile(values, 75))
+    ax.fill_between(np.array(x), np.array(y_lower), np.array(y_upper), color=color, alpha=alpha_transparency)
+    ax.plot(x, y_mean, color=color, label=label, lw=1)
+# this is what I found... basically I used fill_between() and then you give the shaded area, the color, and the transparency
+# the rest of the method is just to automatically get mean and std (or median and quartiles), but the plotting part is simply fill_between() and then plot()
+
+def group_datalines (datalines, selection_conditions, selection_limits=None):
+    """Function that groups files in datalist in groups where some value (example potential at
+    the end of the measurement) is within a certain range
+
+    :param datalines: datalines as usual
+    :param selection_conditions: a dictionary of conditions key:datacolumn (hardcoded that last item is chosen!), value: list of values)
+    :param NOT IMPLEMENTED selection_limits: list of limit for fulfillment of conditions. if None,2% is automatically chosen for all
+    :return a list of lists of grouped data
+    """
+    grouped_datalines = []
+    for condition_key, condition_value in selection_conditions.items():
+        for item in condition_value:
+            group=[]
+            max = item + 0.02*item
+            min = item - 0.02*item
+            # print(min, max)
+            for dataline in datalines:
+                # print(dataline["filename"])
+                value_lastline=dataline['data'][condition_key].tail(1).item()
+                if value_lastline <= max and value_lastline >=min:
+                    group.append(dataline)
+                    # for it in group:
+                        # print(it["filename"])
+                    # print("end of group")
+            grouped_datalines.append(group)
+
+    return grouped_datalines
