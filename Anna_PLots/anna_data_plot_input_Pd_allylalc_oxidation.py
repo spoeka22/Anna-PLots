@@ -66,7 +66,7 @@ elif load_new_data:
 
                 # '20180222_Pd_107', #Argon 0.9V
 
-                # '20180227_Pd_114', #propene at 0.9V/RHE
+                '20180227_Pd_114', #propene at 0.9V/RHE
                 '20180418_Pd_128', #Allyl Alc 0.8
                 '20180418_Pd_129' #Allyl Alc 0.9
 
@@ -83,32 +83,37 @@ elif load_new_data:
                             #                   '20180131_Pd_098_SAeval_04_CVA_C01.mpt',
                             #                   '20180131_Pd_098_SAeval_05_OCV_C01.mpt'
                             #                          ]),
-                            #    ('20180201_Pd_099', ['20180201_Pd_099_02_CA_C01.mpt',
-                            #                         '20180201_Pd_099_SAeval_04_CVA_C01.mpt',
-                            #                         '20180201_Pd_099_SAeval_05_OCV_C01.mpt'
-                            #                         ]),
-                            # ('20180201_Pd_100', [#'20180201_Pd_100_02_CA_C01.mpt',
-                            #                        '20180201_Pd_100_saeval_04_CVA_C01.mpt',
-                            #                        # '20180201_Pd_100_saeval_05_OCV_C01.mpt'
-                            #                        ]),
-                            #
-                            #
-                            # ('20180220_Pd_104', [#'20180220_Pd_104_05_CA_C01.mpt',
-                            #                      '20180220_Pd_104_SAeval_04_CVA_C01.mpt',
-                            #                      # '20180220_Pd_104_SAeval_05_OCV_C01.mpt',
-                            #                      # '20180220_Pd_104_01_SPEIS_C01.mpt',
-                            #                      # '20180220_Pd_104_02_CA_C01.mpt',
-                            #                      # '20180220_Pd_104_04_CA_C01.mpt'
-                            #                      ]),
-                            # ('20180220_Pd_105', [#'20180220_Pd_105_02_CA_C01.mpt',
-                            #                      # '20180220_Pd_105_04_CA_C01.mpt',
-                            #                      # '20180220_Pd_105_05_CA_C01.mpt',
-                            #                      '20180220_Pd_105_SAeval_04_CVA_C01.mpt',
-                            #                      # '20180220_Pd_105_SAeval_05_OCV_C01.mpt',
-                            #                      # '20180220_Pd_105_01_SPEIS_C01.mpt'
-                            #                      ]),
+                            ('20180201_Pd_099', [
+                                                    '20180201_Pd_099_02_CA_C01.mpt',
+                                                    # '20180201_Pd_099_SAeval_04_CVA_C01.mpt',
+                                                    # '20180201_Pd_099_SAeval_05_OCV_C01.mpt'
+                                                    ]),
+                            ('20180201_Pd_100', [
+                                                   '20180201_Pd_100_02_CA_C01.mpt',
+                                                   # '20180201_Pd_100_saeval_04_CVA_C01.mpt',
+                                                   # '20180201_Pd_100_saeval_05_OCV_C01.mpt'
+                                                   ]),
 
-                            ('20180222_Pd_107', ['20180222_Pd_107_03_CA_C01.mpt',
+
+                            ('20180220_Pd_104', [
+                                                 '20180220_Pd_104_05_CA_C01.mpt',
+                                                 # '20180220_Pd_104_SAeval_04_CVA_C01.mpt',
+                                                 # '20180220_Pd_104_SAeval_05_OCV_C01.mpt',
+                                                 # '20180220_Pd_104_01_SPEIS_C01.mpt',
+                                                 # '20180220_Pd_104_02_CA_C01.mpt',
+                                                 # '20180220_Pd_104_04_CA_C01.mpt'
+                                                 ]),
+                            ('20180220_Pd_105', [
+                                                 #'20180220_Pd_105_02_CA_C01.mpt',
+                                                 # '20180220_Pd_105_04_CA_C01.mpt',
+                                                 '20180220_Pd_105_05_CA_C01.mpt',
+                                                 # '20180220_Pd_105_SAeval_04_CVA_C01.mpt',
+                                                 # '20180220_Pd_105_SAeval_05_OCV_C01.mpt',
+                                                 # '20180220_Pd_105_01_SPEIS_C01.mpt'
+                                                 ]),
+
+                            ('20180222_Pd_107', [
+                                                 # '20180222_Pd_107_03_CA_C01.mpt',
                                                  # '20180222_Pd_107_SAeval_04_CVA_C01.mpt',
                                                  # '20180222_Pd_107_SAeval_05_OCV_C01.mpt',
                                                  # '20180222_Pd_107_02_CA_C01.mpt'
@@ -139,7 +144,46 @@ elif load_new_data:
     # custom settings for data files: dictionary correlating filename with custom label, cycles to extract from CV file,
     #electrode area (geom and ecsa), ohmic drop to correct for
 
-    filespec_settings = {
+    filespec_settings = { '20180201_Pd_099_02_CA_C01.mpt': {'label': "0.80 V/RHE, allyl alc ox (099)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 97.87,
+                                                               # 'individual ohmicdrop': 43.3
+                                                           },
+                          '20180201_Pd_100_02_CA_C01.mpt': {'label': "1.1 V/RHE, allyl alc ox (100)",
+                                                            # 'cycles to extract': [2],
+                                                            'electrode area geom': 2,
+                                                            'electrode area ecsa': 111.91,
+                                                            # 'individual ohmicdrop': 43.3
+                                                            },
+                          '20180220_Pd_104_05_CA_C01.mpt':{'label': "0.80 V/RHE, allyl alc ox (104)",
+                                                               # 'cycles to extract': [2],
+                                                               'electrode area geom': 2,
+                                                               'electrode area ecsa': 89.14,
+                                                               # 'individual ohmicdrop': 43.3
+                                                           },
+                          '20180220_Pd_105_05_CA_C01.mpt': {'label': "0.90 V/RHE, allyl alc ox (105)",
+                                                            # 'cycles to extract': [2],
+                                                            'electrode area geom': 2,
+                                                            'electrode area ecsa': 83.46,
+                                                            # 'individual ohmicdrop': 43.3
+                                                            },
+                          '20180418_Pd_128_03_CA_C01.mpt': {'label': "0.80 V/RHE, allyl alc ox (128)",
+                                                            # 'cycles to extract': [2],
+                                                            'electrode area geom': 2,
+                                                            'electrode area ecsa': 97.09,
+                                                            # 'individual ohmicdrop': 43.3
+                                                            },
+                          '20180418_Pd_129_03_CA_C01.mpt': {'label': "0.90 V/RHE, allyl alc ox (129)",
+                                                            # 'cycles to extract': [2],
+                                                            'electrode area geom': 2,
+                                                            'electrode area ecsa': 30.59,
+                                                            # 'individual ohmicdrop': 43.3
+                                                            },
+
+
+
+
                          '20180222_Pd_107_03_CA_C01.mpt': {'label': "0.90 V/RHE, Ar (107)",
                                                                # 'cycles to extract': [2],
                                                                'electrode area geom': 2,
@@ -163,21 +207,28 @@ elif load_new_data:
                          #CVs
 
 
-                         '20180201_Pd_100_saeval_04_CVA_C01.mpt': {'label': "Pd (100, cycle 3)",
-                                                                   'cycles to extract': [3],
+                         '20180201_Pd_099_SAeval_04_CVA_C01.mpt': {'label': "Pd 099",
+                                                                   'cycles to extract': np.arange(9)[1:],
+                                                                   'electrode area geom': 2,
+                                                                   'electrode area ecsa': 0,
+                                                                   # 'individual ohmicdrop': 43.3
+                                                                   },
+
+                         '20180201_Pd_100_saeval_04_CVA_C01.mpt': {'label': "Pd (100)",
+                                                                   'cycles to extract': np.arange(10)[1:],
                                                                    'electrode area geom': 2,
                                                                    'electrode area ecsa': 0,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
 
                          '20180220_Pd_104_SAeval_04_CVA_C01.mpt': {'label': "Pd (104, cycle 3)",
-                                                            'cycles to extract': [3],
+                                                            'cycles to extract': np.arange(10)[1:],
                                                             'electrode area geom': 2,
                                                             'electrode area ecsa': 0,
                                                             # 'individual ohmicdrop': 43.3
                                                             },
                          '20180220_Pd_105_SAeval_04_CVA_C01.mpt': {'label': "Pd (105, cycle 3)",
-                                                            'cycles to extract': [3],
+                                                            'cycles to extract': np.arange(10)[1:],
                                                             'electrode area geom': 2,
                                                             'electrode area ecsa': 0,
                                                             # 'individual ohmicdrop': 43.3
@@ -186,7 +237,19 @@ elif load_new_data:
                          '20180222_Pd_107_SAeval_04_CVA_C01.mpt': {'label': "Pd (107, cycle 10)",
                                                                    'cycles to extract': [10],
                                                                    'electrode area geom': 2,
-                                                                   'electrode area ecsa': 75.78,
+                                                                   'electrode area ecsa': 0,
+                                                                   # 'individual ohmicdrop': 43.3
+                                                                   },
+                         '20180418_Pd_128_SAeval_04_CVA_C01.mpt': {'label': "Pd 128",
+                                                                   'cycles to extract': np.arange(10)[1:],
+                                                                   'electrode area geom': 2,
+                                                                   'electrode area ecsa': 0,
+                                                                   # 'individual ohmicdrop': 43.3
+                                                                   },
+                         '20180418_Pd_129_saeval_04_CVA_C01.mpt': {'label': "Pd 129",
+                                                                   'cycles to extract': np.arange(10)[1:],
+                                                                   'electrode area geom': 2,
+                                                                   'electrode area ecsa': 0,
                                                                    # 'individual ohmicdrop': 43.3
                                                                    },
                          }
@@ -243,17 +306,18 @@ else:
     #                  "y_data2":"",
     #                  "aspect": 0.95,
     #                  "axis label size": 16,
-    #                  "tick label size": 14
+    #                  "tick label size": 14,
+    #                    "plot_average_cond": None
     #                  }
 
     #settings for the plot - CA settings
     plot_settings = {'safeplot': False,
-                     'plotname': "20180413_Comparison_095V_foamvsfoil",
+                     'plotname': "20180510_CAs_0.1mM_allylalc_ox",
                      'coplot_evsrhe': False,
                      # for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': False,
                      'second axis': False,
-                     'x_lim': (-10, 3700),
+                     'x_lim': (-50, 3750),
                      'y_lim': (-0.1, 10),
                      'y_logscale': False,
                      'y2_lim': (0, 0.025),
@@ -308,7 +372,8 @@ else:
                      "y_data2": "",
                      # "aspect": 100,
                      "axis label size": 16,
-                     "tick label size": 14
+                     "tick label size": 14,
+                     "plot_average_cond": None
                      }
 
 
@@ -394,12 +459,13 @@ def main():
 
 
     #PLOT THE DATA FROM THE LIST OF DATA DICTIONARIES
-    esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
+    # esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
     # print(datalist)
-    dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
+    # dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
     #
     #PLOT THE CURRENT AT A GIVEN TIME AS A FUNCTION OF POTENTIAL
     # dpf.current_at_time_plot(datalist, times=[60, 600, 3300], I_col="i/mAcm^-2_ECSA")
+
 
 
     #INTEGRATE (find difference in Q-Qo) the first peak in a CA after a given starting time (assumed 0 if not given) and plot

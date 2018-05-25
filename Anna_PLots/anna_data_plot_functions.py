@@ -294,12 +294,12 @@ def current_at_time_plot(datalist, times, I_col):
             # print("current and potential are {0} and {1}".format(str(current), str(potential)))
         # print(VI_data.ix[time, 'EvsRHE/V'].values.tolist())
         # print(VI_data.ix[time, I_col].values.tolist())
-        # ax1.plot(VI_data.ix[time, 'EvsRHE/V'].values.tolist(),VI_data.ix[time, I_col].values.tolist(), label=str(time) + " s", marker="o",
-        #          ls="")
+        ax1.plot(VI_data.ix[time, 'EvsRHE/V'].values.tolist(),VI_data.ix[time, I_col].values.tolist(), label=str(time) + " s", marker="o",
+                 ls="")
     print(VI_data)
 
     # axis labels
-    if "ECSA" in I_col:
+    if "ECSA" and "i" in I_col:
         ax1.set_ylabel('i / $\mu$A cm$^{-2}$$_{ECSA}$')
     else:
         ax1.set_ylabel(I_col)
@@ -387,14 +387,15 @@ def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], ch
     if type == "oxide_red":
         deltaQ=[]
         for dataline in datalines:
-            #make sure Vspan is reset one it's been changed for one electrode
+            #make sure Vspan is reset once it's been changed for one electrode
             Vspan = [0.4, 0.9]  # V vs. RHE, taken from Mittermeier et.al 2017
+
             #select the data in the right potential region
             oxide_red_peak = select_data(dataline,selection_conditions) #shortened dictionary like dataline just around the oxide reducton peak)
             DL_current = abs(find_ave_current(dataline, Vspan=[0.37, 0.46], ox_red=ox_red)) #absolute(!) average current in the DL region
-            #check if the current on the anodic side of the peak is < than DL_current (would give error in
-            #correction for DL current
 
+            #V_span adjustment: check if the current on the anodic side of the peak is < than DL_current (would give error in
+            #correction for DL current)
             index_anodic_end = oxide_red_peak["data"]["<I>/mA"].first_valid_index()
             index_cathodic_end = oxide_red_peak["data"]["<I>/mA"].last_valid_index()
             # print("anodic/cathodic end indices" + str(index_anodic_end) + " and " + str(index_cathodic_end))
@@ -429,10 +430,12 @@ def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], ch
                 print("Potential limits for oxide red peak are reset to: {} and {}".format(potential_anodic_end,potential_cathodic_end))
 
             print("Vspan: " +str(Vspan))
+
             reduction_charge = abs(oxide_red_peak["data"]["(Q-Qo)/C"][index_anodic_end] - oxide_red_peak["data"]["(Q-Qo)/C"][index_cathodic_end])
             #correction: subtraction of double layer charge calculated by multiplying current in DL region
             #with time found from potential difference (Vspan) multiplied with scanrate to get correct units
             reduction_peak_time = (Vspan[1]-Vspan[0])/ (scanrate*0.001) #time in s from start to end of integration area
+            print("time for reduction: " + str(reduction_peak_time))
             reduction_charge_corr = reduction_charge - DL_current*0.001 * reduction_peak_time
             deltaQ.append(reduction_charge_corr)
 
@@ -441,12 +444,12 @@ def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], ch
             # print("You need to find some reference for the relation between surface area and oxide reduction "
             #       "current before I can calulate the ECSA for you.")
 
-            each_esca = reduction_charge / charge_p_area
-            print("An ECSA of " + str(esca) + "cm^2 was estimated based on a charge per area of " + str(charge_p_area) + ".")
+            each_esca = reduction_charge_corr / charge_p_area
+            print("An ECSA of " + str(each_esca) + "cm^2 was estimated based on a charge per area of " + str(charge_p_area) + ".")
             esca.append(each_esca)
             plot_label.append(makelabel(dataline))
 
-        save_to_csv([esca, plot_label])
+        # save_to_csv([esca, plot_label])
 
 
     else:  #compares two consecutive cycles (meant for CO-strip)
@@ -558,7 +561,7 @@ def convert_to_current_density(file, electrode_area_geom, electrode_area_ecsa):
     """
     Converts current into current density using the electrode surface area given in the settings
     :param I: measured current from data(frame)
-    :return: current density
+    :return: current density - HARDCODED THAT UNIT IS muA and not mA like in name, because of difficulties in refactoring name in different files!!
     """
 #    from anna_data_plot_input_original import electrode_area_geom
     #check if there is individual settings, else use the general settings and creates 2 new columns
@@ -567,20 +570,26 @@ def convert_to_current_density(file, electrode_area_geom, electrode_area_ecsa):
     if electrode_area_geom or 'electrode area geom' in file['settings']:
         if 'electrode area geom' in file['settings']:
             i_geom = file['data']['<I>/mA']/file['settings']['electrode area geom']
+            Q_geom = file['data']['(Q-Qo)/C'] / file['settings']['electrode area geom']
         else:
             i_geom = file['data']['<I>/mA']/electrode_area_geom
+            Q_geom = file['data']['(Q-Qo)/C'] / electrode_area_geom
     else:
         i_geom=[]
+        Q_geom = []
 
     if electrode_area_ecsa or 'electrode area ecsa' in file['settings']:
         if 'electrode area ecsa' in file['settings']:
-            i_ecsa = file['data']['<I>/mA']/file['settings']['electrode area ecsa'] *1000
+            i_ecsa = file['data']['<I>/mA']/file['settings']['electrode area ecsa'] *1000 #in muA/cm2
+            Q_ecsa = file['data']['(Q-Qo)/C'] / file['settings']['electrode area ecsa'] *1000 #in mC/cm2
         else:
-            i_ecsa = file['data']['<I>/mA'] / electrode_area_ecsa *1000
+            i_ecsa = file['data']['<I>/mA'] / electrode_area_ecsa *1000 #in muA/cm2
+            Q_ecsa = file['data']['(Q-Qo)/C'] / electrode_area_ecsa *1000 #in mC/cm2
     else:
         i_ecsa = []
+        Q_ecsa = []
 
-    i_df = DataFrame(data=[i_geom, i_ecsa], index=["i/mAcm^-2_geom", "i/mAcm^-2_ECSA"]).T
+    i_df = DataFrame(data=[i_geom, i_ecsa, Q_geom, Q_ecsa], index=["i/mAcm^-2_geom", "i/mAcm^-2_ECSA", "q/mCcm^-2_geom", "q/mCcm^-2_ECSA"]).T
     return i_df
 
 
@@ -724,22 +733,32 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     elif plot_settings['plot_average_cond']:
         print("Preparing averaged y values for plotting...")
         datagroups = group_datalines(datalist, plot_settings['plot_average_cond'])
-        print(len(datagroups[0]))
+        # print(datagroups)
+        print("len datagroups: " + str(len(datagroups[0])))
+        i = 0
         for (group, color) in zip(datagroups, color_list): #necessary to have a longer colour list than groups!!
             x_data = group[0]["data"][x_data_col].values.tolist()
             print("x_length: " + str(len(x_data)))
             y_data =[]
+            try:
+                label = str(plot_settings['plot_average_cond']["EvsRHE/V"][i]) + " V/RHE"  #only works for selection according to potential
+                i = i + 1
+                print(i)
+            except KeyError:
+                print("Automatic label creation failed...")
+                label = "Label"
             for line in group:
                 x_data_line=line['data'][x_data_col].values.tolist()
+                print(x_data_line[1])
                 if len(x_data_line) > len(x_data):
                     x_data = x_data_line
                     print("x_length updated: " + str(len(x_data)))
                 y_data_line = line["data"][y_data_col].values.tolist()
-                print(len(y_data_line))
+                # print(len(y_data_line))
                 y_data.append(y_data_line)
-            print(y_data)
+            # print(y_data)
 
-            update_one_plot(ax1, color=color, label="Label", x_data=x_data, y_data=y_data, central_tend='mean', alpha_transparency=0.5)
+            update_one_plot(ax1, color=color, label=label, x_data=x_data, y_data=y_data, central_tend='mean', alpha_transparency=0.2)
 
     else:
         for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
@@ -860,10 +879,14 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
             ax1.annotate(anno_esca, xy=(0.6, 0.05), xycoords="axes fraction")
 
     #addition of vertical lines (manual change in here, because not expected to be used often)
-    plt.axvline(x=1,  color='#3FBB00', linestyle=':', linewidth='2.5')
-    plt.axvline(x=3,  color='#2A8F00', linestyle=':', linewidth='2.5')
-    plt.axvline(x=10,  color='#155700', linestyle=':', linewidth='2.5')
-    plt.axvline(x=55,  color='k', linestyle=':',linewidth='2.5')
+    # plt.axvline(x=1,  color='#3FBB00', linestyle=':', linewidth='2.5')
+    # plt.axvline(x=3,  color='#2A8F00', linestyle=':', linewidth='2.5')
+    # plt.axvline(x=10,  color='#155700', linestyle=':', linewidth='2.5')
+    # plt.axvline(x=55,  color='k', linestyle=':',linewidth='2.5')
+    # plt.axvline(x=1,  color='#E26FFF', linestyle=':', linewidth='2')
+    # plt.axvline(x=3,  color='#9D3CFF', linestyle=':', linewidth='2')
+    # plt.axvline(x=10,  color='#490093', linestyle=':', linewidth='2')
+    # plt.axvline(x=55,  color='k', linestyle=':',linewidth='2')
 
 
     plt.show()
@@ -879,6 +902,7 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
 
         plt.savefig("output_files/" + plot_settings['plotname']+'.png', dpi=400, bbox_inches='tight')
         plt.savefig("output_files/" + plot_settings['plotname']+'.pdf', dpi=400, bbox_inches='tight')
+        print("Figure saved.")
 
 
 
@@ -986,8 +1010,8 @@ def group_datalines (datalines, selection_conditions, selection_limits=None):
     for condition_key, condition_value in selection_conditions.items():
         for item in condition_value:
             group=[]
-            max = item + 0.02*item
-            min = item - 0.02*item
+            max = item + 0.005*item
+            min = item - 0.005*item
             # print(min, max)
             for dataline in datalines:
                 # print(dataline["filename"])

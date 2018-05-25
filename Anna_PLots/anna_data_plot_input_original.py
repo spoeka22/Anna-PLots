@@ -943,7 +943,8 @@ else:
     #                  "y_data2":"",
     #                  "aspect": 0.95,
     #                  "axis label size": 16,
-    #                  "tick label size": 14
+    #                  "tick label size": 14,
+    #                  "plot_average_cond": None
     #                  }
 
     #settings for the plot - CA settings
@@ -1008,7 +1009,8 @@ else:
                      "y_data2": "",
                      # "aspect": 100,
                      "axis label size": 16,
-                     "tick label size": 14
+                     "tick label size": 14,
+                     "plot_average_cond": None
                      }
 
 
