@@ -59,29 +59,31 @@ elif load_new_data:
     folder_path = r'\\dtu-storage\annawi\Desktop\Projects\Propene oxidation\Experiments\Pd-electrodes\Systematic Study NovDec2017'
 
     folders = [ #'AW_Pd_025'
-                '20171122_Pd_064', #1.1
+                # '20171122_Pd_064', #1.1
                 # '20171122_GC_005',
-                '20171123_Pd_065', #0.7
-                '20171123_Pd_066', #1.2
+                # '20171123_Pd_065', #0.7
+                # '20171123_Pd_066', #1.2
                 # '20171127_Pd_068b',
-                '20171203_Pd_069', #0.85
-                '20171203_Pd_070', #1.0
-                '20171212_Pd_073', #0.9
-                '20171213_Pd_074', #0.7
+                # '20171203_Pd_069', #0.85
+                # '20171203_Pd_070', #1.0
+                # '20171212_Pd_073', #0.9
+                # '20171213_Pd_074', #0.7
                 # '20171213_Pd_075',
-                '20171214_Pd_076', #0.8
-                '20171214_Pd_077', #0.85
-                '20171214_Pd_078', #1.0
-                '20171219_Pd_079', #0.9
-                '20171219_Pd_080', #0.95
-                '20180103_Pd_081', #0.95
+                # '20171214_Pd_076', #0.8
+                # '20171214_Pd_077', #0.85
+                # '20171214_Pd_078', #1.0
+                # '20171219_Pd_079', #0.9
+                # '20171219_Pd_080', #0.95
+                # '20180103_Pd_081', #0.95
                 # '20180103_Pd_082',
-                '20180104_Pd_084', # 0.8
-                '20180104_Pd_085', #0.85
+                # '20180104_Pd_084', # 0.8
+                # '20180104_Pd_085', #0.85
+                #  '20180109_Pd_086', #0.8 V, 100muM PdCl2
+                 '20180109_Pd_087', #0.95V, 100muM PdCl2
                 # '20180110_Pd_089',
-                # '20180109_Pd_086',
+
                 # '20180111_Pd_090', #0.8 PO4 ph3
-                # '20180109_Pd_087',
+
                 # '20180111_Pd_091' #0.9 PO4 ph3
                 # '20180124_Pd_092',
                 # '20180124_Pd_093',
@@ -102,12 +104,12 @@ elif load_new_data:
                 # '20180222_Pd_108',
                 # '20180223_Pd_109',
                 # '20180226_Pd_110',
-                '20180226_Pd_112', #0.7
-                '20180226_Pd_113', #0.8
-                '20180227_Pd_114', #0.9
-                '20180227_Pd_115', #0.95
-                '20180312_Pd_118', #1.1
-                '20180312_Pd_119', #1.2
+                # '20180226_Pd_112', #0.7
+                # '20180226_Pd_113', #0.8
+                # '20180227_Pd_114', #0.9
+                # '20180227_Pd_115', #0.95
+                # '20180312_Pd_118', #1.1
+                # '20180312_Pd_119', #1.2
                 # '20180410_Pd_123', #RDE, noisy
                 #   '20180415_Pd_126', #RDE
                 #   '20180415_Pd_127'  #RDE
@@ -231,16 +233,18 @@ elif load_new_data:
                                                   #  '20180104_POR_Pd_085_SAeval_04_CVA_C01.mpt',
                                                    # '20180104_POR_Pd_085_SAeval_05_OCV_C01.mpt'
                                                    ]),
-                             # ('20180109_Pd_086', ['20180109_POR_Pd_086_100muMPdCl2_03_CA_C01.mpt',
-                             #                     '20180109_POR_Pd_086_100muMPdCl2_02_CA_C01.mpt',
-                             #                     '20180109_POR_Pd_086_SAeval_05_OCV_C01.mpt',
-                             #                     '20180109_POR_Pd_086_SAeval_04_CVA_C01.mpt'
-                             #                     ]),
-                             # ('20180109_Pd_087', ['20180109_POR_Pd_087b_SAeval_04_CVA_C01.mpt',
-                             #                         '20180109_POR_Pd_087b_SAeval_05_OCV_C01.mpt',
-                             #                         '20180109_POR_Pd_087b_100muMPdCl2_02_CA_C01.mpt',
-                             #                         '20180109_POR_Pd_087b_100muMPdCl2_03_CA_C01.mpt'
-                             #                         ]),
+                             ('20180109_Pd_086', [
+                                                 # '20180109_POR_Pd_086_100muMPdCl2_03_CA_C01.mpt',
+                                                 # '20180109_POR_Pd_086_100muMPdCl2_02_CA_C01.mpt',
+                                                 # '20180109_POR_Pd_086_SAeval_05_OCV_C01.mpt',
+                                                 '20180109_POR_Pd_086_SAeval_04_CVA_C01.mpt'
+                                                 ]),
+                             ('20180109_Pd_087', [
+                                                    '20180109_POR_Pd_087b_SAeval_04_CVA_C01.mpt',
+                                                     # '20180109_POR_Pd_087b_SAeval_05_OCV_C01.mpt',
+                                                     # '20180109_POR_Pd_087b_100muMPdCl2_02_CA_C01.mpt',
+                                                     # '20180109_POR_Pd_087b_100muMPdCl2_03_CA_C01.mpt'
+                                                     ]),
                              # ('20180110_Pd_089',   ['20180110_Pd_089_SA_eval_acid_04_CVA_C01.mpt',
                              #                        '20180110_Pd_089_SA_eval_acid_05_OCV_C01.mpt',
                              #                        '20180110_Pd_089_PO4_04_CA_C01.mpt',
@@ -1229,8 +1233,8 @@ def main():
     #CALCULATE ESCA: type="CO_strip": difference between the first 2 cycles in list of data, rest of list is ignored.
     #type="oxide_red": finds oxide red charge and calculates ESCA with given charge_p_area for each item in list, also
     #plots the calculated data as bar chart
-    # esca_data = dpf.calc_esca(datalist[0:17], type='oxide_red', scanrate=50, charge_p_area=0.000481709)
-    # print(esca_data)
+    esca_data = dpf.calc_esca(datalist[0:17], type='oxide_red', scanrate=50, charge_p_area=0.000481709)
+    print(esca_data)
 
 
 
@@ -1240,7 +1244,7 @@ def main():
     # dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
     #
     #PLOT THE CURRENT AT A GIVEN TIME AS A FUNCTION OF POTENTIAL
-    dpf.current_at_time_plot(datalist, times=[60, 180, 600, 3300], I_col="i/mAcm^-2_ECSA")
+    # dpf.current_at_time_plot(datalist, times=[60, 180, 600, 3300], I_col="i/mAcm^-2_ECSA")
     # dpf.current_at_time_plot(datalist, times=[60, 180, 600, 3300], I_col="q/mCcm^-2_ECSA")
 
 

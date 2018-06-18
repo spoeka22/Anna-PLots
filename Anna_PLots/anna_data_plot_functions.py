@@ -928,8 +928,6 @@ def extract_data(folder_path, filenames, folders, filespec_settings):
                 filepath = folder_path + "/" + folder + "/" + filename
                 # import from file
                 datadict = Data_Importing_Scott.import_data(filepath)
-                # print(filespec_settings.keys())
-                # print(filespec_settings[str(filename)].keys())
                 if str(filename) in filespec_settings.keys():
                     if 'cycles to extract' in filespec_settings[str(filename)].keys():
                         for cycle in filespec_settings[str(filename)]['cycles to extract']:
@@ -946,6 +944,19 @@ def extract_data(folder_path, filenames, folders, filespec_settings):
                         data.append({'filename': filename, 'data': data_current_file,
                                      'settings': filespec_settings[str(filename)]})
                         print("data from " + filename + " extracted using settings specified for file.")
+
+                elif "cycle number" in datadict:
+                    print("checking for cycles")
+                    cycleno = max(datadict["cycle number"])
+                    cycles = np.arange(cycleno)[1:]
+                    for cycle in cycles:
+                        data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle])
+                        data_selected_cycle_frame = DataFrame(convert_datadict_to_dataframe(data_selected_cycle))
+                        data.append(
+                            {'filename': filename + "_cycle_" + str(cycle), 'data': data_selected_cycle_frame,
+                             'settings': []})
+                        print("cycle " + str(cycle) + " extracted")
+
                 else:
                     data_current_file = DataFrame(convert_datadict_to_dataframe(datadict))
                     data.append({'filename': filename, 'data': data_current_file, 'settings': []})
