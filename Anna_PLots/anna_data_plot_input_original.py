@@ -1084,6 +1084,12 @@ def main():
         # e_range = annotation_settings['e_range']
         # find_deltaI_DLcapacitance(e_vs_rhe=x, i_mApscm=y, e_range=e_range, file=current_file)
 
+            # filter noise by calculating rolling mean over a column
+            # most likely useful: #"Ewe/V", "EvsRHE/V", "E_corr/V", "E_corr_vsRHE/V", "<I>/mA", "i/mAcm^-2_geom",
+            # "i/mAcm^-2_ECSA", "time/s", "(Q-Qo)/C"
+            # filter_column="i/mAcm^-2_geom"
+            # file['data'][filter_column] = dpf.rolling_smoothing_of_column(file['data'][filter_column], window=10, type="mean")
+
      #TODO: find set potential in CA and print it/annotate it in plot
 
 

@@ -59,27 +59,27 @@ elif load_new_data:
     folder_path = r'\\dtu-storage\annawi\Desktop\Projects\Propene oxidation\Experiments\Pd-electrodes\Systematic Study NovDec2017'
 
     folders = [ #'AW_Pd_025'
-                # '20171122_Pd_064', #1.1
+                '20171122_Pd_064', #1.1
                 # '20171122_GC_005',
-                # '20171123_Pd_065', #0.7
-                # '20171123_Pd_066', #1.2
+                '20171123_Pd_065', #0.7
+                '20171123_Pd_066', #1.2
                 # '20171127_Pd_068b',
-                # '20171203_Pd_069', #0.85
-                # '20171203_Pd_070', #1.0
-                # '20171212_Pd_073', #0.9
-                # '20171213_Pd_074', #0.7
+                '20171203_Pd_069', #0.85
+                '20171203_Pd_070', #1.0
+                '20171212_Pd_073', #0.9
+                '20171213_Pd_074', #0.7
                 # '20171213_Pd_075',
-                # '20171214_Pd_076', #0.8
-                # '20171214_Pd_077', #0.85
-                # '20171214_Pd_078', #1.0
-                # '20171219_Pd_079', #0.9
-                # '20171219_Pd_080', #0.95
-                # '20180103_Pd_081', #0.95
+                '20171214_Pd_076', #0.8
+                '20171214_Pd_077', #0.85
+                '20171214_Pd_078', #1.0
+                '20171219_Pd_079', #0.9
+                '20171219_Pd_080', #0.95
+                '20180103_Pd_081', #0.95
                 # '20180103_Pd_082',
-                # '20180104_Pd_084', # 0.8
-                # '20180104_Pd_085', #0.85
+                '20180104_Pd_084', # 0.8
+                '20180104_Pd_085', #0.85
                 #  '20180109_Pd_086', #0.8 V, 100muM PdCl2
-                 '20180109_Pd_087', #0.95V, 100muM PdCl2
+                #  '20180109_Pd_087', #0.95V, 100muM PdCl2
                 # '20180110_Pd_089',
 
                 # '20180111_Pd_090', #0.8 PO4 ph3
@@ -100,16 +100,16 @@ elif load_new_data:
                 # '20180220_Pd_104', #allylalcox 0.8
                 # '20180220_Pd_105', #allylalcox 0.9for
                 # '20180222_Pd_106',
-                # '20180222_Pd_107',
+                '20180222_Pd_107', #Ar, 0.9V
                 # '20180222_Pd_108',
                 # '20180223_Pd_109',
                 # '20180226_Pd_110',
-                # '20180226_Pd_112', #0.7
-                # '20180226_Pd_113', #0.8
-                # '20180227_Pd_114', #0.9
-                # '20180227_Pd_115', #0.95
-                # '20180312_Pd_118', #1.1
-                # '20180312_Pd_119', #1.2
+                '20180226_Pd_112', #0.7
+                '20180226_Pd_113', #0.8
+                '20180227_Pd_114', #0.9
+                '20180227_Pd_115', #0.95
+                '20180312_Pd_118', #1.1
+                '20180312_Pd_119', #1.2
                 # '20180410_Pd_123', #RDE, noisy
                 #   '20180415_Pd_126', #RDE
                 #   '20180415_Pd_127'  #RDE
@@ -406,9 +406,9 @@ elif load_new_data:
                                                  # '20180410_Pd_123_RDE_3rdtry_04_CVA_C01.mpt'
                                                   ]),
                              ('20180415_Pd_126',[
-                                             # '20180415_Pd_126_RDE_04_CVA_C01.mpt',
+                                             '20180415_Pd_126_RDE_04_CVA_C01.mpt',
                                              # '20180415_Pd_126_RDE_3_02_CA_C01.mpt',
-                                             # '20180415_Pd_126_RDE_3_03_CVA_C01.mpt',
+                                             '20180415_Pd_126_RDE_3_03_CVA_C01.mpt',
                                              # '20180415_Pd_126_RDE_4_03_CVA_C01.mpt',
                                              # '20180415_Pd_126_RDE_4_04_CA_C01.mpt',
                                              # '20180415_Pd_126_RDE_4_06_CVA_C01.mpt'
@@ -970,13 +970,13 @@ elif load_new_data:
                                                                        'electrode area ecsa': 0,
                                                                        },
                          '20180415_Pd_126_RDE_04_CVA_C01.mpt': {'label': "Ar before", #Ar/before
-                                                                       'cycles to extract': [5], #np.arange(15)[1:],
+                                                                       'cycles to extract': [6], #np.arange(15)[1:],
                                                                        'electrode area geom': 0.19635,
                                                                        'electrode area ecsa': 0,
                                                                        },
 
                         '20180415_Pd_126_RDE_3_03_CVA_C01.mpt': {'label': "Propene before", #propene/before
-                                                                       'cycles to extract': [5],#np.arange(15)[1:],
+                                                                       'cycles to extract': [8],#np.arange(15)[1:],
                                                                        'electrode area geom': 0.19635,
                                                                        'electrode area ecsa': 0,
                                                                        },
@@ -1034,20 +1034,20 @@ if not input_plot_settings:
 
 else:
     # settings for the plot - CV settings
-    # plot_settings = {'safeplot': False,
-    #                  'plotname': "20180426_CV_Pd_RDE_123_Ar_Propene_no_rot_figure1",
+    # plot_settings = {'safeplot': True,
+    #                  'plotname': "20180619_CV_Pd_RDE_126_Ar_Propene_no_rot_figure1",
     #                  'coplot_evsrhe': False, #for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
     #                  'grid': False,
     #                  'second axis':  False,
     #                  'x_lim': (0.2, 1.5),
-    #                  'y_lim': (-30, 20),
+    #                  'y_lim': (-20, 15),
     #                  'y_logscale': False,
     #                  'y2_lim': (0, 0.025),
     #                  'top_pad': 0.2,
     #                  'bottom_pad': 0.1,
     #                  'l_pad': [],
     #                  'r_pad': [],
-    #                  'colors': [[0.03137255, 0.20853518, 0.4497501, 1.],'0.25', 'b', 'grey','k', 'r', '#4a235a', 'c', '#538612', 'c', 'm', '0.50',"#538612", '0.75'],
+    #                  'colors': ['0.25',[0.03137255, 0.20853518, 0.4497501, 1.],'0.25', 'b', 'grey','k', 'r', '#4a235a', 'c', '#538612', 'c', 'm', '0.50',"#538612", '0.75'],
     #                  # 'colors': [ '#bd4de0' , 'k', 'orange', 'g', 'b', 'r', '#d816ff', "#ff8a16"],
     #                  # 'colors': ['k','#bd4de0', '#6b12ad', 'g', '#266f0e', 'grey'],
     #                  # 'colors': ['#bd4de0', 'orange', '#d816ff', "#ff8a16"],
@@ -1072,14 +1072,14 @@ else:
     #                  }
 
     #settings for the plot - CA settings
-    plot_settings = {'safeplot': False,
-                     'plotname': "20180508_CAs_080_090_phosphatebuffer_ph23_vs_Hclo4",
+    plot_settings = {'safeplot': True,
+                     'plotname': "20180731_CAs_article_data_ALL_ALL_bluegreen_lighter2_morespace_y",
                      'coplot_evsrhe': False,
                      # for plottype ca: selection whether ohmic drop corrected EvsRHE is co-plotted
                      'grid': False,
                      'second axis': False,
                      'x_lim': (-1, 61),
-                     'y_lim': (-0.1, 10),
+                     'y_lim': (-1.9, 10),
                      'y_logscale': False,
                      'y2_lim': (0, 0.025),
                      'top_pad': 0.2,
@@ -1095,45 +1095,51 @@ else:
                      #            ],
                      # 'colors': ['#bd4de0', 'orange', '#d816ff', "#ff8a16"],
                      # 'colors': plt.cm.gist_earth(range(255, 10, 10)),
-                     'colors': [[0.10249904, 0.40868897, 0.68289121, 1.],  # 0.9 73
-                                [0.59215688, 0.77708575, 0.87643215, 1.], #0.8
-                                 '#bd4de0', '#6b12ad'],
+                     # 'colors': [[0.10249904, 0.40868897, 0.68289121, 1.],  # 0.9 73
+                     #            [0.59215688, 0.77708575, 0.87643215, 1.], #0.8
+                     #             '#bd4de0', '#6b12ad'],
                      # 'colors': #plt.cm.Blues([50,100,150,200,250,255]),
                      #         [
+                     #          [0.81707037, 0.88589005, 0.95078816, 1.],  # 0.7 112
+                     #          [0.59215688, 0.77708575, 0.87643215, 1.],  # 0.8 76
+                     #          [0.30611305, 0.60484431, 0.79492504, 1.],  # 0.85 85
                      #          [0.10249904, 0.40868897, 0.68289121, 1.],  #0.9 73
-                     #          # [0.59215688, 0.77708575, 0.87643215, 1.],  #0.8 76
-                     #          # [0.03137255, 0.20853518, 0.4497501, 1.],  # 1.0 78
-                     #
-                     #          # [0.03137255, 0.1882353, 0.41960785, 1.],
-                     #
-                     #          [0.30611305, 0.60484431, 0.79492504, 1.],   #0.85 85
-                     #          "grey",  #Ar #0.9 Ar 107
-                     #          #   [0.10249904, 0.40868897, 0.68289121, 1.],  # 0.9 73
-                     #          # [0.81707037, 0.88589005, 0.95078816, 1.], #0.7 112
                      #          [0.03137255, 0.1882353, 0.41960785, 1.],  # 0.95 115
-                     #             #1.1 118 (missing!!)
-                     #          # [0, 0, 0, 1.],  #black 1.2 119
+                     #          [0.03137255, 0.20853518, 0.4497501, 1.],  # 1.0 78
                      #
+                     #          [0.03137255, 0.1882353, 0.41960785, 1.], #1.1 118 (missing!!)
+                     #          [0, 0, 0, 1.],  # black 1.2 119
+                     #
+                     #
+                     #          "grey",  #Ar #0.9 Ar 107
+                     #            [0.10249904, 0.40868897, 0.68289121, 1.],  # 0.9 73
                      #          ],
+                     'colors':  [
+                         '#08820a', '#098d55','#098d7b','#097d8d',
+                         '#095f8d', '#093b8d', '#15098d', '#120a5a',
+                             "grey",  # Ar #0.9 Ar 107
+                             "k"
+                         ],
                      # 'colors':  # plt.cm.Blues([50,100,150,200,250,255]),
                      #     [
                      #         # [0.81707037, 0.88589005, 0.95078816, 1.],  # 0.7 112
                      #
-                     #         # [0.59215688, 0.77708575, 0.87643215, 1.],  #0.8 76
                      #
-                     #         [0.30611305, 0.60484431, 0.79492504, 1.],  # 0.85 85
+                     #
+                     #         # [0.30611305, 0.60484431, 0.79492504, 1.],  # 0.85 85
                      #         [0.10249904, 0.40868897, 0.68289121, 1.],  # 0.9 73
                      #
-                     #         [0.03137255, 0.1882353, 0.41960785, 1.],  # 0.95 115
-                     #         # [0.03137255, 0.20853518, 0.4497501, 1.],  # 1.0 78
-                     #         # "grey", # 1.1 118 (missing!!)
+                     #         # [0.03137255, 0.1882353, 0.41960785, 1.],  # 0.95 115
+                     #         [0.03137255, 0.20853518, 0.4497501, 1.],  # 1.0 78
+                     #         [0.59215688, 0.77708575, 0.87643215, 1.],  # 0.8 84
+                     #         "grey", # 0.9 Ar 107
                      #         # [0, 0, 0, 1.],  #black 1.2 119
                      #
                      #     ],
 
 
-                     # 'linestyle': ['-', '-','-', '-','-', '-','-', '-'],
-                     'linestyle': ['--', '--', '-', '-', '-', '-', '-', '-'],
+                     'linestyle': ['-', '-', '-', '-', '-', '-', '-', '-', '--', '-'],
+                     # 'linestyle': ['--', '--', '-', '-', '-', '-', '-', '-'],
                      'colors2': ['0.25', 'grey', '0.75'],
                      'linestyle2': ['--', '--', '--'],
                      # color_list = plt.cm.YlGnBu(np.linspace(0, 1, 14))
@@ -1153,14 +1159,14 @@ else:
                      # "aspect": 100,
                      "axis label size": 16,
                      "tick label size": 14,
-                     "plot_average_cond": None #{"EvsRHE/V":[0.85, 0.9, 0.95]}#{"EvsRHE/V":[0.7, 0.8, 0.85, 0.9 ,0.95, 1.0, 1.1, 1.2]}
+                     "plot_average_cond": {"EvsRHE/V":[0.7, 0.8, 0.85, 0.9 ,0.95, 1.0, 1.1, 1.2], "not_average":['20180222_Pd_107_03_CA_C01.mpt']} #, "not_average": ['20180222_Pd_107_03_CA_C01.mpt']} #{"EvsRHE/V":[0.85, 0.9, 0.95]}#{"EvsRHE/V":[0.7, 0.8, 0.85, 0.9 ,0.95, 1.0, 1.1, 1.2]}
                      }
 
 
     # legend:
     legend_settings = {'position1': (0, 1.05),
                        'position2': (0, -0.2), #position of the legend for the second y axis
-                       'number_of_cols': 2,
+                       'number_of_cols': 3,
                        'fontsize': 8
                        }
 
@@ -1233,15 +1239,15 @@ def main():
     #CALCULATE ESCA: type="CO_strip": difference between the first 2 cycles in list of data, rest of list is ignored.
     #type="oxide_red": finds oxide red charge and calculates ESCA with given charge_p_area for each item in list, also
     #plots the calculated data as bar chart
-    esca_data = dpf.calc_esca(datalist[0:17], type='oxide_red', scanrate=50, charge_p_area=0.000481709)
-    print(esca_data)
+    # esca_data = dpf.calc_esca(datalist[0:17], type='oxide_red', scanrate=50, charge_p_area=0.000481709)
+    # print(esca_data)
 
 
 
     #PLOT THE DATA FROM THE LIST OF DATA DICTIONARIES
-    # esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
+    esca_data=[] #uncomment if no calculation of esca to avoid error in EC_plot
     # print(datalist)
-    # dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
+    dpf.EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data)
     #
     #PLOT THE CURRENT AT A GIVEN TIME AS A FUNCTION OF POTENTIAL
     # dpf.current_at_time_plot(datalist, times=[60, 180, 600, 3300], I_col="i/mAcm^-2_ECSA")

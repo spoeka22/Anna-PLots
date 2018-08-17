@@ -361,7 +361,7 @@ def select_data(dataline, selection_columns_conditions, operator = "&"):
     #DataFrame.truncate([before, after, axis, copy]) Truncates a sorted DataFrame/Series before and/or after some particular index value
 
 
-def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], charge_p_area=1, makeplot=True):
+def calc_esca(datalines,  type, scanrate=50, Vspan=[], ox_red=[], selection_conditions={}, charge_p_area=1, makeplot=True):
     """ Input: list of 2 dictionaries containing data (file in datalist), one with surface area specific peak,
     one with reference peak. Calls integrate_CV function to evaluate charge difference in selected Vspan.
     calculates absolute difference between these charge differences & multiplies with a selected factor
@@ -392,7 +392,7 @@ def calc_esca(datalines,  type="oxide_red", scanrate=50, Vspan=[], ox_red=[], ch
 
             #select the data in the right potential region
             oxide_red_peak = select_data(dataline,selection_conditions) #shortened dictionary like dataline just around the oxide reducton peak)
-            DL_current = abs(find_ave_current(dataline, Vspan=[0.37, 0.46], ox_red=ox_red)) #absolute(!) average current in the DL region
+            DL_current = abs(find_ave_current(dataline, Vspan=[0.40, 0.46], ox_red=ox_red)) #absolute(!) average current in the DL region
 
             #V_span adjustment: check if the current on the anodic side of the peak is < than DL_current (would give error in
             #correction for DL current)
@@ -566,15 +566,16 @@ def convert_to_current_density(file, electrode_area_geom, electrode_area_ecsa):
 #    from anna_data_plot_input_original import electrode_area_geom
     #check if there is individual settings, else use the general settings and creates 2 new columns
     #Data frame that then can be added to the general dataframe.
-
-    if electrode_area_geom or 'electrode area geom' in file['settings']:
-        if 'electrode area geom' in file['settings']:
-            i_geom = file['data']['<I>/mA']/file['settings']['electrode area geom']
-            Q_geom = file['data']['(Q-Qo)/C'] / file['settings']['electrode area geom']
-        else:
-            i_geom = file['data']['<I>/mA']/electrode_area_geom
-            Q_geom = file['data']['(Q-Qo)/C'] / electrode_area_geom
+    print("Calculating current densities...")
+    if 'electrode area geom' in file['settings']:
+        i_geom = file['data']['<I>/mA']/file['settings']['electrode area geom']
+        Q_geom = file['data']['(Q-Qo)/C'] / file['settings']['electrode area geom']
+    elif electrode_area_geom:
+        print("General geometric SA used.")
+        i_geom = file['data']['<I>/mA']/electrode_area_geom
+        Q_geom = file['data']['(Q-Qo)/C'] / electrode_area_geom
     else:
+        print("No geometric SA data found.")
         i_geom=[]
         Q_geom = []
 
@@ -652,18 +653,18 @@ def find_axis_label(data_col):
     elif data_col == "time/s":
         axis_label = "Time / s"
     elif data_col == "time/min":
-        axis_label = "Time / min"
+        axis_label = "t / min"
     elif "i" in data_col or "I" in data_col:
         if data_col == "i/mAcm^-2_geom":
             axis_label = "i / mA cm$^{-2}$$_{geom.}$"
         elif data_col == "i/mAcm^-2_ECSA":
-            axis_label = "Current density / $\mu$A cm$^{-2}$$_{ECSA}$"
+            axis_label = "i / $\mu$A cm$^{-2}$$_{ECSA}$"
         elif data_col == "<I>/mA":
             axis_label = "I / mA"
         else:
             print("Something wrong with current density axis labelling.")
     else:
-        axis_label = "Charge / C"  #This might not be the smartest way to deal with it, but ok for now.
+        axis_label = "Q / C"  #This might not be the smartest way to deal with it, but ok for now.
     print("Label for " + str(data_col) + " is: " + str(axis_label))
     return axis_label
 
@@ -733,10 +734,10 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     elif plot_settings['plot_average_cond']:
         print("Preparing averaged y values for plotting...")
         datagroups = group_datalines(datalist, plot_settings['plot_average_cond'])
-        # print(datagroups)
+        print(str(type(datagroups)))
         print("len datagroups: " + str(len(datagroups[0])))
         i = 0
-        for (group, color) in zip(datagroups, color_list): #necessary to have a longer colour list than groups!!
+        for (group, color, linestyle) in zip(datagroups, color_list, linestyle_list): #necessary to have a longer colour list & linestyle list than groups!!
             x_data = group[0]["data"][x_data_col].values.tolist()
             print("x_length: " + str(len(x_data)))
             y_data =[]
@@ -745,7 +746,10 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
                 i = i + 1
                 print(i)
             except KeyError:
-                print("Automatic label creation failed...")
+                print("Automatic label creation failed... (KeyError)")
+                label = "Label"
+            except IndexError:
+                print("Automatic label creation failed... (IndexError)")
                 label = "Label"
             for line in group:
                 x_data_line=line['data'][x_data_col].values.tolist()
@@ -758,12 +762,12 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
                 y_data.append(y_data_line)
             # print(y_data)
 
-            update_one_plot(ax1, color=color, label=label, x_data=x_data, y_data=y_data, central_tend='mean', alpha_transparency=0.2)
+            update_one_plot(ax1, color=color, label=label, linestyle= linestyle, x_data=x_data, y_data=y_data, central_tend='mean', alpha_transparency=0.05)
 
     else:
         for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
             try:
-                ax1.plot(each_file['data'][x_data_col].values.tolist(), each_file['data'][y_data_col].values.tolist(), color=color,
+                ax1.plot(each_file['data'][x_data_col].values.tolist()[:-3], each_file['data'][y_data_col].values.tolist()[:-3], color=color,
                      linestyle=linestyle, label=makelabel(each_file))
             except TypeError:
                 if len(datalist) < len(color_list) or len(datalist) < len(linestyle_list):
@@ -889,7 +893,7 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     # plt.axvline(x=55,  color='k', linestyle=':',linewidth='2')
 
 
-    plt.show()
+
 
     #safes figure as png and pdf
     if plot_settings['safeplot']:
@@ -904,6 +908,7 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
         plt.savefig("output_files/" + plot_settings['plotname']+'.pdf', dpi=400, bbox_inches='tight')
         print("Figure saved.")
 
+    plt.show()
 
 
 
@@ -945,7 +950,7 @@ def extract_data(folder_path, filenames, folders, filespec_settings):
                                      'settings': filespec_settings[str(filename)]})
                         print("data from " + filename + " extracted using settings specified for file.")
 
-                elif "cycle number" in datadict:
+                elif "cycle number" in datadict and datadict["cycle number"][1] > 0:
                     print("checking for cycles")
                     cycleno = max(datadict["cycle number"])
                     cycles = np.arange(cycleno)[1:]
@@ -959,7 +964,7 @@ def extract_data(folder_path, filenames, folders, filespec_settings):
 
                 else:
                     data_current_file = DataFrame(convert_datadict_to_dataframe(datadict))
-                    data.append({'filename': filename, 'data': data_current_file, 'settings': []})
+                    data.append({'filename': filename, 'data': data_current_file, 'settings': {'label': str(filename)}})
                     print("data from " + filename + " extracted using standard settings.")
     # print(data)
     return data
@@ -976,7 +981,7 @@ def convert_datadict_to_dataframe(datadict):
 
 
 
-def update_one_plot(ax, color, label, x_data, y_data, central_tend, alpha_transparency=0.5):
+def update_one_plot(ax, color, label, linestyle, x_data, y_data, central_tend, alpha_transparency=0.5):
     """
     :param ax: axes
     :param color: one color
@@ -1004,7 +1009,7 @@ def update_one_plot(ax, color, label, x_data, y_data, central_tend, alpha_transp
             y_lower.append(np.percentile(values, 25))
             y_upper.append(np.percentile(values, 75))
     ax.fill_between(np.array(x), np.array(y_lower), np.array(y_upper), color=color, alpha=alpha_transparency)
-    ax.plot(x, y_mean, color=color, label=label, lw=1)
+    ax.plot(x, y_mean, color=color, label=label, lw=1, linestyle=linestyle)
 # this is what I found... basically I used fill_between() and then you give the shaded area, the color, and the transparency
 # the rest of the method is just to automatically get mean and std (or median and quartiles), but the plotting part is simply fill_between() and then plot()
 
@@ -1018,20 +1023,51 @@ def group_datalines (datalines, selection_conditions, selection_limits=None):
     :return a list of lists of grouped data
     """
     grouped_datalines = []
+    print("length grouped datalines start = " + str(len(grouped_datalines)))
     for condition_key, condition_value in selection_conditions.items():
+        not_group = []
         for item in condition_value:
             group=[]
-            max = item + 0.005*item
-            min = item - 0.005*item
-            # print(min, max)
+            print("Item " + str(item) +" Type " + str(type(item)))
+
+            if type(item) == float:
+                max = item + 0.005*item
+                min = item - 0.005*item
+                # print(min, max)
+            else:
+                continue
+
             for dataline in datalines:
-                # print(dataline["filename"])
                 value_lastline=dataline['data'][condition_key].tail(1).item()
                 if value_lastline <= max and value_lastline >=min:
-                    group.append(dataline)
-                    # for it in group:
+                    # try:
+                    if dataline['filename'] in selection_conditions['not_average']:
+                        print("Not grouped dataline: " + dataline["filename"])
+                        not_group.append(dataline)
+                    else:
+                        group.append(dataline)
+                        print("line " + dataline["filename"]+  " appended")
+                        # for it in group:
                         # print(it["filename"])
-                    # print("end of group")
-            grouped_datalines.append(group)
-
+                    # except KeyError:
+                    #     print("KEY ERROR: No files excluded from averageing")
+                    #     group.append(dataline)
+            print("end of group")
+            if len(group) > 0:
+                grouped_datalines.append(group)
+            print("length grouped datalines = " + str(len(grouped_datalines)))
+        print("length nogroup  = " + str(len(not_group)))
+        if len(not_group) > 0:
+            grouped_datalines.append(not_group)
+        print("length grouped datalines= " + str(len(grouped_datalines)))
     return grouped_datalines
+
+def rolling_smoothing_of_column(data, window, type="median"):
+    if type == "median":
+        column_new = pd.rolling_median(data, window)
+    elif type == "mean":
+        column_new = pd.rolling_mean(data, window)
+    else:
+        print("specify a valid smoothing type")
+    return column_new
+
