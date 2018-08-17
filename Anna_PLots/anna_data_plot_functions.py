@@ -392,7 +392,7 @@ def calc_esca(datalines,  type, scanrate=50, Vspan=[], ox_red=[], selection_cond
 
             #select the data in the right potential region
             oxide_red_peak = select_data(dataline,selection_conditions) #shortened dictionary like dataline just around the oxide reducton peak)
-            DL_current = abs(find_ave_current(dataline, Vspan=[0.40, 0.46], ox_red=ox_red)) #absolute(!) average current in the DL region
+            DL_current = abs(find_ave_current(dataline, Vspan=[0.37, 0.46], ox_red=ox_red)) #absolute(!) average current in the DL region
 
             #V_span adjustment: check if the current on the anodic side of the peak is < than DL_current (would give error in
             #correction for DL current)
