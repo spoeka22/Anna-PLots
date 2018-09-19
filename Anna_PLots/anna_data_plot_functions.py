@@ -276,6 +276,7 @@ def current_at_time_plot(datalist, times, I_col):
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
 
+
     #prepare a dataframe to save the extracted data
     VI_data = pd.DataFrame({"filename": 0, "EvsRHE/V": 0, I_col: 0}, index=[0])
     for time in times:
@@ -313,6 +314,7 @@ def current_at_time_plot(datalist, times, I_col):
     ax1.legend()
     # plotname = input("Enter a name for saving the plot:")
     # plt.savefig("output_files/" + plotname + '.png')
+
 
     plt.show()
 
@@ -676,7 +678,7 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     """
     # prepare for figure with 2 x-axes
     print('Preparing a figure with 2 x-axes for plotting.')
-    fig = plt.figure()
+    fig = plt.figure(figsize=(3.999,2.1))
     ax1 = fig.add_subplot(111)
     #Set the aspect ratio
     # ax1.set_aspect(aspect=plot_settings["aspect"])
@@ -762,7 +764,7 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
                 y_data.append(y_data_line)
             # print(y_data)
 
-            update_one_plot(ax1, color=color, label=label, linestyle= linestyle, x_data=x_data, y_data=y_data, central_tend='mean', alpha_transparency=0.05)
+            update_one_plot(ax1, color=color, label=label, linestyle= linestyle, x_data=x_data, y_data=y_data, central_tend='mean', alpha_transparency=0.1)
 
     else:
         for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
@@ -904,8 +906,8 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
             else:
                 plot_settings['plotname'] = input("Enter new filename:")
 
-        plt.savefig("output_files/" + plot_settings['plotname']+'.png', dpi=400, bbox_inches='tight')
-        plt.savefig("output_files/" + plot_settings['plotname']+'.pdf', dpi=400, bbox_inches='tight')
+        plt.savefig("output_files/" + plot_settings['plotname']+'.pdf', dpi=300, bbox_inches='tight')
+        plt.savefig("output_files/" + plot_settings['plotname'] + '.png', dpi=300, bbox_inches='tight')
         print("Figure saved.")
 
     plt.show()
