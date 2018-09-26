@@ -1073,3 +1073,76 @@ def rolling_smoothing_of_column(data, window, type="median"):
         print("specify a valid smoothing type")
     return column_new
 
+
+def make_pol_curve(datalist, type='CA', timelimit = 900, add_conditions = {} ):
+    """
+    Take a large file with current at different potentials (or the other way round), averages
+    current and potential over entire period and creates dataframe that can either be saved as
+    csv or be plotted internally using the EC-plot function.
+    Also evaluates gradient of degradation for each potential/current hold and plots this with
+    other data.
+    :param datalist:list of dataframes
+        type: CA or CP (constant potential or constant current mode) FOR NOW NOT IMPLEMENTED
+        add_conditions: dict of additional conditions to just going through the list of sections
+        necessary if one section reused at and of experiment more than once.
+        timelimit: set which is the max time difference between 2 values  with the same Ns to belong to the same section;
+        looks at time and looks at where difference from 1st value is smaller and larger than 15min (900s)
+        (or any other specified value in s) -> only works if there's only 2 equivalent sections.
+    :return:
+    pol_curve_data: dictionary of same type as datalist, but with evaluated polarisation curve
+    data instead of raw data
+
+    """
+    #here there's space to implement choice of current and potential columns
+    I_col = "<I>/mA"
+    E_col = "Ewe/V"
+
+
+    for dataline in datalist:
+        current = []
+        current_grad = []
+        potential = []
+        potential_grad = []
+        time_stamp = []
+        sequence_list = np.arange(max(dataline['data']['Ns'])) #determine no of sections in sequence
+        for item in sequence_list: #iterate through sections and determine average current & potential
+
+            selection_conditions = {'Ns': [lambda x: x == item]}
+            selection_conditions.update(add_conditions)
+            section_data = select_data(dataline, selection_columns_conditions=selection_conditions, operator="&")
+            # print(section_data)
+
+            start_time = section_data['data']['time/s'][section_data['data']['time/s'].first_valid_index()]
+
+            time_delta = abs(start_time - section_data['data']['time/s'][section_data['data']['time/s'].last_valid_index()])
+            if time_delta > timelimit:
+                section_data_a = select_data(section_data, selection_columns_conditions={'time/s': [lambda x: x - start_time < timelimit]})
+                section_data_b = select_data(section_data, selection_columns_conditions={'time/s': [lambda x: x - start_time > timelimit]})
+                section_data = None
+                ave_current_a = np.mean(section_data_a['data'][I_col])
+                ave_potential_a = np.mean(section_data_a['data'][E_col])
+                start_time_a = section_data_a['data']['time/s'][section_data_a['data']['time/s'].first_valid_index()]
+                ave_current_b = np.mean(section_data_a['data'][I_col])
+                ave_potential_b = np.mean(section_data_a['data'][E_col])
+                start_time_b = section_data_b['data']['time/s'][section_data_b['data']['time/s'].first_valid_index()]
+                current.append(ave_current_a)
+                current.append(ave_current_b)
+                potential.append(ave_potential_a)
+                potential.append(ave_potential_b)
+                time_stamp.append(start_time_a)
+                time_stamp.append(start_time_b)
+
+                #something still seems weird here....
+
+            else:
+                ave_current = np.mean(section_data['data'][I_col])
+                ave_potential = np.mean(section_data['data'][E_col])
+                current.append(ave_current)
+                potential.append(ave_potential)
+                time_stamp.append(start_time)
+        print("Current: " + str(current))
+        print("Potential: " + str(potential))
+
+
+
+
