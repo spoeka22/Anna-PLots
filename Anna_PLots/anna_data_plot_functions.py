@@ -7,9 +7,8 @@ Created on Tue Oct  18 19:25:46 2016
 Working part of the data plotting programme, that contains all the functions
 """
 import numpy as np
-
 import matplotlib
-matplotlib.use('qt4agg')
+# matplotlib.use('qt4agg')
 import matplotlib.pyplot as plt
 
 
@@ -23,30 +22,25 @@ from EC_MS import Data_Importing as Data_Importing_Scott
 from EC_MS import EC as EC_Scott
 
 
-def find_deltaI_DLcapacitance(e_vs_rhe, i_mApscm, e_range, file):
-    #print(e_vs_rhe.index(max(e_vs_rhe)))
-
-    #divide CV into oxizing and reducing half
-    ox_part = DataFrame(data=[e_vs_rhe[:e_vs_rhe.index(max(e_vs_rhe))], i_mApscm[:e_vs_rhe.index(max(e_vs_rhe))]],
-                        index=["EvsRHE", "imA/cm^2"]).transpose()
-    red_part = DataFrame(data=[e_vs_rhe[e_vs_rhe.index(max(e_vs_rhe)):], i_mApscm[e_vs_rhe.index(max(e_vs_rhe)):]],
-                         index=["EvsRHE", "imA/cm^2"]).transpose()
-
-    #find indices corresponding to the selected e-range
-    #print(e_range)
-    ox_current=[]
-    for eachvalue in ox_part.itertuples():
-        if e_range[0]<= eachvalue[1] and e_range[1] >= eachvalue[1]:
-           ox_current.append(eachvalue[2])
-    #print(ox_current)
-    red_current=[]
-    for eachvalue in red_part.itertuples():
-        if e_range[0] <= eachvalue[1] and e_range[1] >= eachvalue[1]:
-            red_current.append(eachvalue[2])
-    #print(red_current)
-    #print(file)
-    delta_i=np.mean(ox_current)-np.mean(red_current)
-    print(str(file)+": The difference between oxidation and reduction current in the potential region " +str(e_range) + " = " + str(delta_i) +
+def find_deltaI_DLcapacitance(dataline, e_range, e_col = "EvsRHE/V", i_col = "i/mAcm^-2_geom"):
+    
+    #I'm sick of using pandas here... let's just convert everything back to lists and use np functions instead
+    
+    red_ox, e_data, i_data = np.asarray(dataline['data']["ox/red"]), np.asarray(dataline['data'][e_col]), np.asarray(dataline['data'][i_col])
+    #find oxidizing and reducing part
+    mask_ox = red_ox == 1
+    ox_current = i_data[mask_ox]
+    mask_red = red_ox == 0
+    red_current = i_data[mask_red]
+    #select the relvant potential range
+    mask_erange_ox = np.logical_and(e_data[mask_ox] >= e_range[0], e_data[mask_ox] <= e_range[1])
+    ox_current = ox_current[mask_erange_ox]
+    mask_erange_red = np.logical_and(e_data[mask_red] >= e_range[0], e_data[mask_red] <= e_range[1])
+    red_current = red_current[mask_erange_red]
+    # print(ox_current)
+    # print(red_current)
+    delta_i=abs(np.mean(ox_current)-np.mean(red_current))
+    print(str(dataline['filename'])+": The difference between oxidation and reduction current in the potential region " +str(e_range) + " = " + str(delta_i) +
           " mA/cm2")
 
 def integrate_CV(dataline, Vspan, ox_red):
@@ -372,9 +366,9 @@ def calc_esca(datalines,  type, scanrate=50, Vspan=[], ox_red=[], selection_cond
     print(type)
 
     if type == "CO_strip":
-        Vspan=[0.6, 1.2] #V vs. RHE, taken from Mittermeier et.al 2017
+        Vspan=[0.45, 0.75] #should be [0.6-1.2]V vs. RHE, taken from Mittermeier et.al 2017
         ox_red = 1
-    elif type == "oxide_red":
+    elif type == "oxide_red" or type == "oxide_red_tilt":
         selection_conditions = {"EvsRHE/V": [lambda x: x >= 0.4, lambda x: x <= 0.9],  #V vs. RHE, taken from Mittermeier et.al 2017
                             "ox/red": [lambda x: x == 0]}
         ox_red = 0
@@ -386,7 +380,7 @@ def calc_esca(datalines,  type, scanrate=50, Vspan=[], ox_red=[], selection_cond
     esca_co = None
     plot_label = []
 
-    if type == "oxide_red":
+    if type == "oxide_red" or type== "oxide_red_tilt":
         deltaQ=[]
         for dataline in datalines:
             #make sure Vspan is reset once it's been changed for one electrode
@@ -410,26 +404,30 @@ def calc_esca(datalines,  type, scanrate=50, Vspan=[], ox_red=[], selection_cond
 
             current_anodic_end=abs(oxide_red_peak["data"]["<I>/mA"][index_anodic_end])
             print("Current anodic end: " + str(current_anodic_end))
+
             if current_anodic_end < DL_current:
                 print("DL current larger than current at 0.9 V/RHE.")
-                #-> sets a lower anodic limit for peak region
-                adjust_peak_region = {"<I>/mA": [lambda x: abs(x) > DL_current],
-                                      "EvsRHE/V": [lambda x: x < 0.7]}
-                #and cuts peak region accordingly
-                oxide_red_peak = select_data(oxide_red_peak, adjust_peak_region, operator="|")
+                if type == "oxide_red_tilt":
+                    print("Tilted CV selected, so no further cutting.")
+                else:
+                    #-> sets a lower anodic limit for peak region
+                    adjust_peak_region = {"<I>/mA": [lambda x: abs(x) > DL_current],
+                                          "EvsRHE/V": [lambda x: x < 0.7]}
+                    #and cuts peak region accordingly
+                    oxide_red_peak = select_data(oxide_red_peak, adjust_peak_region, operator="|")
 
-                #recalculate indices of first and last line of the relevant data region
-                index_anodic_end = oxide_red_peak["data"]["<I>/mA"].first_valid_index()
-                index_cathodic_end = oxide_red_peak["data"]["<I>/mA"].last_valid_index()
-                # print("anodic/cathodic end indices" + str(index_anodic_end) + " and " + str(index_cathodic_end))
+                    #recalculate indices of first and last line of the relevant data region
+                    index_anodic_end = oxide_red_peak["data"]["<I>/mA"].first_valid_index()
+                    index_cathodic_end = oxide_red_peak["data"]["<I>/mA"].last_valid_index()
+                    # print("anodic/cathodic end indices" + str(index_anodic_end) + " and " + str(index_cathodic_end))
 
-                #update Vspan for calculating the DL charge
-                Vspan = [0.4, oxide_red_peak["data"]["EvsRHE/V"][index_anodic_end]]
-                print("The potential region was corrected according to DL current to end at " + str(Vspan[1]))
+                    #update Vspan for calculating the DL charge
+                    Vspan = [0.4, oxide_red_peak["data"]["EvsRHE/V"][index_anodic_end]]
+                    print("The potential region was corrected according to DL current to end at " + str(Vspan[1]))
 
-                potential_anodic_end = oxide_red_peak["data"]["EvsRHE/V"][index_anodic_end]
-                potential_cathodic_end = oxide_red_peak["data"]["EvsRHE/V"][index_cathodic_end]
-                print("Potential limits for oxide red peak are reset to: {} and {}".format(potential_anodic_end,potential_cathodic_end))
+                    potential_anodic_end = oxide_red_peak["data"]["EvsRHE/V"][index_anodic_end]
+                    potential_cathodic_end = oxide_red_peak["data"]["EvsRHE/V"][index_cathodic_end]
+                    print("Potential limits for oxide red peak are reset to: {} and {}".format(potential_anodic_end,potential_cathodic_end))
 
             print("Vspan: " +str(Vspan))
 
@@ -663,6 +661,8 @@ def find_axis_label(data_col):
             axis_label = "i / $\mu$A cm$^{-2}$$_{ECSA}$"
         elif data_col == "<I>/mA":
             axis_label = "I / mA"
+        elif data_col == "I_grad":
+            axis_label = "i gradient / mA/cm$^{-2}$s"
         else:
             print("Something wrong with current density axis labelling.")
     else:
@@ -671,14 +671,14 @@ def find_axis_label(data_col):
     return axis_label
 
 
-def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data): #basically all the details that are chosen in the settings part go into this function
+def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_drop_corr, esca_data=[], output = "\output_files"): #basically all the details that are chosen in the settings part go into this function
     """makes plots, main function of the program
     input: settings from anna_data_plot_settings through doplot function
     output: cv_plot
     """
     # prepare for figure with 2 x-axes
     print('Preparing a figure with 2 x-axes for plotting.')
-    fig = plt.figure(figsize=(3.999,2.1))
+    fig = plt.figure() #figsize=(3.999,2.1)
     ax1 = fig.add_subplot(111)
     #Set the aspect ratio
     # ax1.set_aspect(aspect=plot_settings["aspect"])
@@ -769,8 +769,8 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
     else:
         for (each_file, color, linestyle) in itertools.zip_longest(datalist, color_list, linestyle_list):
             try:
-                ax1.plot(each_file['data'][x_data_col].values.tolist()[:-3], each_file['data'][y_data_col].values.tolist()[:-3], color=color,
-                     linestyle=linestyle, label=makelabel(each_file))
+                ax1.plot(each_file['data'][x_data_col].values.tolist()[:], each_file['data'][y_data_col].values.tolist()[:], color=color,
+                     linestyle=linestyle, marker=None, label=makelabel(each_file))
             except TypeError:
                 if len(datalist) < len(color_list) or len(datalist) < len(linestyle_list):
                     continue
@@ -816,10 +816,33 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
 
 
     # axis labels
-    ax1.set_xlabel(find_axis_label(x_data_col), size=plot_settings["axis label size"])
-    ax1.set_ylabel(find_axis_label(y_data_col), size=plot_settings["axis label size"])
+    try:
+        plot_settings['x_data_label']
+    except KeyError:
+        print("KEY ERROR X data lable setting")
+        ax1.set_xlabel(find_axis_label(x_data_col), size=plot_settings["axis label size"])
+    else:
+        ax1.set_xlabel(plot_settings['x_data_label'], size=plot_settings["axis label size"])
+
+    try:
+        plot_settings['y_data_label']
+    except KeyError:
+        print("KEY ERROR Y data lable setting")
+        ax1.set_ylabel(find_axis_label(y_data_col), size=plot_settings["axis label size"])
+    else:
+        ax1.set_ylabel(plot_settings['y_data_label'], size=plot_settings["axis label size"])
+
+
     if not plot_settings['y_data2'] == "":
-        ax2.set_ylabel(find_axis_label(y2_data_col))
+        # ax2.set_ylabel(find_axis_label(y2_data_col))
+        try:
+            plot_settings['y_data2_label']
+        except KeyError:
+            print("KEY ERROR Y2 data lable setting")
+            ax2.set_ylabel(find_axis_label(y2_data_col), size=plot_settings["axis label size"])
+        else:
+            ax2.set_ylabel(plot_settings['y_data2_label'], size=plot_settings["axis label size"])
+
 
     #set tick label size
     ax1.tick_params(axis="both", labelsize=plot_settings["tick label size"], pad=8, direction="in", which="both", width=1.5)
@@ -838,7 +861,7 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
 
     #grid
     if plot_settings['grid']:
-        ax1.grid(True, color="grey")
+        ax1.grid(True, which="both", color="grey")
 
      # inserts second x-axis with E vs Ref on top, if selected in settings. only if plot type is not CA
     if plot_settings['second axis'] and not plot_settings['plot type'] == 'ca':
@@ -899,15 +922,15 @@ def EC_plot(datalist, plot_settings, legend_settings, annotation_settings, ohm_d
 
     #safes figure as png and pdf
     if plot_settings['safeplot']:
-        if os.path.exists("output_files/" + plot_settings['plotname']+'.png'):
+        if os.path.exists(output + plot_settings['plotname']+'.png'):
             overwrite = input("Do you want to overwrite an existing plot? (y/n)")
             if overwrite == "y" or overwrite == "yes":
                 print("Overwriting file.")
             else:
                 plot_settings['plotname'] = input("Enter new filename:")
 
-        plt.savefig("output_files/" + plot_settings['plotname']+'.pdf', dpi=300, bbox_inches='tight')
-        plt.savefig("output_files/" + plot_settings['plotname'] + '.png', dpi=300, bbox_inches='tight')
+        plt.savefig(output + plot_settings['plotname']+'.pdf', dpi=300, bbox_inches='tight')
+        plt.savefig(output + plot_settings['plotname'] + '.png', dpi=300, bbox_inches='tight')
         print("Figure saved.")
 
     plt.show()
@@ -939,30 +962,43 @@ def extract_data(folder_path, filenames, folders, filespec_settings):
                     if 'cycles to extract' in filespec_settings[str(filename)].keys():
                         for cycle in filespec_settings[str(filename)]['cycles to extract']:
                             data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle]) #extract only the data from selected cycles
-                            # print(data_selected_cycle['cycle number'])
-                            # convert DataDict to DataFrame
-                            data_selected_cycle_frame = DataFrame(convert_datadict_to_dataframe(data_selected_cycle))
-                            # print(converted_e_and_i)
+                            data_selected_cycle_frame = DataFrame(convert_datadict_to_dataframe(data_selected_cycle)) # convert DataDict to DataFrame
                             #collect all the data from different cycles in one big dictionary
                             data.append({'filename': filename + "_cycle_" + str(cycle), 'data': data_selected_cycle_frame, 'settings': filespec_settings[str(filename)]})
                             print("cycle " + str(cycle) +" extracted")
+                    elif 'sequence to extract' in filespec_settings[str(filename)].keys():
+                        for seq in filespec_settings[str(filename)]['sequence to extract']:
+                            data_selected_cycle = EC_Scott.select_cycles(datadict, [seq], cycle_str="Ns") #extract only the data from selected loops
+                            data_selected_cycle_frame = DataFrame(convert_datadict_to_dataframe(data_selected_cycle)) # convert DataDict to DataFrame
+                            #collect all the data from different cycles in one big dictionary
+                            data.append({'filename': filename + "_cycle_" + str(seq), 'data': data_selected_cycle_frame, 'settings': filespec_settings[str(filename)]})
+                            print("seq " + str(seq) +" extracted")
                     else:
                         data_current_file = DataFrame(convert_datadict_to_dataframe(datadict))
                         data.append({'filename': filename, 'data': data_current_file,
                                      'settings': filespec_settings[str(filename)]})
                         print("data from " + filename + " extracted using settings specified for file.")
 
-                elif "cycle number" in datadict and datadict["cycle number"][1] > 0:
+                elif "cycle number" in datadict:
                     print("checking for cycles")
-                    cycleno = max(datadict["cycle number"])
-                    cycles = np.arange(cycleno)[1:]
-                    for cycle in cycles:
-                        data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle])
-                        data_selected_cycle_frame = DataFrame(convert_datadict_to_dataframe(data_selected_cycle))
+                    try: datadict["cycle number"][1]
+                    except IndexError:
+                        data_current_file = DataFrame(convert_datadict_to_dataframe(datadict))
                         data.append(
-                            {'filename': filename + "_cycle_" + str(cycle), 'data': data_selected_cycle_frame,
-                             'settings': []})
-                        print("cycle " + str(cycle) + " extracted")
+                            {'filename': filename, 'data': data_current_file, 'settings': {'label': str(filename)}})
+                        print("data from " + filename + " extracted using standard settings.")
+                        continue
+
+                    if datadict["cycle number"][1] > 0:
+                        cycleno = max(datadict["cycle number"])
+                        cycles = np.arange(cycleno)[1:]
+                        for cycle in cycles:
+                            data_selected_cycle = EC_Scott.select_cycles(datadict, [cycle])
+                            data_selected_cycle_frame = DataFrame(convert_datadict_to_dataframe(data_selected_cycle))
+                            data.append(
+                                {'filename': filename + "_cycle_" + str(cycle), 'data': data_selected_cycle_frame,
+                                 'settings': []})
+                            print("cycle " + str(cycle) + " extracted")
 
                 else:
                     data_current_file = DataFrame(convert_datadict_to_dataframe(datadict))
@@ -1074,7 +1110,8 @@ def rolling_smoothing_of_column(data, window, type="median"):
     return column_new
 
 
-def make_pol_curve(datalist, type='CA', timelimit = 900, add_conditions = {} ):
+
+def get_pol_curve_data(datalist, type='CA', timelimit = 900, add_conditions = {}, save = False):
     """
     Take a large file with current at different potentials (or the other way round), averages
     current and potential over entire period and creates dataframe that can either be saved as
@@ -1094,37 +1131,51 @@ def make_pol_curve(datalist, type='CA', timelimit = 900, add_conditions = {} ):
 
     """
     #here there's space to implement choice of current and potential columns
-    I_col = "<I>/mA"
+    I_col = "i/mAcm^-2_geom"
     E_col = "Ewe/V"
 
-
+    datalist_new = []
     for dataline in datalist:
         current = []
         current_grad = []
         potential = []
         potential_grad = []
         time_stamp = []
-        sequence_list = np.arange(max(dataline['data']['Ns'])) #determine no of sections in sequence
+        sequence_list = np.arange(max(dataline['data']['Ns'])+1) #determine no of sections in sequence
+        print("sequence" + str(sequence_list))
         for item in sequence_list: #iterate through sections and determine average current & potential
-
+            print(item)
             selection_conditions = {'Ns': [lambda x: x == item]}
             selection_conditions.update(add_conditions)
             section_data = select_data(dataline, selection_columns_conditions=selection_conditions, operator="&")
             # print(section_data)
-
             start_time = section_data['data']['time/s'][section_data['data']['time/s'].first_valid_index()]
 
             time_delta = abs(start_time - section_data['data']['time/s'][section_data['data']['time/s'].last_valid_index()])
             if time_delta > timelimit:
-                section_data_a = select_data(section_data, selection_columns_conditions={'time/s': [lambda x: x - start_time < timelimit]})
-                section_data_b = select_data(section_data, selection_columns_conditions={'time/s': [lambda x: x - start_time > timelimit]})
-                section_data = None
+                print("Different timestamps found under one section indicator...")
+                section_data_a = select_data(section_data, selection_columns_conditions={'time/s': [lambda x: abs(x - start_time) < timelimit]})
+                section_data_b = select_data(section_data, selection_columns_conditions={'time/s': [lambda x: abs(x - start_time) > timelimit]})
+                # print(section_data_a['data']['Ewe/V'])
+                # print(section_data_b['data']['Ewe/V'])
                 ave_current_a = np.mean(section_data_a['data'][I_col])
                 ave_potential_a = np.mean(section_data_a['data'][E_col])
                 start_time_a = section_data_a['data']['time/s'][section_data_a['data']['time/s'].first_valid_index()]
-                ave_current_b = np.mean(section_data_a['data'][I_col])
-                ave_potential_b = np.mean(section_data_a['data'][E_col])
+                ave_current_b = np.mean(section_data_b['data'][I_col])
+                ave_potential_b = np.mean(section_data_b['data'][E_col])
                 start_time_b = section_data_b['data']['time/s'][section_data_b['data']['time/s'].first_valid_index()]
+                slope_current_a = lin_regression(section_data_a['data']["time/s"].values.tolist(),
+                                               section_data_a['data'][I_col].values.tolist())[0][1]
+                slope_potential_a = lin_regression(section_data_a['data']["time/s"].values.tolist(),
+                                                 section_data_a['data'][E_col].values.tolist())[0][1]
+                slope_current_b = lin_regression(section_data_b['data']["time/s"].values.tolist(),
+                                               section_data_b['data'][I_col].values.tolist())[0][1]
+                slope_potential_b = lin_regression(section_data_b['data']["time/s"].values.tolist(),
+                                                 section_data_b['data'][E_col].values.tolist())[0][1]
+                current_grad.append(slope_current_a)
+                potential_grad.append(slope_potential_a)
+                current_grad.append(slope_current_b)
+                potential_grad.append(slope_potential_b)
                 current.append(ave_current_a)
                 current.append(ave_current_b)
                 potential.append(ave_potential_a)
@@ -1132,16 +1183,36 @@ def make_pol_curve(datalist, type='CA', timelimit = 900, add_conditions = {} ):
                 time_stamp.append(start_time_a)
                 time_stamp.append(start_time_b)
 
+
                 #something still seems weird here....
 
             else:
                 ave_current = np.mean(section_data['data'][I_col])
                 ave_potential = np.mean(section_data['data'][E_col])
+                slope_current = lin_regression(section_data['data']["time/s"].values.tolist(), section_data['data'][I_col].values.tolist())[0][1]
+                slope_potential = lin_regression(section_data['data']["time/s"].values.tolist(), section_data['data'][E_col].values.tolist())[0][1]
                 current.append(ave_current)
                 potential.append(ave_potential)
+                current_grad.append(slope_current)
+                potential_grad.append(slope_potential)
                 time_stamp.append(start_time)
-        print("Current: " + str(current))
-        print("Potential: " + str(potential))
+
+
+        pol_curve_data = pd.DataFrame({"time_stamp": time_stamp, E_col: potential, I_col: current, "E_grad": potential_grad,
+                                       "I_grad": current_grad}).sort_values("time_stamp")
+        dataline_new = copy.deepcopy(dataline)
+        dataline_new['data'] = pol_curve_data
+        # print(dataline_new)
+        # print("Current: " + str(current))
+        # print("Potential: " + str(potential))
+        # print("Timestamp: " + str(time_stamp))
+        datalist_new.append(dataline_new)
+        if save == True:
+            save_to_csv(dataline_new["data"], dataline_new["settings"]["label"])
+
+    return datalist_new
+
+
 
 
 

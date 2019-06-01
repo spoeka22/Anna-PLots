@@ -1,0 +1,37 @@
+import pandas as pd
+import numpy as np
+
+def current_at_time_plot(datalist, times, I_col):
+    """finds current at certain time (adds +/-5s and finds average current in that window) and plots
+    this against time -> get a different view on CAs
+    """
+    VI_data_dict={}
+    for time in times:
+        timespan=[time - 5, time + 5]
+        print(time, timespan)
+        # print(type(time))
+
+        VI_data = pd.DataFrame({"filename": 0,"EvsRHE/V": 0, I_col: 0}, index=[0])
+        for dataline in datalist:
+            print("Now working on file %s " % dataline['filename'])
+            current = np.random.randint(1, 10) #find_ave_current(dataline, tspan=timespan, I_col= I_col)
+            potential = np.random.randint(1, 10) #find_pot_at_time(dataline, time=timespan[0])
+            VI_data_dataline = pd.DataFrame({"filename":[dataline['filename']],"EvsRHE/V": [potential], I_col: [current]})
+            #VI_data.append(VI_data_dataline, ignore_index=True)
+            VI_data = pd.concat([VI_data, VI_data_dataline])
+            print(VI_data_dataline)
+            print(VI_data)
+            print("current and potential are {0} and {1}".format(str(current), str(potential)))
+
+    VI_data_dict[str(time)]= VI_data
+
+if __name__ == '__main__':
+    datalist = [
+        {'filename': 1},
+        {'filename': 2},
+        {'filename': 3},
+        {'filename': 4},
+    ]
+    times = range(20)
+    I_col = "Stroooom"
+    current_at_time_plot(datalist, times, I_col)
